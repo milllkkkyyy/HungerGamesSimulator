@@ -1,0 +1,75 @@
+form {
+    border: 1px dotted pink;
+    border-radius: 4px;
+    padding: 10px;
+    min-width: 13%;
+}
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+button {
+    background: #EC9706;
+    border: 1px solid pink;
+    border-radius: 5px;
+}
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.tributes-table {
+    overflow-x: auto;
+}
+
+#tributes {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+    border: none;
+    border-radius: 8px;
+}
+
+#tributes tr.header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+#tributes tr:nth-child(even) {
+    background-color: lightgoldenrodyellow;
+}
+#tributes th.header {
+    background: pink;
+    padding: 2px
+}
+
+#tributes tr.info,
+#tributes td.info {
+    text-align: center;
+    padding: 10px
+}
+
+tr.info:first-child,
+th.header:first-child {
+}
+
+th.header:first-child {
+    border-radius: 5px 0 0 0;
+}
+
+th.header:last-child {
+    border-radius: 0 5px 0 0;
+}
+
+
+#tributes td.info {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

@@ -1,0 +1,9 @@
+.main {
+    text-align: center;
+}
+
+.simulationText {
+    margin: 25px auto;
+    width: 50%;
+    border: 1px solid black;
+}

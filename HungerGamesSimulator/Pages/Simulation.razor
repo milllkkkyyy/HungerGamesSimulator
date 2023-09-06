@@ -1,0 +1,31 @@
+@page "/Simulation"
+
+@using HungerGamesSimulator.Data
+@inject GameService GameService
+
+<div class="main">
+    <h3>The 1st Annual Hunger Games</h3>
+    <button @onclick="Simulate"> Continue </button>
+    <div class="simulationText">
+        @foreach (var message in MessageCenter.GetMessages())
+        {
+            <p> @message </p>
+        }
+    </div>
+</div>
+
+@code {
+
+    private World? _world;
+    
+    protected override void OnInitialized()
+    {
+        MessageCenter.ClearMessages();
+        _world = GameService.CreateWorld();
+    }
+
+    private void Simulate()
+    {
+        _world?.Simulate();
+    }
+}

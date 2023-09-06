@@ -1,0 +1,127 @@
+/* _content/HungerGamesSimulator/Pages/Index.razor.rz.scp.css */
+button[b-6d8zccouvn] {
+    height: 50px;
+    width: 200px;
+    font-size: medium;
+}
+/* _content/HungerGamesSimulator/Pages/Simulation.razor.rz.scp.css */
+.main[b-6orpdzuipb] {
+    text-align: center;
+}
+
+.simulationText[b-6orpdzuipb] {
+    margin: 25px auto;
+    width: 50%;
+    border: 1px solid black;
+}
+/* _content/HungerGamesSimulator/Pages/Tributes.razor.rz.scp.css */
+form[b-kf0zo9q2kw] {
+    border: 1px dotted pink;
+    border-radius: 4px;
+    padding: 10px;
+    min-width: 13%;
+}
+input[type=text][b-kf0zo9q2kw] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+button[b-kf0zo9q2kw] {
+    background: #EC9706;
+    border: 1px solid pink;
+    border-radius: 5px;
+}
+.button-container[b-kf0zo9q2kw] {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.tributes-table[b-kf0zo9q2kw] {
+    overflow-x: auto;
+}
+
+#tributes[b-kf0zo9q2kw] {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+    border: none;
+    border-radius: 8px;
+}
+
+#tributes tr.header[b-kf0zo9q2kw] {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+#tributes tr:nth-child(even)[b-kf0zo9q2kw] {
+    background-color: lightgoldenrodyellow;
+}
+#tributes th.header[b-kf0zo9q2kw] {
+    background: pink;
+    padding: 2px
+}
+
+#tributes tr.info[b-kf0zo9q2kw],
+#tributes td.info[b-kf0zo9q2kw] {
+    text-align: center;
+    padding: 10px
+}
+
+tr.info:first-child[b-kf0zo9q2kw],
+th.header:first-child[b-kf0zo9q2kw] {
+}
+
+th.header:first-child[b-kf0zo9q2kw] {
+    border-radius: 5px 0 0 0;
+}
+
+th.header:last-child[b-kf0zo9q2kw] {
+    border-radius: 0 5px 0 0;
+}
+
+
+#tributes td.info[b-kf0zo9q2kw] {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+/* _content/HungerGamesSimulator/Shared/NavBar.razor.rz.scp.css */
+.header[b-i881ifjw89] {
+    display: flex;
+    max-width: 100%;
+    height: 65px;
+    background: pink;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navigation[b-i881ifjw89] {
+    list-style: none;
+    text-decoration: none;
+    padding-right: 5%;
+}
+.navigation li[b-i881ifjw89] {
+    display: inline-block;
+    font-size: 15px;
+    overflow: hidden;
+    padding: 0 10px 0 10px;
+}
+
+.navigation a[b-i881ifjw89] {
+    text-decoration: none;
+    color: black;
+}
+
+h1[b-i881ifjw89] {
+    padding-left: 5%;
+    margin: 0;
+}
+
+p[b-i881ifjw89] {
+    font-style: italic;
+}

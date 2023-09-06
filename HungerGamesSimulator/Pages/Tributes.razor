@@ -1,0 +1,77 @@
+@page "/Tributes"
+@using HungerGamesSimulator.Data
+@inject GameService GameService
+
+<h2>Tributes</h2>
+
+<p> Add your Tributes names in the form below.</p>
+<form>
+    <label for="tribute-name"> Name: </label>
+    <input type="text" id="tribute-name" @bind="_name" placeholder="Tributes Name" @onkeyup="@(args => { if (args.Code == EnterCord) { CreateTribute(); } })" >
+
+    <label for="tribute-attribute"> Attribute: </label>
+    <input type="text" id="tribute-attribute" placeholder="Tributes Attribute" >
+
+    <div class="button-container">
+        <button type="button" @onclick="@CreateTribute">Add Tribute</button> 
+        <button type="button" id="tribute-clear" @onclick="@ClearTributes">Clear Tributes</button>
+    </div> <!-- end button-container-->
+</form>
+
+<p> Here is the current list of Tributes:</p>
+<div class="tributes-table">
+    <table id="tributes">
+        <tr class="header">
+            <th class="header">Names</th>
+            <th class="header">Delete</th>
+        </tr>
+        @foreach (var tribute in _data)
+        {
+            <tr class="info">
+                <td class="info">@tribute.Name</td>
+                <td class="info">
+                    <button @onclick="@(() => RemoveTribute(tribute))">Remove Tribute</button>
+                </td>
+            </tr>
+        }
+    </table>
+</div> <!-- end tributes table-->
+<br>
+<a href="/Simulation"><button>Begin Simulation</button></a>
+
+@code
+{
+    private string? _name;
+    private List<IActor> _data = new List<IActor>();
+    private const string EnterCord = "Enter";
+
+    private void RefreshData()
+    {
+        _data = GameService.GetTributes();
+    }
+
+    protected override void OnInitialized()
+    {
+        RefreshData();
+    }
+
+    private void CreateTribute()
+    {
+        if (string.IsNullOrWhiteSpace(_name))
+        {
+            return;
+        }
+        
+        GameService.AddTribute(new Tribute(_name));
+    }
+
+    private async Task RemoveTribute( IActor tribute )
+    {
+        await GameService.RemoveTribute( tribute );
+    }
+
+    private void ClearTributes()
+    {
+        GameService.ClearTributes();
+    }
+}

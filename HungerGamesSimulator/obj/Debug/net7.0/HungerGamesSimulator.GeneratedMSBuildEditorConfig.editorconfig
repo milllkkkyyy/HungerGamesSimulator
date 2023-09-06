@@ -1,0 +1,53 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = HungerGamesSimulator
+build_property.RootNamespace = HungerGamesSimulator
+build_property.ProjectDir = /Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Shared/Map.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01hcC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-6d8zccouvn
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/Simulation.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2ltdWxhdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-6orpdzuipb
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/Tributes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVHJpYnV0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-kf0zo9q2kw
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Shared/NavBar.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdkJhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-i881ifjw89
+
+[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
