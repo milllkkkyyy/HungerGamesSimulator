@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Numerics;
 
 namespace HungerGamesSimulator.Data;
 
@@ -15,12 +14,11 @@ public class Tribute : IActor
     public string? Name { get; set; }
     public Coord Velocity { get; set; }
     public Coord Location { get; set; }
-    public World? World { get; set; }
     private void RandomizeDirection()
     {
         var newDirection = Velocity;
-        newDirection.X = World.Random.Next(0, 2) != 0 ? Velocity.X * -1 : Velocity.X;
-        newDirection.Y = World.Random.Next(0, 2) != 0 ? Velocity.Y * -1 : Velocity.Y;
+        newDirection.X = Random.Shared.Next(0, 2) != 0 ? Velocity.X * -1 : Velocity.X;
+        newDirection.Y = Random.Shared.Next(0, 2) != 0 ? Velocity.Y * -1 : Velocity.Y;
         Velocity = newDirection;
     }
     
@@ -31,15 +29,15 @@ public class Tribute : IActor
         throw new NotImplementedException();
     }
 
-    public void Act()
+    public void Act( World world )
     {
-        if (World == null)
+        if ( world == null)
         {
             return;
         }
 
         RandomizeDirection();
-        var oldLocation = World.Move( this );
+        var oldLocation = world.Move( this );
         MessageCenter.AddMessage( $"{Name} moved from {oldLocation} to {Location}" );
     }
 

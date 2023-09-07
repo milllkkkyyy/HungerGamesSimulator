@@ -1,27 +1,17 @@
-/* _content/HungerGamesSimulator/Pages/Index.razor.rz.scp.css */
-button[b-6d8zccouvn] {
+/* _content/HungerGamesSimulator/Components/Home.razor.rz.scp.css */
+button[b-5as8ex97ul] {
     height: 50px;
     width: 200px;
     font-size: medium;
 }
-/* _content/HungerGamesSimulator/Pages/Simulation.razor.rz.scp.css */
-.main[b-6orpdzuipb] {
-    text-align: center;
-}
-
-.simulationText[b-6orpdzuipb] {
-    margin: 25px auto;
-    width: 50%;
-    border: 1px solid black;
-}
-/* _content/HungerGamesSimulator/Pages/Tributes.razor.rz.scp.css */
-form[b-kf0zo9q2kw] {
+/* _content/HungerGamesSimulator/Components/Reaping.razor.rz.scp.css */
+form[b-rzoh7ltxbs] {
     border: 1px dotted pink;
     border-radius: 4px;
     padding: 10px;
     min-width: 13%;
 }
-input[type=text][b-kf0zo9q2kw] {
+input[type=text][b-rzoh7ltxbs] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -30,22 +20,22 @@ input[type=text][b-kf0zo9q2kw] {
     border-radius: 4px;
     box-sizing: border-box;
 }
-button[b-kf0zo9q2kw] {
+button[b-rzoh7ltxbs] {
     background: #EC9706;
     border: 1px solid pink;
     border-radius: 5px;
 }
-.button-container[b-kf0zo9q2kw] {
+.button-container[b-rzoh7ltxbs] {
     display: flex;
     justify-content: space-between;
 }
 
 
-.tributes-table[b-kf0zo9q2kw] {
+.tributes-table[b-rzoh7ltxbs] {
     overflow-x: auto;
 }
 
-#tributes[b-kf0zo9q2kw] {
+#tributes[b-rzoh7ltxbs] {
     table-layout: fixed;
     width: 100%;
     border-collapse: separate;
@@ -54,74 +44,93 @@ button[b-kf0zo9q2kw] {
     border-radius: 8px;
 }
 
-#tributes tr.header[b-kf0zo9q2kw] {
+#tributes tr.header[b-rzoh7ltxbs] {
     padding-top: 12px;
     padding-bottom: 12px;
 }
-#tributes tr:nth-child(even)[b-kf0zo9q2kw] {
+#tributes tr:nth-child(even)[b-rzoh7ltxbs] {
     background-color: lightgoldenrodyellow;
 }
-#tributes th.header[b-kf0zo9q2kw] {
+#tributes th.header[b-rzoh7ltxbs] {
     background: pink;
     padding: 2px
 }
 
-#tributes tr.info[b-kf0zo9q2kw],
-#tributes td.info[b-kf0zo9q2kw] {
+#tributes tr.info[b-rzoh7ltxbs],
+#tributes td.info[b-rzoh7ltxbs] {
     text-align: center;
     padding: 10px
 }
 
-tr.info:first-child[b-kf0zo9q2kw],
-th.header:first-child[b-kf0zo9q2kw] {
+tr.info:first-child[b-rzoh7ltxbs],
+th.header:first-child[b-rzoh7ltxbs] {
 }
 
-th.header:first-child[b-kf0zo9q2kw] {
+th.header:first-child[b-rzoh7ltxbs] {
     border-radius: 5px 0 0 0;
 }
 
-th.header:last-child[b-kf0zo9q2kw] {
+th.header:last-child[b-rzoh7ltxbs] {
     border-radius: 0 5px 0 0;
 }
 
 
-#tributes td.info[b-kf0zo9q2kw] {
+#tributes td.info[b-rzoh7ltxbs] {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 }
-/* _content/HungerGamesSimulator/Shared/NavBar.razor.rz.scp.css */
-.header[b-i881ifjw89] {
-    display: flex;
-    max-width: 100%;
-    height: 65px;
-    background: pink;
-    align-items: center;
-    justify-content: space-between;
+/* _content/HungerGamesSimulator/Components/Simulation.razor.rz.scp.css */
+.main[b-m5wk37vuk1] {
+    text-align: center;
 }
 
-.navigation[b-i881ifjw89] {
-    list-style: none;
-    text-decoration: none;
-    padding-right: 5%;
+.simulationText[b-m5wk37vuk1] {
+    margin: 25px auto;
+    width: 50%;
+    border: 1px solid black;
 }
-.navigation li[b-i881ifjw89] {
-    display: inline-block;
-    font-size: 15px;
-    overflow: hidden;
-    padding: 0 10px 0 10px;
-}
-
-.navigation a[b-i881ifjw89] {
-    text-decoration: none;
-    color: black;
+/* _content/HungerGamesSimulator/Pages/Index.razor.rz.scp.css */
+button[b-enywm35dh8] {
+    height: 50px;
+    width: 200px;
+    font-size: medium;
 }
 
-h1[b-i881ifjw89] {
-    padding-left: 5%;
-    margin: 0;
+.header[b-enywm35dh8] {
+  display: flex;
+  max-width: 100%;
+  height: 65px;
+  background: pink;
+  align-items: center;
+  justify-content: space-between;
 }
 
-p[b-i881ifjw89] {
-    font-style: italic;
+.navigation[b-enywm35dh8] {
+  list-style: none;
+  text-decoration: none;
+  padding-right: 5%;
+}
+
+ .navigation li[b-enywm35dh8] {
+   display: inline-block;
+   font-size: 15px;
+   overflow: hidden;
+   padding: 0 10px 0 10px;
+   color: black;
+   cursor: pointer;
+ }
+
+h1[b-enywm35dh8] {
+  padding-left: 5%;
+  margin: 0;
+}
+
+p[b-enywm35dh8] {
+  font-style: italic;
+}
+
+
+.body[b-enywm35dh8] {
+  margin: 0 5% 0 5%;
 }

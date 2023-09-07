@@ -1,27 +1,27 @@
 {
   "Files": [
     {
-      "Id": "/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/obj/Debug/net7.0/scopedcss/projectbundle/HungerGamesSimulator.bundle.scp.css",
-      "PackagePath": "staticwebassets/HungerGamesSimulator.bundle.scp.css"
+      "Id": "C:\\Personal\\HungerGamesSimulator\\HungerGamesSimulator\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\HungerGamesSimulator.bundle.scp.css",
+      "PackagePath": "staticwebassets\\HungerGamesSimulator.bundle.scp.css"
     },
     {
-      "Id": "/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/wwwroot/css/site.css",
-      "PackagePath": "staticwebassets/css/site.css"
+      "Id": "C:\\Personal\\HungerGamesSimulator\\HungerGamesSimulator\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.HungerGamesSimulator.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.HungerGamesSimulator.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.build.HungerGamesSimulator.props",
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.HungerGamesSimulator.props",
       "PackagePath": "build\\HungerGamesSimulator.props"
     },
     {
-      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.HungerGamesSimulator.props",
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.HungerGamesSimulator.props",
       "PackagePath": "buildMultiTargeting\\HungerGamesSimulator.props"
     },
     {
-      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.HungerGamesSimulator.props",
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.HungerGamesSimulator.props",
       "PackagePath": "buildTransitive\\HungerGamesSimulator.props"
     }
   ],

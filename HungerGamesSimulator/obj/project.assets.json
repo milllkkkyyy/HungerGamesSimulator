@@ -8,24 +8,30 @@
     "net7.0": []
   },
   "packageFolders": {
-    "/Users/malachihollins/.nuget/packages/": {}
+    "C:\\Users\\mhollins\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/HungerGamesSimulator.csproj",
+      "projectUniqueName": "C:\\Personal\\HungerGamesSimulator\\HungerGamesSimulator\\HungerGamesSimulator.csproj",
       "projectName": "HungerGamesSimulator",
-      "projectPath": "/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/HungerGamesSimulator.csproj",
-      "packagesPath": "/Users/malachihollins/.nuget/packages/",
-      "outputPath": "/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/obj/",
+      "projectPath": "C:\\Personal\\HungerGamesSimulator\\HungerGamesSimulator\\HungerGamesSimulator.csproj",
+      "packagesPath": "C:\\Users\\mhollins\\.nuget\\packages\\",
+      "outputPath": "C:\\Personal\\HungerGamesSimulator\\HungerGamesSimulator\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "/Users/malachihollins/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\mhollins\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -62,7 +68,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/malachihollins/.dotnet/sdk/7.0.201/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

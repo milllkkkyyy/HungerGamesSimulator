@@ -1,26 +1,56 @@
 ﻿@page "/"
 
+@using HungerGamesSimulator.Data;
+@using HungerGamesSimulator.Components;
 
-<div class="main">
-    <h2> Welcome! </h2>
-    <p>
-        This is an introductory Blazor project by MachiTeaStudios and we hope that you enjoy it!
-        Wanting to learn more about the project? Click the about page. If you'd like
-        to see a feature implemented that isn't here, please contact us at temp@@gmail.com
-    </p>
-    Credits:
-    <ul>
-        <li>
-            Front End: Mikalo
-        </li>
-        <li>
-            Back End: Malik Hollins
-        </li>
-    </ul>
-    <hr>
-    <p>
-        To get started, hit "Create Tributes" and begin your own Hunger Game experience!
-    </p>
-    <a href="/Tributes"><button>Create Tributes</button></a>
-</div> <!-- end main-->
-      
+<div class="header">
+  <h1> Hunger Games Simulator </h1>
+  <p>"May the odds be ever in your favor"</p>
+  <ul class="navigation">
+    <li @onclick="@( () => state = GameState.Home )">Home</li>
+    <li>About</li>
+  </ul>
+</div>
+
+<div class="body">
+
+
+@if ( state == GameState.Home )
+{
+    <Home @bind-State=state/>
+}
+else if ( state == GameState.Reaping )
+{
+    <Reaping @bind-Tributes=tributes @bind-Tributes:after="TributesUpdated" @bind-State=state @bind-State:after="StateUpdated" />
+}
+else if ( state == GameState.Simulation )
+{
+    <Simulation @bind-World=world Tributes=tributes Reset=resetWorld />
+}
+
+@code
+  {
+    private GameState state = GameState.Home;
+
+    private World? world;
+
+    private List<IActor> tributes = new List<IActor>();
+
+    private bool tributeUpdated = false;
+
+    private bool resetWorld = false;
+
+    private void StateUpdated()
+    {
+      resetWorld = tributeUpdated;
+
+      tributeUpdated = false;
+    }
+
+    private void TributesUpdated()
+    {
+      tributeUpdated = true;
+    }
+}
+     
+</div>

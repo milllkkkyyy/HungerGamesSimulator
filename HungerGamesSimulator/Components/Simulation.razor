@@ -1,0 +1,45 @@
+﻿@using HungerGamesSimulator.Data
+
+<div class="main">
+  <h3>The 1st Annual Hunger Games</h3>
+  <button @onclick="Simulate"> Continue </button>
+  <div class="simulationText">
+    @foreach ( var message in MessageCenter.GetMessages() )
+    {
+      <p> @message </p>
+    }
+  </div>
+</div>
+
+@code {
+
+  [Parameter]
+  public World? World { get; set; }
+
+
+  [Parameter]
+  public bool Reset { get; set; }
+
+  [Parameter]
+  public EventCallback<World?> WorldChanged { get; set; }
+
+  [Parameter]
+  public List<IActor> Tributes { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    MessageCenter.ClearMessages();
+
+    if ( World == null || Reset )
+    {
+      World = new World( 5, 5, Tributes );
+      await WorldChanged.InvokeAsync(World);
+    }
+  }
+
+  private async Task Simulate()
+  {
+    World?.Simulate();
+    await WorldChanged.InvokeAsync(World);
+  }
+}

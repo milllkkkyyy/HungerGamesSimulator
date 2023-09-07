@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace HungerGamesSimulator.Data;
+﻿namespace HungerGamesSimulator.Data;
 
 public class World
 {
@@ -13,8 +11,6 @@ public class World
     private IEvent? _event;
 
     public int Day { get; private set; } = 1;
-
-    public static readonly Random Random = new Random();
 
     public World( int x , int y, List<IActor> actors)
     {
@@ -43,7 +39,7 @@ public class World
         {
             foreach (var actor in _actors)
             {
-                actor.Act();
+                actor.Act( this );
             }
         }
         else

@@ -9,45 +9,41 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = HungerGamesSimulator
 build_property.RootNamespace = HungerGamesSimulator
-build_property.ProjectDir = /Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/
+build_property.ProjectDir = C:\Personal\HungerGamesSimulator\HungerGamesSimulator\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator
+build_property.MSBuildProjectDirectory = C:\Personal\HungerGamesSimulator\HungerGamesSimulator
 build_property._RazorSourceGeneratorDebug = 
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/App.razor]
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Shared/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Shared/Map.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01hcC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/_Imports.razor]
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/Index.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-6d8zccouvn
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/Components/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-5as8ex97ul
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/Simulation.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2ltdWxhdGlvbi5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-6orpdzuipb
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/Components/Reaping.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSZWFwaW5nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-rzoh7ltxbs
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/Tributes.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvVHJpYnV0ZXMucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-kf0zo9q2kw
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/Components/Simulation.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaW11bGF0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-m5wk37vuk1
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Shared/NavBar.razor]
-build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdkJhci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-i881ifjw89
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-enywm35dh8
 
-[/Users/malachihollins/HungerGames/HungerGamesSimulator/HungerGamesSimulator/Pages/_Host.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX0hvc3QuY3NodG1s
+[C:/Personal/HungerGamesSimulator/HungerGamesSimulator/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
