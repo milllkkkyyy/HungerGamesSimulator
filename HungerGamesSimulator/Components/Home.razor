@@ -20,20 +20,4 @@
   <p>
     To get started, hit "Create Tributes" and begin your own Hunger Game experience!
   </p>
-  <button @onclick="@ChangeState">Create Tributes</button>
 </div> <!-- end main-->
-
-@code
-{
-  [Parameter]
-  public GameState State { get; set; }
-
-  [Parameter]
-  public EventCallback<GameState> StateChanged { get; set; }
-
-  private async Task ChangeState()
-  {
-    State = GameState.Reaping;
-    await StateChanged.InvokeAsync( State );
-  }
-}

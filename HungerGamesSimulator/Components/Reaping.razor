@@ -35,7 +35,6 @@
   </table>
 </div> <!-- end tributes table-->
 <br>
-<button @onclick="@ChangeState">Begin Simulation</button>
 
 @code
 {
@@ -43,13 +42,7 @@
   public List<IActor> Tributes { get; set; }
 
   [Parameter]
-  public GameState State { get; set; }
-
-  [Parameter]
   public EventCallback<List<IActor>> TributesChanged { get; set; }
-
-  [Parameter]
-  public EventCallback<GameState> StateChanged { get; set; }
 
   private string? _name;
 
@@ -76,11 +69,5 @@
   {
     Tributes.Clear();
     await TributesChanged.InvokeAsync( Tributes );
-  }
-
-  private async Task ChangeState()
-  {
-    State = GameState.Simulation;
-    await StateChanged.InvokeAsync( State );
   }
 }

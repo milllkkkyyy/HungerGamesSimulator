@@ -17,11 +17,15 @@
 
 @if ( state == GameState.Home )
 {
-    <Home @bind-State=state/>
+    <Home />
+
+    <button @onclick="@ChangeState">Create Tributes</button>
 }
 else if ( state == GameState.Reaping )
 {
-    <Reaping @bind-Tributes=tributes @bind-Tributes:after="TributesUpdated" @bind-State=state @bind-State:after="StateUpdated" />
+    <Reaping @bind-Tributes=tributes @bind-Tributes:after="TributesUpdated" />
+
+    <button @onclick="@ChangeState">Start Simulation</button>
 }
 else if ( state == GameState.Simulation )
 {
@@ -40,16 +44,29 @@ else if ( state == GameState.Simulation )
 
     private bool resetWorld = false;
 
-    private void StateUpdated()
-    {
-      resetWorld = tributeUpdated;
-
-      tributeUpdated = false;
-    }
-
     private void TributesUpdated()
     {
       tributeUpdated = true;
+    }
+
+    private void ChangeState()
+    {
+      switch (state)
+      {
+        case GameState.Home:
+          state = GameState.Reaping;
+          break;
+        case GameState.Reaping:
+       
+          resetWorld = tributeUpdated;
+          tributeUpdated = false;
+
+          state = GameState.Simulation;
+          break;
+
+        default:
+          break;
+      }
     }
 }
      
