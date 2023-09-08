@@ -28,10 +28,11 @@
 
   protected override async Task OnInitializedAsync()
   {
-    MessageCenter.ClearMessages();
-
     if ( World == null || Reset )
     {
+      MessageCenter.ClearMessages();
+      MessageCenter.AddMessage( "Press simulate to begin writing messages" );
+
       World = new World( 5, 5, Tributes );
       await WorldChanged.InvokeAsync(World);
     }
