@@ -2,6 +2,7 @@
 
 @using HungerGamesSimulator.Data;
 @using HungerGamesSimulator.Components;
+@using HungerGamesSimulator.Data.Metadata;
 
 <div class="header">
   <h1> Hunger Games Simulator </h1>
@@ -23,22 +24,22 @@
 }
 else if ( state == GameState.Reaping )
 {
-    <Reaping @bind-Tributes=tributes @bind-Tributes:after="TributesUpdated" />
+    <Reaping @bind-Tributes=tributesMetaData @bind-Tributes:after="TributesUpdated" />
 
     <button @onclick="@ChangeState">Start Simulation</button>
 }
 else if ( state == GameState.Simulation )
 {
-    <Simulation @bind-World=world Tributes=tributes Reset=resetWorld />
+    <Simulation @bind-World=world TributesMetaData=tributesMetaData Reset=resetWorld />
 }
 
 @code
   {
     private GameState state = GameState.Home;
 
-    private World? world;
+    private Game? world;
 
-    private List<IActor> tributes = new List<IActor>();
+    private List<IMetaData> tributesMetaData = new List<IMetaData>();
 
     private bool tributeUpdated = false;
 

@@ -1,16 +1,17 @@
+using HungerGamesSimulator.Data.Metadata;
 using System.ComponentModel.DataAnnotations;
 
 namespace HungerGamesSimulator.Data;
 
 public class Tribute : IActor
 {
-    public Tribute(string name)
+    public Tribute( IMetaData data, Coord location )
     {
-        Name = name;
+        Name = data.Name;
+        Location = location;
         Velocity = new Coord(1, 1);
     }
 
-    [Required] 
     public string? Name { get; set; }
     public Coord Velocity { get; set; }
     public Coord Location { get; set; }
@@ -29,7 +30,7 @@ public class Tribute : IActor
         throw new NotImplementedException();
     }
 
-    public void Act( World world )
+    public void Act( Game world )
     {
         if ( world == null)
         {
@@ -38,7 +39,6 @@ public class Tribute : IActor
 
         RandomizeDirection();
         var oldLocation = world.Move( this );
-        MessageCenter.AddMessage( $"{Name} moved from {oldLocation} to {Location}" );
     }
 
     public bool IsDead()

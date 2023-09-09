@@ -9,7 +9,7 @@ public interface IActor
     public Coord Velocity { get; set; }
     public Coord Location { get; set; }
     public void Reset();
-    public void Act( World world );
+    public void Act( Game world );
     
     public bool IsDead();
 }

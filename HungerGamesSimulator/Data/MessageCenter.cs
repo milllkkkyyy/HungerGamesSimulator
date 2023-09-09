@@ -1,21 +1,20 @@
-
 namespace HungerGamesSimulator.Data;
 
-public static class MessageCenter
+public class MessageCenter : IMessageCenter
 {
-    private static List<string> _messages = new List<string>();
+    private List<string> _messages = new List<string>();
 
-    public static void AddMessage(string message)
+    public void AddMessage( string message )
     {
-        _messages.Add(message);  
+        _messages.Add( message );
     }
 
-    public static void ClearMessages()
+    public void ClearMessages()
     {
         _messages.Clear();
     }
 
-    public static List<string> GetMessages()
+    public List<string> GetMessages()
     {
         return _messages;
     }

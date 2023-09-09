@@ -1,4 +1,6 @@
 ﻿@using HungerGamesSimulator.Data
+@using HungerGamesSimulator.Data.Metadata;
+@inject IMessageCenter MessageCenter;
 
 <div class="main">
   <h3>The 1st Annual Hunger Games</h3>
@@ -14,26 +16,24 @@
 @code {
 
   [Parameter]
-  public World? World { get; set; }
+  public Game? World { get; set; }
 
 
   [Parameter]
   public bool Reset { get; set; }
 
   [Parameter]
-  public EventCallback<World?> WorldChanged { get; set; }
+  public EventCallback<Game?> WorldChanged { get; set; }
 
   [Parameter]
-  public List<IActor> Tributes { get; set; }
+  public List<IMetaData> TributesMetaData { get; set; }
 
   protected override async Task OnInitializedAsync()
   {
     if ( World == null || Reset )
     {
-      MessageCenter.ClearMessages();
-      MessageCenter.AddMessage( "Press simulate to begin writing messages" );
 
-      World = new World( 5, 5, Tributes );
+      World = new Game( 5, 5, TributesMetaData, MessageCenter );
       await WorldChanged.InvokeAsync(World);
     }
   }

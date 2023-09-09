@@ -6,7 +6,6 @@ public class Cornucopia : IEvent
     {
         foreach (var actor in actors)
         {
-            MessageCenter.AddMessage( $"{actor.Name} participated in the cornucopia" );
         }
 
         return actors;
