@@ -2,13 +2,12 @@
 
 @using HungerGamesSimulator.Data;
 @using HungerGamesSimulator.Components;
-@using HungerGamesSimulator.Data.Metadata;
 
 <div class="header">
   <h1> Hunger Games Simulator </h1>
   <p>"May the odds be ever in your favor"</p>
   <ul class="navigation">
-    <li @onclick="@( () => state = GameState.Home )">Home</li>
+    <li @onclick="@( () => _state = GameState.Home )">Home</li>
     <li>About</li>
   </ul>
 </div>
@@ -16,56 +15,48 @@
 <div class="body">
 
 
-@if ( state == GameState.Home )
+@if ( _state == GameState.Home )
 {
     <Home />
 
     <button @onclick="@ChangeState">Create Tributes</button>
 }
-else if ( state == GameState.Reaping )
+else if ( _state == GameState.Reaping )
 {
-    <Reaping @bind-Tributes=tributesMetaData @bind-Tributes:after="TributesUpdated" />
+    <Reaping @bind-Tributes=_tributes />
 
     <button @onclick="@ChangeState">Start Simulation</button>
 }
-else if ( state == GameState.Simulation )
+else if ( _state == GameState.Simulation )
 {
-    <Simulation @bind-World=world TributesMetaData=tributesMetaData Reset=resetWorld />
+    <Sim @bind-Simulation=_simulation Tributes=_tributes Reset=_resetSimulation />
 }
 
 @code
   {
-    private GameState state = GameState.Home;
+    private GameState _state = GameState.Home;
 
-    private Game? world;
+    private Simulation? _simulation;
 
-    private List<IMetaData> tributesMetaData = new List<IMetaData>();
+    private List<IActor> _tributes = new List<IActor>();
 
-    private bool tributeUpdated = false;
+    private bool _tributeUpdated;
 
-    private bool resetWorld = false;
-
-    private void TributesUpdated()
-    {
-      tributeUpdated = true;
-    }
+    private bool _resetSimulation;
 
     private void ChangeState()
     {
-      switch (state)
+      switch (_state)
       {
         case GameState.Home:
-          state = GameState.Reaping;
+          _state = GameState.Reaping;
           break;
         case GameState.Reaping:
        
-          resetWorld = tributeUpdated;
-          tributeUpdated = false;
+          _resetSimulation = _tributeUpdated;
+          _tributeUpdated = false;
 
-          state = GameState.Simulation;
-          break;
-
-        default:
+          _state = GameState.Simulation;
           break;
       }
     }

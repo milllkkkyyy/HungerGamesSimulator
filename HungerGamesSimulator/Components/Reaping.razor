@@ -1,4 +1,4 @@
-﻿@using HungerGamesSimulator.Data.Metadata
+﻿@using HungerGamesSimulator.Data
 
 <h2>Tributes</h2>
 
@@ -39,10 +39,10 @@
 @code
 {
   [Parameter]
-  public List<IMetaData> Tributes { get; set; }
+  public List<IActor> Tributes { get; set; }
 
   [Parameter]
-  public EventCallback<List<IMetaData>> TributesChanged { get; set; }
+  public EventCallback<List<IActor>> TributesChanged { get; set; }
 
   private string? _name;
 
@@ -55,11 +55,11 @@
       return;
     }
 
-    Tributes.Add( new TributeMetaData( _name ) );
+    Tributes.Add( new Tribute( _name ) );
     await TributesChanged.InvokeAsync( Tributes );
   }
 
-  private async Task RemoveTribute( IMetaData tribute )
+  private async Task RemoveTribute( IActor tribute )
   {
     Tributes.Remove(tribute);
     await TributesChanged.InvokeAsync( Tributes );

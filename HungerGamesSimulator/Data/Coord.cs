@@ -31,6 +31,8 @@ public struct Coord
     public static bool operator ==(Coord a, Coord b) { return a.X == b.X && a.Y == b.Y; }
 
     public static bool operator !=(Coord a, Coord b) { return a.X != b.X || a.Y != b.Y; }
+    
+    public static Coord operator +(Coord a, Coord b) => new (a.X + b.X, a.Y + b.Y);
 
     public override int GetHashCode()
     {

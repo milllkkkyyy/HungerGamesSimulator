@@ -1,5 +1,4 @@
 ﻿@using HungerGamesSimulator.Data
-@using HungerGamesSimulator.Data.Metadata;
 @inject IMessageCenter MessageCenter;
 
 <div class="main">
@@ -16,31 +15,30 @@
 @code {
 
   [Parameter]
-  public Game? World { get; set; }
-
-
+  public Simulation? Simulation { get; set; }
+  
+  [Parameter]
+  public EventCallback<Simulation?> SimulationChanged { get; set; }
+  
   [Parameter]
   public bool Reset { get; set; }
 
   [Parameter]
-  public EventCallback<Game?> WorldChanged { get; set; }
-
-  [Parameter]
-  public List<IMetaData> TributesMetaData { get; set; }
+  public List<IActor> Tributes { get; set; }
 
   protected override async Task OnInitializedAsync()
   {
-    if ( World == null || Reset )
+    if ( Simulation == null || Reset )
     {
 
-      World = new Game( 5, 5, TributesMetaData, MessageCenter );
-      await WorldChanged.InvokeAsync(World);
+      Simulation = new Simulation( MessageCenter, Tributes );
+      await SimulationChanged.InvokeAsync( Simulation );
     }
   }
 
   private async Task Simulate()
   {
-    World?.Simulate();
-    await WorldChanged.InvokeAsync(World);
+    Simulation?.Simulate();
+    await SimulationChanged.InvokeAsync(Simulation);
   }
 }

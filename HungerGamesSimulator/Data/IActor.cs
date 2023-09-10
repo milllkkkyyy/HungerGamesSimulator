@@ -1,15 +1,19 @@
-using System.Numerics;
-
 namespace HungerGamesSimulator.Data;
 
+public enum ActorStates
+{
+    Attacking,
+    Moving
+}
 
 public interface IActor 
-{ 
-    public string? Name { get; set; }
-    public Coord Velocity { get; set; }
-    public Coord Location { get; set; }
-    public void Reset();
-    public void Act( Game world );
-    
-    public bool IsDead();
+{
+    public string Name { get; }
+    public Coord Location { get; }
+    public int Speed { get; }
+    public ActorStates GetState();
+    public Coord SimulateMove();
+    public void SimulateAttack( IActor actor );
+    public void SetLocation(Coord location);
+    public void SetSpeed(int speed);
 }
