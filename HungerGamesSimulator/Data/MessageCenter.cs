@@ -2,20 +2,36 @@ namespace HungerGamesSimulator.Data;
 
 public class MessageCenter : IMessageCenter
 {
-    private List<string> _messages = new List<string>();
+  private List<string> _messages = new List<string>();
+  private List<string> _cannonMessages = new List<string>();
 
-    public void AddMessage( string message )
-    {
-        _messages.Add( message );
-    }
+  public void AddDeadActor( IActor actor )
+  {
+    _cannonMessages.Add( $"{actor.Name}" );
+  }
 
-    public void ClearMessages()
-    {
-        _messages.Clear();
-    }
+  public void AddMessage( string message )
+  {
+    _messages.Add( message );
+  }
 
-    public List<string> GetMessages()
-    {
-        return _messages;
-    }
+  public void ClearMessages()
+  {
+    _messages.Clear();
+  }
+
+  public void ClearCannonMessages()
+  {
+    _cannonMessages.Clear();
+  }
+
+  public List<string> GetMessages()
+  {
+    return _messages;
+  }
+
+  public List<string> GetCannonMessages()
+  {
+    return _cannonMessages;
+  }
 }
