@@ -1,6 +1,6 @@
 ﻿namespace HungerGamesSimulator.Data
 {
-  public static class DiceHelper
+  public static class SimulationHelper
   {
     public static int RollD20()
     {

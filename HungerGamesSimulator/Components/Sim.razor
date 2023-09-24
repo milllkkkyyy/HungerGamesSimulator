@@ -13,7 +13,7 @@
   }
   else
   {
-      <p> @MessageCenter.GetCannonMessages().Count Cannon shots can be heard in the distance </p>
+      <p> @MessageCenter.GetCannonMessages().Count Cannon shot(s) can be heard in the distance </p>
       @foreach ( var message in MessageCenter.GetCannonMessages() )
       {
         <p> @message </p>
@@ -24,9 +24,6 @@
 </div>
 
 @code {
-
-  private bool cannon = false;
-
   [Parameter]
   public Simulation? Simulation { get; set; }
 
@@ -39,13 +36,17 @@
   [Parameter]
   public List<IActor> Tributes { get; set; }
 
+  private bool cannon = false;
+  private SimulationService? simulationService;
+
   protected override async Task OnInitializedAsync()
   {
     if ( Simulation == null || Reset )
     {
-
-      Simulation = new Simulation( MessageCenter, Tributes );
+      Simulation = new Simulation( Tributes );
       await SimulationChanged.InvokeAsync( Simulation );
+
+      simulationService = new SimulationService( Simulation, MessageCenter );
     }
   }
 
@@ -64,7 +65,7 @@
       }
     }
 
-    Simulation?.Simulate();
+    simulationService?.Act();
     await SimulationChanged.InvokeAsync(Simulation);
   }
 }

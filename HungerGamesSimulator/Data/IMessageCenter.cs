@@ -3,10 +3,10 @@
   public interface IMessageCenter
   {
     public void AddMessage( string message );
-    public void AddDeadActor( IActor actor );
-    public List<string> GetCannonMessages();
+    public void AddCannonMessage( IActor actor );
     public void ClearCannonMessages();
     public void ClearMessages();
     public List<string> GetMessages();
+    public List<string> GetCannonMessages();
   }
 }

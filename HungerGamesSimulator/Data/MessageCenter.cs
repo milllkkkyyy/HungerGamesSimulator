@@ -5,11 +5,6 @@ public class MessageCenter : IMessageCenter
   private List<string> _messages = new List<string>();
   private List<string> _cannonMessages = new List<string>();
 
-  public void AddDeadActor( IActor actor )
-  {
-    _cannonMessages.Add( $"{actor.Name}" );
-  }
-
   public void AddMessage( string message )
   {
     _messages.Add( message );
@@ -33,5 +28,10 @@ public class MessageCenter : IMessageCenter
   public List<string> GetCannonMessages()
   {
     return _cannonMessages;
+  }
+
+  public void AddCannonMessage( IActor actor )
+  {
+    _cannonMessages.Add( $"{actor.Name}" );
   }
 }

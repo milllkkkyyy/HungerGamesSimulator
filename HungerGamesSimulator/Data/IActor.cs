@@ -10,6 +10,7 @@ public enum ActorStates
 public interface IActor 
 {
     public string Name { get; }
+    public Guid ActorId { get; }
     public Coord Location { get; }
     public int Speed { get; }
     public int ArmourClass { get; }
@@ -18,8 +19,9 @@ public interface IActor
     public int Health { get; }
     public IWeapon Weapon { get; }
     public ActorStates GetState();
+    public void Act( SimulationService simulationService );
+
     public Coord SimulateMove();
-    
     /// <summary>
     /// Simulate hiting another actor
     /// </summary>

@@ -10,6 +10,8 @@ public abstract class Actor : IActor
   public IWeapon Weapon { get; private set; } = new Hand();
   public int Dexerity { get; private set; } = 0;
   public int Health { get; private set; } = 12;
+  public Guid ActorId { get; private set; } = Guid.NewGuid();
+
   protected Actor( string name )
   {
     Name = name;
@@ -34,7 +36,7 @@ public abstract class Actor : IActor
 
   public virtual bool SimulateHit( IActor actor )
   {
-    return ( DiceHelper.RollD20() + Strength ) >= actor.ArmourClass;
+    return ( SimulationHelper.RollD20() + Strength ) >= actor.ArmourClass;
   }
 
   public void SetLocation( Coord location )
@@ -49,7 +51,7 @@ public abstract class Actor : IActor
 
   public bool SimulateEscape( IActor actor )
   {
-    return ( DiceHelper.RollD20() + Dexerity ) >= ( DiceHelper.RollD20() + actor.Dexerity );
+    return ( SimulationHelper.RollD20() + Dexerity ) >= ( SimulationHelper.RollD20() + actor.Dexerity );
   }
 
 
@@ -58,4 +60,20 @@ public abstract class Actor : IActor
     Health -= damage;
   }
 
+  public void Act( SimulationService simulationService )
+  {
+    ActorStates state = GetState();
+
+    switch ( state )
+    {
+      case ActorStates.Attacking:
+        simulationService.CombatRequest( this, simulationService.GetTributesSurrondingRequest( Location, this ) );
+      break;
+      case ActorStates.Moving:
+        simulationService.LocationChangeRequest( this, SimulateMove() );
+      break;
+      case ActorStates.Dead:
+      break;
+    }
+  }
 }

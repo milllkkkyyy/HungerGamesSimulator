@@ -1,6 +1,6 @@
 namespace HungerGamesSimulator.Data;
 
-public class Cornucopia : IEvent
+public class Cornucopia
 { 
     public List<IActor> Simulate(List<IActor> actors)
     {
