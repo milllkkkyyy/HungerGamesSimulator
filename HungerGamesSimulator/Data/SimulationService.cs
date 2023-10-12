@@ -46,7 +46,7 @@ namespace HungerGamesSimulator.Data
 
         if ( actor.SimulateHit( otherActor ) )
         {
-          otherActor.TakeDamage( SimulationHelper.CalculateDamage( actor.Weapon ) );
+          otherActor.TakeDamage( SimulationHelper.CalculateDamage( actor ) );
         }
 
         escaped = otherActor.SimulateEscape( actor );

@@ -7,14 +7,10 @@
       return Random.Shared.Next( 1, 21 );
     }
 
-    public static int CalculateDamage( IWeapon weapon )
+    public static int CalculateDamage( IActor actor )
     {
-      int sum = 0;
-      for ( int i = 0; i < weapon.NumberOfDice; i++ )
-      {
-        sum += Random.Shared.Next( 1 , weapon.TypeOfDice + 1 ); 
-      }
-      return sum;
+      int damage = Weapon.RollWeaponDamage( actor.Weapon );
+      return actor.Weapon.IsRanged ? damage + actor.Strength : damage + actor.Dexerity;
     }
   }
 }

@@ -7,7 +7,7 @@ public abstract class Actor : IActor
   public int Speed { get; private set; } = 1;
   public int ArmourClass { get; private set; } = 10;
   public int Strength { get; private set; } = 0;
-  public IWeapon Weapon { get; private set; } = new Hand();
+  public IWeapon Weapon { get; private set; }
   public int Dexerity { get; private set; } = 0;
   public int Health { get; private set; } = 12;
   public Guid ActorId { get; private set; } = Guid.NewGuid();
