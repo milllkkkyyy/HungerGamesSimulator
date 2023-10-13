@@ -93,6 +93,5 @@ namespace HungerGamesSimulator.Data
     {
       return _simulation.GetRandomActorInArea( origin, toIgnore );
     }
-
   }
 }

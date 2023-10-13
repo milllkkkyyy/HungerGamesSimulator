@@ -1,0 +1,51 @@
+[
+  {
+    "Name": "Hands",
+    "NumberOfDice": 1,
+    "TypeOfDice": 4,
+    "DamageType": "Bludgeoning",
+    "IsRanged": false
+  },
+  {
+    "Name": "Handaxe",
+    "NumberOfDice": 1,
+    "TypeOfDice": 6,
+    "DamageType": "Slashing",
+    "IsRanged": false
+  },
+  {
+    "Name": "Greatclub",
+    "NumberOfDice": 1,
+    "TypeOfDice": 8,
+    "DamageType": "Bludgeoning",
+    "IsRanged": false
+  },
+  {
+    "Name": "Spear",
+    "NumberOfDice": 1,
+    "TypeOfDice": 6,
+    "DamageType": "Piercing",
+    "IsRanged": false
+  },
+  {
+    "Name": "Shortbow",
+    "NumberOfDice": 1,
+    "TypeOfDice": 6,
+    "DamageType": "Piercing",
+    "IsRanged": true
+  },
+  {
+    "Name": "Sling",
+    "NumberOfDice": 1,
+    "TypeOfDice": 4,
+    "DamageType": "Piercing",
+    "IsRanged": true
+  },
+  {
+    "Name": "Greatsword",
+    "NumberOfDice": 2,
+    "TypeOfDice": 6,
+    "DamageType": "Slashing",
+    "IsRanged": false
+  }
+]

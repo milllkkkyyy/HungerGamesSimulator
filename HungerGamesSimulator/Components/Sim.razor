@@ -1,5 +1,6 @@
 ﻿@using HungerGamesSimulator.Data
 @inject IMessageCenter MessageCenter;
+@inject HttpClient HttpClient;
 
 <div class="main">
   <h3>The 1st Annual Hunger Games</h3>
@@ -43,7 +44,12 @@
   {
     if ( Simulation == null || Reset )
     {
-      Simulation = new Simulation( Tributes );
+      // retrieve weapon data from a static json stored on the client
+      Storage storage = new Storage( HttpClient );
+      var response = await storage.GetWeaponsAsync();
+
+      // create new simulation
+      Simulation = new Simulation( Tributes, response );
       await SimulationChanged.InvokeAsync( Simulation );
 
       simulationService = new SimulationService( Simulation, MessageCenter );

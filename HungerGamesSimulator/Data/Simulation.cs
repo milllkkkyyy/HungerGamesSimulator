@@ -7,10 +7,12 @@ public class Simulation
   public int Day { get; internal set; } = 1;
 
   private List<IActor> _actors;
+  private List<Weapon> _weapons;
 
-  public Simulation( List<IActor> actors )
+  public Simulation( List<IActor> actors, List<Weapon> weapons )
   {
     _actors = actors;
+    _weapons = weapons;
     foreach ( var actor in actors )
     {
       actor.SetLocation( new Coord( Width / 2, Height / 2 ) );
