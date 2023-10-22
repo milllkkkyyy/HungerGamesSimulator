@@ -21,6 +21,7 @@
       }
   }
   <button @onclick="Simulate"> Continue </button>
+  <button @onclick="Restart"> Restart </button>
   </div>
 </div>
 
@@ -73,5 +74,33 @@
 
     simulationService?.Act();
     await SimulationChanged.InvokeAsync(Simulation);
+  }
+
+  private async Task Restart()
+  {
+    // reset tributes
+    foreach (var tribute in Tributes)
+    {
+      if (tribute is Actor actor)  // This check is needed if IActor might have implementations other than Actor
+      {
+        actor.Reset();
+      }
+    }
+
+    // Clear message center
+    MessageCenter.ClearMessages();
+    MessageCenter.ClearCannonMessages();
+    cannon = false; // must reset this also
+
+    // TO:DO Maybe converting the storage local variable to a class property?
+    // retrieve weapon data from a static json stored on the client
+    Storage storage = new Storage(HttpClient);
+    var response = await storage.GetWeaponsAsync();
+
+    // create new simulation
+    Simulation = new Simulation(Tributes, response);
+    await SimulationChanged.InvokeAsync(Simulation);
+
+    simulationService = new SimulationService(Simulation, MessageCenter);
   }
 }
