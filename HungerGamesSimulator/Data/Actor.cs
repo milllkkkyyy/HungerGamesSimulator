@@ -36,7 +36,7 @@ public abstract class Actor : IActor
 
   public virtual bool SimulateHit( IActor actor )
   {
-    return ( SimulationHelper.RollD20() + Strength ) >= actor.ArmourClass;
+    return ( SimulationUtil.RollD20() + Strength ) >= actor.ArmourClass;
   }
 
   public void SetLocation( Coord location )
@@ -51,7 +51,7 @@ public abstract class Actor : IActor
 
   public bool SimulateEscape( IActor actor )
   {
-    return ( SimulationHelper.RollD20() + Dexerity ) >= ( SimulationHelper.RollD20() + actor.Dexerity );
+    return ( SimulationUtil.RollD20() + Dexerity ) >= ( SimulationUtil.RollD20() + actor.Dexerity );
   }
 
 
@@ -60,20 +60,8 @@ public abstract class Actor : IActor
     Health -= damage;
   }
 
-  public void Act( SimulationService simulationService )
+  public bool IsDead()
   {
-    ActorStates state = GetState();
-
-    switch ( state )
-    {
-      case ActorStates.Attacking:
-        simulationService.CombatRequest( this, simulationService.GetTributesSurrondingRequest( Location, this ) );
-      break;
-      case ActorStates.Moving:
-        simulationService.LocationChangeRequest( this, SimulateMove() );
-      break;
-      case ActorStates.Dead:
-      break;
-    }
+    return this.Health <= 0;
   }
 }

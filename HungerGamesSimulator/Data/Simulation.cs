@@ -15,6 +15,8 @@ public class Simulation
     _weapons = weapons;
     foreach ( var actor in actors )
     {
+      // TO:DO Remove to instead handle a dictionary of string to weapon
+      actor.GiveWeapon( _weapons[ 0 ] );
       actor.SetLocation( new Coord( Width / 2, Height / 2 ) );
     }
   }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 
 namespace HungerGamesSimulator.Data
 {
@@ -6,11 +7,13 @@ namespace HungerGamesSimulator.Data
   {
     private Simulation _simulation;
     private IMessageCenter _messageCenter;
+    private Combat _combat;
 
     public SimulationService( Simulation simulation, IMessageCenter messageCenter )
     {
       _simulation = simulation;
       _messageCenter = messageCenter;
+      _combat = new Combat();
     }
 
     public void Act()
@@ -22,47 +25,64 @@ namespace HungerGamesSimulator.Data
 
       foreach ( var actor in _simulation.GetActors() )
       {
-        actor.Act( this );
+        CombatRequest( actor );
       }
 
       _simulation.IncreaseDay();
     }
 
-    public void CombatRequest( IActor actor, IActor? otherActor )
+    /// <summary>
+    /// Initializes the data to request combat 
+    /// </summary>
+    /// <param name="actor"></param>
+    public void CombatRequest( IActor actor )
     {
+      var otherActor = GetTributesSurrondingRequest( actor.Location, actor );
       if ( otherActor == null )
       {
-        _messageCenter.AddMessage( $"{actor.Name} attempted to attack, but no other tribute was near" );
+        // combat cannot be processed without a tribute
+        _messageCenter.AddMessage( $"{actor.Name} searched for a tribute to attack, but couldn't find any" );
         return;
       }
+      
+      // TO:DO add retrieval of other party members
+      var fighters = new List<IActor>() { actor };
+      var defenders = new List<IActor>() { otherActor };
 
-      bool escaped = false;
-      do
+      // create the request and simulate combat
+      var request = new CombatRequest( fighters, defenders );
+      var response = _combat.Simulate( request );
+
+      GenerateCombatDescriptions( response, fighters, defenders );
+    }
+
+    /// <summary>
+    /// Creates the dynamic messages that can result from the summary of the combat experience
+    /// </summary>
+    /// <param name="combatResponse"></param>
+    /// <param name="fighters"></param>
+    /// <param name="defenders"></param>
+    public void GenerateCombatDescriptions( CombatResponse combatResponse, List<IActor> fighters, List<IActor> defenders )
+    {
+      // manage the response 
+      var concatedFighterNames = String.Join( ", ", fighters.Select( fighter => fighter.Name ) );
+      var concatedDefenderNames = String.Join( ", ", defenders.Select( defender => defender.Name ) );
+
+      if ( combatResponse.defendersDied )
       {
-        if ( otherActor.Health <= 0 )
+        var deadDefenders = defenders.Where( defender => defender.IsDead() );
+        var deadDefenderNames = String.Join( ", ", deadDefenders.Select( defender => defender.Name ) );
+
+        _messageCenter.AddMessage( $"{concatedFighterNames} attacked {concatedDefenderNames} and killed {deadDefenderNames}" );
+        foreach ( var deadActor in deadDefenders )
         {
-          break;
+          _messageCenter.AddCannonMessage( deadActor );
         }
-
-        if ( actor.SimulateHit( otherActor ) )
-        {
-          otherActor.TakeDamage( SimulationHelper.CalculateDamage( actor ) );
-        }
-
-        escaped = otherActor.SimulateEscape( actor );
       }
-      while ( escaped != true );
-
-      if ( otherActor.Health <= 0 )
+      else if ( combatResponse.escaped )
       {
-        _messageCenter.AddMessage( $"{actor.Name} attacked {otherActor.Name} and killed them" );
-        _messageCenter.AddCannonMessage( otherActor );
+        _messageCenter.AddMessage( $"{concatedFighterNames} attacked {concatedDefenderNames}. {concatedDefenderNames} barely escaped" );
       }
-      else if ( escaped )
-      {
-        _messageCenter.AddMessage( $"{actor.Name} attacked {otherActor.Name}, but  {otherActor.Name} successfully escaped" );
-      }
-      Debug.WriteLine( $"{actor.Name} was at positon {actor.Location}" );
     }
 
     public void LocationChangeRequest( IActor actor, Coord wishLocation )

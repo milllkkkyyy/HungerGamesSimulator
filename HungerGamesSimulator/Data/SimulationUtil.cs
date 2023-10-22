@@ -1,6 +1,6 @@
 ﻿namespace HungerGamesSimulator.Data
 {
-  public static class SimulationHelper
+  public static class SimulationUtil
   {
     public static int RollD20()
     {
@@ -12,5 +12,6 @@
       int damage = Weapon.RollWeaponDamage( actor.Weapon );
       return actor.Weapon.IsRanged ? damage + actor.Strength : damage + actor.Dexerity;
     }
+
   }
 }
