@@ -1,4 +1,6 @@
-﻿namespace HungerGamesSimulator.Data
+﻿using System.Collections.Generic;
+
+namespace HungerGamesSimulator.Data
 {
   /// <summary>
   /// Creates and manages tributes parties
@@ -12,48 +14,55 @@
       partyData = new Dictionary<Guid, List<Guid>>();
     }
 
-    public void MergeParty( List<IActor> actorsInParty, Guid party1, Guid party2 )
+    public void MergeParties( List<IActor> actorsInParty1, List<IActor> actorsInParty2 )
     {
+      if ( !actorsInParty1.Any() || !actorsInParty2.Any() )
+      {
+        throw new ArgumentException( $"There must be actors in the lists in order to merge the parties." );
+      }
+
+      var party1 = actorsInParty1[ 0 ].PartyId;
+      var party2 = actorsInParty2[ 0 ].PartyId;
+
       var newPartyId = Guid.NewGuid();
-      partyData.Add( newPartyId, partyData[ party1 ].Concat( partyData[ party2 ] ).ToList() );
+      var newActorIdList = partyData[ party1 ].Concat( partyData[ party2 ] ).ToList();
+      partyData.Add( newPartyId, newActorIdList );
       partyData.Remove( party1 );
       partyData.Remove( party2 );
 
-      foreach ( var actor in actorsInParty )
+      var newParty = actorsInParty1.Concat( actorsInParty2 );
+
+      foreach ( var actor in newParty )
       {
         actor.PartyId = newPartyId;
       }
     }
 
-    public void JoinParty( IActor actor, Guid party )
+    public void JoinParty( IActor actor, Guid partyToJoin )
     {
-      partyData[ party ].Add( actor.ActorId );
-      actor.PartyId = party;
+      partyData[ partyToJoin ].Add( actor.ActorId );
+      actor.PartyId = partyToJoin;
     }
 
-    public void DisbandParty( List<IActor> actorsInParty, Guid party )
+    public void DisbandParty( List<IActor> actorsInParty )
     {
-      partyData.Remove( party );
+      if ( !actorsInParty.Any() )
+      {
+        throw new ArgumentException( $"You can't disband a party without any actors" );
+      }
 
+      partyData.Remove( actorsInParty[ 0 ].PartyId );
       foreach ( var actor in actorsInParty )
       {
         actor.PartyId = Guid.Empty;
       }
     }
 
-    public void LeaveParty( List<IActor> actorsInParty, IActor actorToLeave, Guid party )
+    public void LeaveParty( IActor actorToLeave )
     {
-      bool shouldDisbandParty = actorsInParty.Count - 1 <= 1;
-      if ( !shouldDisbandParty )
-      {
-        var partyMembers = partyData[ party ];
-        partyMembers.Remove( actorToLeave.ActorId );
-        actorToLeave.PartyId = Guid.Empty;
-      }
-      else
-      {
-        DisbandParty( actorsInParty, party );
-      }
+      var partyMembers = partyData[ actorToLeave.PartyId ];
+      partyMembers.Remove( actorToLeave.ActorId );
+      actorToLeave.PartyId = Guid.Empty;
     }
 
     public void CreateParty( IActor actor, IActor otherActor )
