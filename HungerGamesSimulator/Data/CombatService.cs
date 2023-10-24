@@ -1,7 +1,7 @@
 ﻿namespace HungerGamesSimulator.Data
 {
 
-  public class Combat
+  public class CombatService
   {
     private bool AreAllTributesDead( List<IActor> tributes )
     {
@@ -46,6 +46,12 @@
       // retrieve data needed for combat
       int fightersCount = request.Fighters.Count;
       int defendersCount = request.Defenders.Count;
+      
+      if ( fightersCount == 0 || defendersCount == 0 )
+      {
+        throw new ArgumentException( "You can not have no defenders or no fighters" );
+      }
+
       int maxActors = fightersCount < defendersCount ? defendersCount : fightersCount;
 
       // begin combat loop

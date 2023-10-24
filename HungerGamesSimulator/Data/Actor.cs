@@ -37,7 +37,7 @@ public abstract class Actor : IActor
 
   public virtual bool SimulateHit( IActor actor )
   {
-    return ( SimulationUtil.RollD20() + Strength ) >= actor.ArmourClass;
+    return ( SimulationUtils.RollD20() + Strength ) >= actor.ArmourClass;
   }
 
   public void SetLocation( Coord location )
@@ -52,7 +52,7 @@ public abstract class Actor : IActor
 
   public bool SimulateEscape( IActor actor )
   {
-    return ( SimulationUtil.RollD20() + Dexerity ) >= ( SimulationUtil.RollD20() + actor.Dexerity );
+    return ( SimulationUtils.RollD20() + Dexerity ) >= ( SimulationUtils.RollD20() + actor.Dexerity );
   }
 
 

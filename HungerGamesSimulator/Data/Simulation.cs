@@ -42,24 +42,19 @@ public class Simulation
     return (inArea.Count == 0) ? null : inArea[ Random.Shared.Next( inArea.Count ) ];
   }
 
-  public IActor? GetActors( IActor toIgnore, Predicate<IActor> predicate )
+  public List<IActor>? GetAliveActors( Predicate<IActor>? predicate = null , IActor? toIgnore = null )
   {
-    var possibleActors =
+    var actors =
         _actors
             .Where( actor => toIgnore != actor )
             .Where( actor => actor.Health > 0 )
-            .Where( actor => predicate( actor ) )
+            .Where( actor => predicate == null ? true : predicate( actor ) )
             .ToList();
 
-    return ( possibleActors.Count == 0 ) ? null : possibleActors[ Random.Shared.Next( possibleActors.Count ) ];
+    return ( actors.Count == 0 ) ? null : actors;
   }
 
   #region Getters/Setters
-
-  public List<IActor> GetActors()
-  {
-    return _actors;
-  }
 
   #endregion
 

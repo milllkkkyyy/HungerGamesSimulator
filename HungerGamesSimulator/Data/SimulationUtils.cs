@@ -1,6 +1,6 @@
 ﻿namespace HungerGamesSimulator.Data
 {
-  public static class SimulationUtil
+  public static class SimulationUtils
   {
     public static int RollD20()
     {
@@ -13,5 +13,14 @@
       return actor.Weapon.IsRanged ? damage + actor.Strength : damage + actor.Dexerity;
     }
 
+    public static bool FindPartyMembers( IActor actor, Guid partyId )
+    {
+      return actor.IsInParty() && actor.PartyId == partyId;
+    }
+
+    public static string GetConcatenatedActorNames( List<IActor> party )
+    {
+      return String.Join( ", ", party.Select( fighter => fighter.Name ) );
+    }
   }
 }

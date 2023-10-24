@@ -8,15 +8,19 @@ namespace HungerGamesSimulator.Data
   {
     private Simulation _simulation;
     private IMessageCenter _messageCenter;
-    private Combat _combat;
+    private CombatService _combatService;
     private PartyService _partyService;
+    private MovementService _movementService;
+    private PartyFinder _partyFinder;
 
     public SimulationService( Simulation simulation, IMessageCenter messageCenter )
     {
       _simulation = simulation;
       _messageCenter = messageCenter;
-      _combat = new Combat();
+      _combatService = new CombatService();
       _partyService = new PartyService();
+      _movementService = new MovementService();
+      _partyFinder = new PartyFinder();
     }
 
     public void Act()
@@ -26,9 +30,21 @@ namespace HungerGamesSimulator.Data
 
       _messageCenter.AddMessage( $"Day {_simulation.Day}" );
 
-      foreach ( var actor in _simulation.GetActors() )
+      var aliveActors = _simulation.GetAliveActors();
+      if ( aliveActors != null )
       {
-        CombatRequest( actor );
+        foreach ( var actor in aliveActors )
+        {
+          int coin = Random.Shared.Next( 0, 2 );
+          if ( coin == 1 )
+          {
+            MovementRequest( actor );
+          }
+          else
+          {
+            CombatRequest( actor );
+          }
+        }
       }
 
       _simulation.IncreaseDay();
@@ -47,14 +63,14 @@ namespace HungerGamesSimulator.Data
         _messageCenter.AddMessage( $"{actor.Name} searched for a tribute to attack, but couldn't find any" );
         return;
       }
-      
-      // TO:DO add retrieval of other party members
-      var fighters = new List<IActor>() { actor };
-      var defenders = new List<IActor>() { otherActor };
+
+      // retrieve other party members
+      var fighters = GetParty( actor );
+      var defenders = GetParty( otherActor );
 
       // create the request and simulate combat
       var request = new CombatRequest( fighters, defenders );
-      var response = _combat.Simulate( request );
+      var response = _combatService.Simulate( request );
 
       GenerateCombatDescriptions( response, fighters, defenders );
     }
@@ -68,13 +84,13 @@ namespace HungerGamesSimulator.Data
     public void GenerateCombatDescriptions( CombatResponse combatResponse, List<IActor> fighters, List<IActor> defenders )
     {
       // manage the response 
-      var concatedFighterNames = String.Join( ", ", fighters.Select( fighter => fighter.Name ) );
-      var concatedDefenderNames = String.Join( ", ", defenders.Select( defender => defender.Name ) );
+      var concatedFighterNames = SimulationUtils.GetConcatenatedActorNames( fighters );
+      var concatedDefenderNames = SimulationUtils.GetConcatenatedActorNames( defenders );
 
       if ( combatResponse.defendersDied )
       {
         var deadDefenders = defenders.Where( defender => defender.IsDead() );
-        var deadDefenderNames = String.Join( ", ", deadDefenders.Select( defender => defender.Name ) );
+        var deadDefenderNames = SimulationUtils.GetConcatenatedActorNames( deadDefenders.ToList() );
 
         _messageCenter.AddMessage( $"{concatedFighterNames} attacked {concatedDefenderNames} and killed {deadDefenderNames}" );
         foreach ( var deadActor in deadDefenders )
@@ -88,28 +104,24 @@ namespace HungerGamesSimulator.Data
       }
     }
 
-    public void LocationChangeRequest( IActor actor, Coord wishLocation )
+    public void MovementRequest( IActor actor )
     {
-      if ( wishLocation.X > _simulation.Height )
-      {
-        wishLocation.X = _simulation.Width;
-      }
-      else if ( wishLocation.X < 0 )
-      {
-        wishLocation.X = 0;
-      }
+      // retrieve other party members
+      var party = GetParty( actor );
 
-      if ( wishLocation.Y > _simulation.Height )
-      {
-        wishLocation.Y = _simulation.Height;
-      }
-      else if ( wishLocation.Y < 0 )
-      {
-        wishLocation.Y = 0;
-      }
+      MovementResponse response = _movementService.Move( new MovementRequest( party, _simulation.Width, _simulation.Height ) );
 
-      _messageCenter.AddMessage( $"{actor.Name} moved from {actor.Location} to {wishLocation}" );
-      actor.SetLocation( wishLocation );
+      var partyNames = SimulationUtils.GetConcatenatedActorNames( party );
+
+      _messageCenter.AddMessage( $"{partyNames} moved from {response.PastLocation} to {response.NewLocation}" );
+    }
+
+    public List<IActor> GetParty( IActor actor )
+    {
+      _partyFinder.PartyToFind = actor.PartyId;
+      var party = _simulation.GetAliveActors( _partyFinder.FindParty, actor ) ?? new List<IActor>();
+      party.Add( actor );
+      return party;
     }
 
     public IActor? GetTributesSurrondingRequest( Coord origin, IActor toIgnore )
