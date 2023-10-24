@@ -11,6 +11,7 @@ public interface IActor
 {
   public string Name { get; }
   public Guid ActorId { get; }
+  public Guid PartyId { get; set; }
   public Coord Location { get; }
   public int Speed { get; }
   public int ArmourClass { get; }
@@ -32,4 +33,5 @@ public interface IActor
   public bool SimulateEscape( IActor actor );
   public void TakeDamage( int damage );
   public bool IsDead();
+  public bool IsInParty();
 }

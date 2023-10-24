@@ -1,4 +1,7 @@
-﻿namespace HungerGamesSimulator.Data;
+﻿using System.Drawing;
+using System;
+
+namespace HungerGamesSimulator.Data;
 
 public class Simulation
 {
@@ -37,6 +40,18 @@ public class Simulation
             .ToList();
 
     return (inArea.Count == 0) ? null : inArea[ Random.Shared.Next( inArea.Count ) ];
+  }
+
+  public IActor? GetActors( IActor toIgnore, Predicate<IActor> predicate )
+  {
+    var possibleActors =
+        _actors
+            .Where( actor => toIgnore != actor )
+            .Where( actor => actor.Health > 0 )
+            .Where( actor => predicate( actor ) )
+            .ToList();
+
+    return ( possibleActors.Count == 0 ) ? null : possibleActors[ Random.Shared.Next( possibleActors.Count ) ];
   }
 
   #region Getters/Setters

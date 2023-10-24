@@ -1,0 +1,72 @@
+﻿namespace HungerGamesSimulator.Data
+{
+  /// <summary>
+  /// Creates and manages tributes parties
+  /// </summary>
+  public class PartyService
+  {
+    private Dictionary<Guid, List<Guid>> partyData;
+
+    public PartyService()
+    {
+      partyData = new Dictionary<Guid, List<Guid>>();
+    }
+
+    public void MergeParty( List<IActor> actorsInParty, Guid party1, Guid party2 )
+    {
+      var newPartyId = Guid.NewGuid();
+      partyData.Add( newPartyId, partyData[ party1 ].Concat( partyData[ party2 ] ).ToList() );
+      partyData.Remove( party1 );
+      partyData.Remove( party2 );
+
+      foreach ( var actor in actorsInParty )
+      {
+        actor.PartyId = newPartyId;
+      }
+    }
+
+    public void JoinParty( IActor actor, Guid party )
+    {
+      partyData[ party ].Add( actor.ActorId );
+      actor.PartyId = party;
+    }
+
+    public void DisbandParty( List<IActor> actorsInParty, Guid party )
+    {
+      partyData.Remove( party );
+
+      foreach ( var actor in actorsInParty )
+      {
+        actor.PartyId = Guid.Empty;
+      }
+    }
+
+    public void LeaveParty( List<IActor> actorsInParty, IActor actorToLeave, Guid party )
+    {
+      bool shouldDisbandParty = actorsInParty.Count - 1 <= 1;
+      if ( !shouldDisbandParty )
+      {
+        var partyMembers = partyData[ party ];
+        partyMembers.Remove( actorToLeave.ActorId );
+        actorToLeave.PartyId = Guid.Empty;
+      }
+      else
+      {
+        DisbandParty( actorsInParty, party );
+      }
+    }
+
+    public void CreateParty( IActor actor, IActor otherActor )
+    {
+      // generate data
+      var partyId = Guid.NewGuid();
+      var partyMembers = new List<Guid>() { actor.ActorId, otherActor.ActorId };
+
+      // create party
+      partyData.Add( partyId, partyMembers );
+      actor.PartyId = partyId;
+      otherActor.PartyId = partyId;
+    }
+
+  }
+}

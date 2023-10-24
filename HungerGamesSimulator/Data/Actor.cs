@@ -11,6 +11,7 @@ public abstract class Actor : IActor
   public int Dexerity { get; private set; } = 0;
   public int Health { get; private set; } = 12;
   public Guid ActorId { get; private set; } = Guid.NewGuid();
+  public Guid PartyId { get; set; } = Guid.Empty;
 
   protected Actor( string name )
   {
@@ -63,5 +64,10 @@ public abstract class Actor : IActor
   public bool IsDead()
   {
     return this.Health <= 0;
+  }
+
+  public bool IsInParty()
+  {
+    return PartyId != Guid.Empty;
   }
 }

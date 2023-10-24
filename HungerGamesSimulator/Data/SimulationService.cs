@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace HungerGamesSimulator.Data
@@ -8,12 +9,14 @@ namespace HungerGamesSimulator.Data
     private Simulation _simulation;
     private IMessageCenter _messageCenter;
     private Combat _combat;
+    private PartyService _partyService;
 
     public SimulationService( Simulation simulation, IMessageCenter messageCenter )
     {
       _simulation = simulation;
       _messageCenter = messageCenter;
       _combat = new Combat();
+      _partyService = new PartyService();
     }
 
     public void Act()
