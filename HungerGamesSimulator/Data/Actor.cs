@@ -2,6 +2,12 @@ namespace HungerGamesSimulator.Data;
 
 public abstract class Actor : IActor
 {
+  private static int stayInPartyDC = 10;
+
+  private static int lookForPartyDC = 12;
+
+  private static int lookForCombatDC = 10;
+
   public string Name { get; }
   public Coord Location { get; private set; }
   public int Speed { get; private set; } = 1;
@@ -18,15 +24,32 @@ public abstract class Actor : IActor
     Name = name;
   }
 
-  public virtual ActorStates GetState()
+  public virtual ActorStates GetNewState()
   {
     if ( Health <= 0 )
     {
       return ActorStates.Dead;
     }
 
-    var coin = Random.Shared.Next( 0, 2 );
-    return coin == 0 ? ActorStates.Attacking : ActorStates.Moving;
+    if ( IsInParty() )
+    {
+      if ( SimulationUtils.RollD20() < stayInPartyDC )
+      {
+        return ActorStates.LeaveParty;
+      }
+    }
+
+    if ( SimulationUtils.RollD20() >= lookForPartyDC )
+    {
+      return ActorStates.JoinParty;
+    }
+
+    if ( SimulationUtils.RollD20() + Strength >= lookForCombatDC )
+    {
+      return ActorStates.Attacking;
+    }
+
+    return ActorStates.Moving;
   }
 
   public virtual Coord SimulateMove()

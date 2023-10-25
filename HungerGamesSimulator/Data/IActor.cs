@@ -4,7 +4,9 @@ public enum ActorStates
 {
   Attacking,
   Moving,
-  Dead
+  Dead,
+  JoinParty,
+  LeaveParty
 }
 
 public interface IActor
@@ -19,7 +21,7 @@ public interface IActor
   public int Dexerity { get; }
   public int Health { get; }
   public IWeapon Weapon { get; }
-  public ActorStates GetState();
+  public ActorStates GetNewState();
 
   public Coord SimulateMove();
   /// <summary>

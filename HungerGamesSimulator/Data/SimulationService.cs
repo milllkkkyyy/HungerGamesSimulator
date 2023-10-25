@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-
-namespace HungerGamesSimulator.Data
+﻿namespace HungerGamesSimulator.Data
 {
   public class SimulationService
   {
@@ -35,26 +31,35 @@ namespace HungerGamesSimulator.Data
       {
         foreach ( var actor in aliveActors )
         {
-          int coin = Random.Shared.Next( 0, 2 );
-          if ( coin == 1 )
-          {
-            MovementRequest( actor );
-          }
-          else
-          {
-            CombatRequest( actor );
-          }
+          Act( actor );
         }
       }
 
       _simulation.IncreaseDay();
     }
 
+    private void Act( IActor actor )
+    {
+      var state = actor.GetNewState();
+      switch ( state )
+      {
+        case ActorStates.Attacking:
+          CombatRequest( actor );
+          break;
+        case ActorStates.Moving:
+          MovementRequest( actor );
+          break;
+        default:
+          _messageCenter.AddMessage( $"There is no way for the simulation to handle state ({state}) for {actor.Name}" );
+          break;
+      }
+    }
+
     /// <summary>
     /// Initializes the data to request combat 
     /// </summary>
     /// <param name="actor"></param>
-    public void CombatRequest( IActor actor )
+    private void CombatRequest( IActor actor )
     {
       var otherActor = GetTributesSurrondingRequest( actor.Location, actor );
       if ( otherActor == null )
@@ -81,7 +86,7 @@ namespace HungerGamesSimulator.Data
     /// <param name="combatResponse"></param>
     /// <param name="fighters"></param>
     /// <param name="defenders"></param>
-    public void GenerateCombatDescriptions( CombatResponse combatResponse, List<IActor> fighters, List<IActor> defenders )
+    private void GenerateCombatDescriptions( CombatResponse combatResponse, List<IActor> fighters, List<IActor> defenders )
     {
       // manage the response 
       var concatedFighterNames = SimulationUtils.GetConcatenatedActorNames( fighters );
@@ -104,7 +109,7 @@ namespace HungerGamesSimulator.Data
       }
     }
 
-    public void MovementRequest( IActor actor )
+    private void MovementRequest( IActor actor )
     {
       // retrieve other party members
       var party = GetParty( actor );
@@ -116,7 +121,7 @@ namespace HungerGamesSimulator.Data
       _messageCenter.AddMessage( $"{partyNames} moved from {response.PastLocation} to {response.NewLocation}" );
     }
 
-    public List<IActor> GetParty( IActor actor )
+    private List<IActor> GetParty( IActor actor )
     {
       _partyFinder.PartyToFind = actor.PartyId;
       var party = _simulation.GetAliveActors( _partyFinder.FindParty, actor ) ?? new List<IActor>();
@@ -124,7 +129,7 @@ namespace HungerGamesSimulator.Data
       return party;
     }
 
-    public IActor? GetTributesSurrondingRequest( Coord origin, IActor toIgnore )
+    private IActor? GetTributesSurrondingRequest( Coord origin, IActor toIgnore )
     {
       return _simulation.GetRandomActorInArea( origin, toIgnore );
     }
