@@ -4,6 +4,6 @@
   {
     public string? Title { get; }
 
-    public List<IWeapon> Weapons { get; }
+    public List<Weapon> Weapons { get; }
   }
 }

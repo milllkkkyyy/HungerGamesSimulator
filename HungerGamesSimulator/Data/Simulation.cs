@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System;
-
-namespace HungerGamesSimulator.Data;
+﻿namespace HungerGamesSimulator.Data;
 
 public class Simulation
 {
@@ -19,8 +16,7 @@ public class Simulation
     foreach ( var actor in actors )
     {
       // TO:DO Remove to instead handle a dictionary of string to weapon
-      actor.GiveWeapon( _weapons[ 0 ] );
-      actor.SetLocation( new Coord( Width / 2, Height / 2 ) );
+      actor.Location = new Coord( Width / 2, Height / 2 );
     }
   }
 
@@ -39,10 +35,17 @@ public class Simulation
             .Where( actor => actor.Health > 0 )
             .ToList();
 
-    return (inArea.Count == 0) ? null : inArea[ Random.Shared.Next( inArea.Count ) ];
+    return ( inArea.Count == 0 ) ? null : inArea[ Random.Shared.Next( inArea.Count ) ];
   }
 
-  public List<IActor>? GetAliveActors( Predicate<IActor>? predicate = null , IActor? toIgnore = null )
+  public List<IActor>? GetActors( Predicate<IActor>? predicate = null )
+  {
+    return _actors
+            .Where( actor => predicate == null ? true : predicate( actor ) )
+            .ToList();
+  }
+
+  public List<IActor>? GetAliveActors( Predicate<IActor>? predicate = null, IActor? toIgnore = null )
   {
     var actors =
         _actors
@@ -54,8 +57,22 @@ public class Simulation
     return ( actors.Count == 0 ) ? null : actors;
   }
 
-  #region Getters/Setters
+  public SimulationSnapshot GetSimulationSnapshot()
+  {
+    return new SimulationSnapshot
+    {
+      WorldWidth = Width,
+      WorldHeight = Height,
+      ActorsAround = false
+    };
+  }
 
-  #endregion
+}
 
+public record SimulationSnapshot
+{
+  public int WorldWidth { get; set; }
+  public int WorldHeight { get; set; }
+  public bool ActorsAround { get; set; }
+  public bool SuddenDeath { get; set; }
 }

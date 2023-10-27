@@ -1,12 +1,5 @@
 [
   {
-    "Name": "Hands",
-    "NumberOfDice": 1,
-    "TypeOfDice": 4,
-    "DamageType": "Bludgeoning",
-    "IsRanged": false
-  },
-  {
     "Name": "Handaxe",
     "NumberOfDice": 1,
     "TypeOfDice": 6,

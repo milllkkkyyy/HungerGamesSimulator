@@ -1,6 +1,6 @@
 namespace HungerGamesSimulator.Data;
 
-public enum ActorStates
+public enum ActorAction
 {
   Attacking,
   Moving,
@@ -13,27 +13,28 @@ public interface IActor
 {
   public string Name { get; }
   public Guid ActorId { get; }
-  public Guid PartyId { get; set; }
-  public Coord Location { get; }
-  public int Speed { get; }
   public int ArmourClass { get; }
+  public int Speed { get; }
   public int Strength { get; }
   public int Dexerity { get; }
-  public int Health { get; }
-  public IWeapon Weapon { get; }
-  public ActorStates GetNewState();
+  public int Charisma { get; }
+  public int Wisdom { get; }
+  public Coord Location { get; set; }
+  public int Health { get; set; }
+  public Weapon Weapon { get; set; }
+  public Guid PartyId { get; set; }
 
-  public Coord SimulateMove();
-  /// <summary>
-  /// Simulate hiting another actor
-  /// </summary>
-  /// <param name="actor"></param>
-  /// <returns>if this actor hit the other actor</returns>
-  public bool SimulateHit( IActor actor );
-  public void SetLocation( Coord location );
-  public void GiveWeapon( IWeapon weapon );
-  public bool SimulateEscape( IActor actor );
+  public ActorAction GetNextAction( SimulationSnapshot snapshot );
+
+  public Coord SimulateMove( SimulationSnapshot snapshot );
+
+  public bool SimulateHit( IActor otherActor );
+
+  public bool SimulateEscape( IActor otherActor );
+
   public void TakeDamage( int damage );
+
   public bool IsDead();
+
   public bool IsInParty();
 }
