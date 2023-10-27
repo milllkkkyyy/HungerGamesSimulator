@@ -26,14 +26,15 @@ public class PartyServiceTests
 
     public int Health => throw new NotImplementedException();
 
-    public IWeapon Weapon => throw new NotImplementedException();
+    public int Charisma => throw new NotImplementedException();
 
-    public ActorStates GetState()
-    {
-      throw new NotImplementedException();
-    }
+    public int Wisdom => throw new NotImplementedException();
 
-    public void GiveWeapon( IWeapon weapon )
+    public Weapon Weapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    Coord IActor.Location { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    int IActor.Health { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    public ActorAction GetNextAction( SimulationSnapshot snapshot )
     {
       throw new NotImplementedException();
     }
@@ -48,22 +49,17 @@ public class PartyServiceTests
       return PartyId != Guid.Empty;
     }
 
-    public void SetLocation( Coord location )
+    public bool SimulateEscape( IActor otherActor )
     {
       throw new NotImplementedException();
     }
 
-    public bool SimulateEscape( IActor actor )
+    public bool SimulateHit( IActor otherActor )
     {
       throw new NotImplementedException();
     }
 
-    public bool SimulateHit( IActor actor )
-    {
-      throw new NotImplementedException();
-    }
-
-    public Coord SimulateMove()
+    public Coord SimulateMove( SimulationSnapshot snapshot )
     {
       throw new NotImplementedException();
     }

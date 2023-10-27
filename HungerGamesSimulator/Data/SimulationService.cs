@@ -40,13 +40,13 @@
 
     private void Act( IActor actor )
     {
-      var state = actor.GetNewState();
+      var state = actor.GetNextAction( _simulation.GetSimulationSnapshot() );
       switch ( state )
       {
-        case ActorStates.Attacking:
+        case ActorAction.Attacking:
           CombatRequest( actor );
           break;
-        case ActorStates.Moving:
+        case ActorAction.Moving:
           MovementRequest( actor );
           break;
         default:
@@ -92,7 +92,7 @@
       var concatedFighterNames = SimulationUtils.GetConcatenatedActorNames( fighters );
       var concatedDefenderNames = SimulationUtils.GetConcatenatedActorNames( defenders );
 
-      if ( combatResponse.defendersDied )
+      if ( combatResponse.DefendersDied )
       {
         var deadDefenders = defenders.Where( defender => defender.IsDead() );
         var deadDefenderNames = SimulationUtils.GetConcatenatedActorNames( deadDefenders.ToList() );
@@ -103,7 +103,7 @@
           _messageCenter.AddCannonMessage( deadActor );
         }
       }
-      else if ( combatResponse.escaped )
+      else if ( combatResponse.Escaped )
       {
         _messageCenter.AddMessage( $"{concatedFighterNames} attacked {concatedDefenderNames}. {concatedDefenderNames} barely escaped" );
       }
@@ -114,7 +114,7 @@
       // retrieve other party members
       var party = GetParty( actor );
 
-      MovementResponse response = _movementService.Move( new MovementRequest( party, _simulation.Width, _simulation.Height ) );
+      MovementResponse response = _movementService.Move( new MovementRequest( party, _simulation.GetSimulationSnapshot() ) );
 
       var partyNames = SimulationUtils.GetConcatenatedActorNames( party );
 

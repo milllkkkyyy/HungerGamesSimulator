@@ -34,7 +34,7 @@
   [Parameter]
   public bool Reset { get; set; }
 
-  [Parameter]
+  [Parameter, EditorRequired]
   public List<IActor> Tributes { get; set; }
 
   private bool cannon = false;

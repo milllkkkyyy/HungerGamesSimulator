@@ -76,6 +76,7 @@
           {
             request.Defenders.Push( defender );
           }
+
           request.Fighters.Push( fighter );
         }
 
@@ -94,9 +95,9 @@
 
   public record CombatResponse( bool fightersDied, bool defendersDied, bool escaped )
   {
-    bool FightersDied { get; } = fightersDied;
-    bool DefendersDied { get; } = defendersDied;
-    bool Escaped { get; } = escaped;
+    public bool FightersDied { get; } = fightersDied;
+    public bool DefendersDied { get; } = defendersDied;
+    public bool Escaped { get; } = escaped;
   }
 
   public record CombatRequest( List<IActor> fighters, List<IActor> defenders )
