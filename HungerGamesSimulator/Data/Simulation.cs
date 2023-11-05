@@ -25,13 +25,14 @@ public class Simulation
     Day++;
   }
 
-  public IActor? GetRandomActorInArea( Coord center, IActor toIgnore )
+  public IActor? GetRandomActorInArea( Coord center, IActor? toIgnore = null, Predicate<IActor>? predicate = null )
   {
     var inArea =
         _actors
             .Where( actor => toIgnore != actor )
             .Where( actor => center.X - 1 <= actor.Location.X && actor.Location.X <= center.X + 1 )
             .Where( actor => center.Y - 1 <= actor.Location.Y && actor.Location.Y <= center.Y + 1 )
+            .Where( actor => predicate == null ? true : predicate( actor ) )
             .Where( actor => actor.Health > 0 )
             .ToList();
 

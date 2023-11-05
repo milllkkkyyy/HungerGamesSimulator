@@ -3,28 +3,28 @@ using System.Text.Json.Serialization;
 
 namespace HungerGamesSimulator.Data
 {
-  public class Storage
-  {
-    private HttpClient _httpClient;
-
-    public Storage( HttpClient httpClient )
+    public class Storage
     {
-      _httpClient = httpClient;
-    }
+        private HttpClient _httpClient;
 
-    public async Task<List<Weapon>> GetWeaponsAsync()
-    {
-      JsonSerializerOptions options = new ( JsonSerializerDefaults.Web )
-      {
-        Converters =
+        public Storage( HttpClient httpClient )
         {
-          new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+            _httpClient = httpClient;
         }
-      };
 
-      var response = await _httpClient.GetFromJsonAsync<IEnumerable<Weapon>>( "https://localhost:7142/data/weapons.json", options );
-      System.Diagnostics.Debug.Assert( response != null );
-      return response.ToList();
+        public async Task<List<Weapon>> GetWeaponsAsync()
+        {
+            JsonSerializerOptions options = new( JsonSerializerDefaults.Web )
+            {
+                Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+            };
+
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<Weapon>>( "https://localhost:7142/data/weapons.json", options );
+            System.Diagnostics.Debug.Assert( response != null );
+            return response.ToList();
+        }
     }
-  }
 }

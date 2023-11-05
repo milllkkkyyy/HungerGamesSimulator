@@ -2,7 +2,7 @@
 
 namespace HungerGamesTests;
 
-public class PartyServiceTests
+public class PartyManagerTests
 {
   #region Mocks
 
@@ -75,8 +75,8 @@ public class PartyServiceTests
   [Fact]
   public void Test_Class_Creation()
   {
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
   }
 
   [Fact]
@@ -92,13 +92,13 @@ public class PartyServiceTests
     MockActor actor1 = new MockActor();
     MockActor actor2 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
@@ -111,18 +111,18 @@ public class PartyServiceTests
     MockActor actor2 = new MockActor();
     MockActor actor3 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
 
-    partyService.JoinParty( actor3, actor2.PartyId );
+    partyManager.JoinParty( actor3, actor2.PartyId );
 
     Assert.True( actor3.IsInParty() );
   }
@@ -133,18 +133,18 @@ public class PartyServiceTests
     MockActor actor1 = new MockActor();
     MockActor actor2 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
 
-    partyService.LeaveParty(  actor2 );
+    partyManager.LeaveParty(  actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
@@ -156,18 +156,18 @@ public class PartyServiceTests
     MockActor actor1 = new MockActor();
     MockActor actor2 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
 
-    partyService.DisbandParty( new List<IActor>() { actor1 , actor2 } );
+    partyManager.DisbandParty( new List<IActor>() { actor1 , actor2 } );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
@@ -179,18 +179,18 @@ public class PartyServiceTests
     MockActor actor1 = new MockActor();
     MockActor actor2 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
 
-    Assert.Throws<ArgumentException>( () => partyService.DisbandParty( new List<IActor>() ) );
+    Assert.Throws<ArgumentException>( () => partyManager.DisbandParty( new List<IActor>() ) );
   }
 
 
@@ -202,23 +202,23 @@ public class PartyServiceTests
     MockActor actor3 = new MockActor();
     MockActor actor4 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
 
-    partyService.CreateParty( actor3, actor4 );
+    partyManager.CreateParty( actor3, actor4 );
 
     Assert.True( actor3.IsInParty() );
     Assert.True( actor4.IsInParty() );
 
-    partyService.MergeParties( new List<IActor>() { actor1, actor2 }, new List<IActor>() { actor3, actor4 } );
+    partyManager.MergeParties( new List<IActor>() { actor1, actor2 }, new List<IActor>() { actor3, actor4 } );
 
     Assert.True( actor1.PartyId == actor3.PartyId );
     Assert.True( actor1.PartyId == actor4.PartyId );
@@ -235,23 +235,23 @@ public class PartyServiceTests
     MockActor actor3 = new MockActor();
     MockActor actor4 = new MockActor();
 
-    var partyService = new PartyService();
-    Assert.NotNull( partyService );
+    var partyManager = new PartyManager();
+    Assert.NotNull( partyManager );
 
     Assert.False( actor1.IsInParty() );
     Assert.False( actor2.IsInParty() );
 
-    partyService.CreateParty( actor1, actor2 );
+    partyManager.CreateParty( actor1, actor2 );
 
     Assert.True( actor1.IsInParty() );
     Assert.True( actor2.IsInParty() );
 
-    partyService.CreateParty( actor3, actor4 );
+    partyManager.CreateParty( actor3, actor4 );
 
     Assert.True( actor3.IsInParty() );
     Assert.True( actor4.IsInParty() );
 
-    Assert.Throws<ArgumentException>( () => partyService.MergeParties( new List<IActor>(), new List<IActor>() ) );
-    Assert.Throws<ArgumentException>( () => partyService.MergeParties( new List<IActor>() { actor1 } , new List<IActor>() ) );
+    Assert.Throws<ArgumentException>( () => partyManager.MergeParties( new List<IActor>(), new List<IActor>() ) );
+    Assert.Throws<ArgumentException>( () => partyManager.MergeParties( new List<IActor>() { actor1 } , new List<IActor>() ) );
   }
 }

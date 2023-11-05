@@ -7,7 +7,7 @@ public struct Coord
 
     public int Y { get; set; }
 
-    public Coord(int x, int y)
+    public Coord( int x, int y )
     {
         X = x;
         Y = y;
@@ -18,21 +18,21 @@ public struct Coord
         return $"({X},{Y})";
     }
 
-    public override bool Equals(object? obj)
+    public override bool Equals( object? obj )
     {
-        return obj is Coord coord && Equals(coord);
+        return obj is Coord coord && Equals( coord );
     }
 
-    public bool Equals(Coord other)
+    public bool Equals( Coord other )
     {
         return X == other.X && Y == other.Y;
     }
 
-    public static bool operator ==(Coord a, Coord b) { return a.X == b.X && a.Y == b.Y; }
+    public static bool operator ==( Coord a, Coord b ) { return a.X == b.X && a.Y == b.Y; }
 
-    public static bool operator !=(Coord a, Coord b) { return a.X != b.X || a.Y != b.Y; }
-    
-    public static Coord operator +(Coord a, Coord b) => new (a.X + b.X, a.Y + b.Y);
+    public static bool operator !=( Coord a, Coord b ) { return a.X != b.X || a.Y != b.Y; }
+
+    public static Coord operator +( Coord a, Coord b ) => new( a.X + b.X, a.Y + b.Y );
 
     public override int GetHashCode()
     {

@@ -2,7 +2,7 @@ namespace HungerGamesSimulator.Data;
 
 public abstract class Actor : IActor
 {
-  private readonly int stayInPartyDC = 12;
+  private readonly int stayInPartyDC = 4;
   private readonly int lookForPartyDC = 16;
   private readonly int lookForCombatDC = 14;
 
@@ -33,13 +33,13 @@ public abstract class Actor : IActor
 
     if ( IsInParty() )
     {
-      if ( SimulationUtils.RollD20() < stayInPartyDC )
+      if ( SimulationUtils.RollD20() + Charisma <= stayInPartyDC )
       {
         return ActorAction.LeaveParty;
       }
     }
 
-    if ( SimulationUtils.RollD20() >= lookForPartyDC )
+    if ( SimulationUtils.RollD20() + Charisma >= lookForPartyDC )
     {
       return ActorAction.JoinParty;
     }
