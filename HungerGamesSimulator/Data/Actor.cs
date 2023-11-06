@@ -24,6 +24,18 @@ public abstract class Actor : IActor
     Name = name;
   }
 
+  public void Reset()
+  {
+    Location = default;
+    Speed = 1;
+    ArmourClass = 10;
+    Strength = 0;
+    Weapon = default;  // Assign to null or a default weapon
+    Dexerity = 0;
+    Health = 12;
+    ActorId = Guid.NewGuid();
+  }
+
   public virtual ActorAction GetNextAction( SimulationSnapshot snapshot )
   {
     if ( Health <= 0 )
