@@ -2,17 +2,24 @@ namespace HungerGamesSimulator.Data;
 
 public abstract class Actor : IActor
 {
-  public string Name { get; }
-  public Coord Location { get; private set; }
-  public int Speed { get; private set; } = 1;
-  public int ArmourClass { get; private set; } = 10;
-  public int Strength { get; private set; } = 0;
-  public IWeapon Weapon { get; private set; }
-  public int Dexerity { get; private set; } = 0;
-  public int Health { get; private set; } = 12;
-  public Guid ActorId { get; private set; } = Guid.NewGuid();
+  private readonly int stayInPartyDC = 4;
+  private readonly int lookForPartyDC = 16;
+  private readonly int lookForCombatDC = 14;
 
-  protected Actor( string name )
+  public string Name { get; }
+  public Guid ActorId { get; } = Guid.Empty;
+  public int ArmourClass { get; } = 12;
+  public int Speed { get; } = 1;
+  public int Strength { get; } = 2;
+  public int Dexerity { get; } = 1;
+  public int Charisma { get; } = 0;
+  public int Wisdom { get; } = 0;
+  public Coord Location { get; set; }
+  public int Health { get; set; } = 12;
+  public Weapon Weapon { get; set; } = new Weapon();
+  public Guid PartyId { get; set; } = Guid.Empty;
+
+  public Actor( string name )
   {
     Name = name;
   }
@@ -29,43 +36,49 @@ public abstract class Actor : IActor
     ActorId = Guid.NewGuid();
   }
 
-  public virtual ActorStates GetState()
+  public virtual ActorAction GetNextAction( SimulationSnapshot snapshot )
   {
     if ( Health <= 0 )
     {
-      return ActorStates.Dead;
+      return ActorAction.Dead;
     }
 
-    var coin = Random.Shared.Next( 0, 2 );
-    return coin == 0 ? ActorStates.Attacking : ActorStates.Moving;
+    if ( IsInParty() )
+    {
+      if ( SimulationUtils.RollD20() + Charisma <= stayInPartyDC )
+      {
+        return ActorAction.LeaveParty;
+      }
+    }
+
+    if ( SimulationUtils.RollD20() + Charisma >= lookForPartyDC )
+    {
+      return ActorAction.JoinParty;
+    }
+
+    if ( SimulationUtils.RollD20() + Strength >= lookForCombatDC )
+    {
+      return ActorAction.Attacking;
+    }
+
+    return ActorAction.Moving;
   }
 
-  public virtual Coord SimulateMove()
+  public virtual Coord SimulateMove( SimulationSnapshot _ )
   {
     var direction = new Coord( Random.Shared.Next( -Speed, Speed + 1 ), Random.Shared.Next( -Speed, Speed + 1 ) );
     return direction + Location;
   }
 
-  public virtual bool SimulateHit( IActor actor )
+  public virtual bool SimulateHit( IActor otherActor )
   {
-    return ( SimulationUtil.RollD20() + Strength ) >= actor.ArmourClass;
+    return ( SimulationUtils.RollD20() + Strength ) >= otherActor.ArmourClass;
   }
 
-  public void SetLocation( Coord location )
+  public bool SimulateEscape( IActor otherActor )
   {
-    Location = location;
+    return ( SimulationUtils.RollD20() + Dexerity ) >= ( SimulationUtils.RollD20() + otherActor.Dexerity );
   }
-
-  public void GiveWeapon( IWeapon weapon )
-  {
-    Weapon = weapon;
-  }
-
-  public bool SimulateEscape( IActor actor )
-  {
-    return ( SimulationUtil.RollD20() + Dexerity ) >= ( SimulationUtil.RollD20() + actor.Dexerity );
-  }
-
 
   public void TakeDamage( int damage )
   {
@@ -75,5 +88,10 @@ public abstract class Actor : IActor
   public bool IsDead()
   {
     return this.Health <= 0;
+  }
+
+  public bool IsInParty()
+  {
+    return PartyId != Guid.Empty;
   }
 }
