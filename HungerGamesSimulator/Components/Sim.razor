@@ -1,5 +1,4 @@
 ﻿@using HungerGamesSimulator.Data
-@inject IMessageCenter MessageCenter;
 @inject HttpClient HttpClient;
 
 <div class="main">
@@ -13,15 +12,15 @@
   }
     else if ( state == SimulationState.Description )
   {
-      @foreach ( var message in MessageCenter.GetMessages() )
+      @foreach ( var message in UserState?.ActiveSimulation.GetMessages() ?? new List<string>() )
       {
         <p> @message </p>
       }
   }
     else if ( state == SimulationState.Cannon )
   {
-      <p> @MessageCenter.GetCannonMessages().Count Cannon shot(s) can be heard in the distance </p>
-      @foreach ( var message in MessageCenter.GetCannonMessages() )
+      <p> @UserState?.ActiveSimulation.GetCannonMessages().Count Cannon shot(s) can be heard in the distance </p>
+      @foreach ( var message in UserState?.ActiveSimulation.GetCannonMessages() ?? new List<string>() )
       {
         <p> @message </p>
       }
@@ -38,10 +37,10 @@
 
 @code {
   [Parameter]
-  public Simulation? Simulation { get; set; }
+  public UserState? UserState { get; set; }
 
   [Parameter]
-  public EventCallback<Simulation?> SimulationChanged { get; set; }
+  public EventCallback<UserState?> UserStateChanged { get; set; }
 
   [Parameter]
   public bool Reset { get; set; }
@@ -51,21 +50,20 @@
 
   private SimulationState state = SimulationState.Empty;
 
-  private SimulationService? simulationService;
   private Storage? storage;
 
   protected override async Task OnInitializedAsync()
   {
     storage = new Storage(HttpClient);
-    
+
     if ( Reset )
     {
       await Restart();
     }
 
-    if (Simulation != null)
+    if ( UserState != null)
     {
-      state = SimulationState.Description; 
+      state = UserState.CurrentState;
     }
   }
 
@@ -75,7 +73,7 @@
     {
       case SimulationState.Cannon:
       {
-        if (simulationService != null && simulationService.IsSimulationFinished())
+        if ( UserState != null && UserState.ActiveSimulation.IsSimulationFinished() )
         {
           state = SimulationState.Winner;
         }
@@ -87,13 +85,14 @@
       break;
       case SimulationState.Description:
       {
-        if (MessageCenter.GetCannonMessages().Count > 0)
+        if (UserState != null && UserState.ActiveSimulation.GetCannonMessages().Count > 0)
         {
           state = SimulationState.Cannon;
-          return;
         }
-
-        await Simulate();
+        else
+        {
+          Simulate();
+        }
       }
       break;
       case SimulationState.Winner:
@@ -105,16 +104,25 @@
       {
         await Restart();
         state = SimulationState.Description;
-        await Simulate();
+        Simulate();
       }
       break;
     }
+
+    if (UserState != null)
+    {      
+      UserState.CurrentState = state;
+    }
   }
 
-  private async Task Simulate()
+  private void Simulate()
   {
-    simulationService?.Act();
-    await SimulationChanged.InvokeAsync(Simulation);
+    if (UserState == null)
+    {
+      return; 
+    }
+
+    UserState.ActiveSimulation.Act();
   }
 
   private async Task Restart()
@@ -138,34 +146,29 @@
       }
     }
 
-    // Clear message center
-    MessageCenter.ClearMessages();
-    MessageCenter.ClearCannonMessages();
-
     // TO:DO Maybe converting the storage local variable to a class property?
     // retrieve weapon data from a static json stored on the client
     var response = await storage.GetWeaponsAsync();
 
     // create new simulation
-    Simulation = new Simulation(Tributes, response);
-    await SimulationChanged.InvokeAsync(Simulation);
-    simulationService = new SimulationService(Simulation, MessageCenter);
+    var simulation = new Simulation(Tributes, response);
+    var simulationService = new SimulationService( simulation );
     state = SimulationState.Empty;
+
+    // save the new user state
+    UserState = new UserState( state, simulationService );
+    await UserStateChanged.InvokeAsync( UserState );
   }
   
   private string GetWinnerText()
   {
-    if (Simulation == null)
+    if ( UserState == null || UserState.ActiveSimulation == null )
     {
       return String.Empty; 
     }
 
-    var actors = Simulation.GetAliveActors();
-    if ( actors == null )
-    {
-      return String.Empty;
-    }
+    var actor = UserState.ActiveSimulation.GetWinner();
 
-    return $"The winner of the Xst hunger games is {actors.First().Name}";
+    return $"The winner of the Xst hunger games is {actor.Name}";
   }
 }

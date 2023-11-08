@@ -9,14 +9,14 @@
         private MovementService _movementService;
         private PartyFinder _partyFinder;
 
-        public SimulationService( Simulation simulation, IMessageCenter messageCenter )
+        public SimulationService( Simulation simulation )
         {
             _simulation = simulation;
-            _messageCenter = messageCenter;
             _combatService = new CombatService();
             _partyService = new PartyService();
             _movementService = new MovementService();
             _partyFinder = new PartyFinder();
+            _messageCenter = new MessageCenter();
         }
 
         /// <summary>
@@ -24,8 +24,7 @@
         /// </summary>
         public void Act()
         {
-            _messageCenter.ClearMessages();
-            _messageCenter.ClearCannonMessages();
+            ClearMessageCenter();
 
             _messageCenter.AddMessage( $"Day {_simulation.Day}" );
             _simulation.IncreaseDay();
@@ -262,6 +261,27 @@
                 return true;
             }
             return false;
+        }
+
+        public void ClearMessageCenter()
+        {
+            _messageCenter.ClearCannonMessages();
+            _messageCenter.ClearMessages();
+        }
+
+        public List<string> GetMessages()
+        {
+            return _messageCenter.GetMessages();
+        }
+
+        public List<string> GetCannonMessages()
+        {
+            return _messageCenter.GetCannonMessages();
+        }
+
+        public IActor GetWinner()
+        {
+           return _simulation.GetActors( actor => actor.Health > 1 ).First();
         }
     }
 }

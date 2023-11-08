@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Web;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<IMessageCenter, MessageCenter>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();

@@ -29,14 +29,14 @@
 }
   else if ( _state == GameState.Simulation )
 {
-    <Sim @bind-Simulation=_simulation Tributes=_tributes Reset=_resetSimulation />
+    <Sim @bind-UserState=_userState Tributes=_tributes Reset=_resetSimulation />
 }
 
 @code
   {
     private GameState _state = GameState.Home;
 
-    private Simulation? _simulation;
+    private UserState? _userState;
 
     private List<IActor> _tributes = new List<IActor>();
 
