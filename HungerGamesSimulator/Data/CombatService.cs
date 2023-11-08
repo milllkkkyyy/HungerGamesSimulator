@@ -1,6 +1,5 @@
 ﻿namespace HungerGamesSimulator.Data
 {
-
     public class CombatService
     {
         private bool AreAllTributesDead( List<IActor> tributes )
@@ -67,17 +66,17 @@
                         break;
                     }
 
-                    var fighter = request.Fighters.Pop();
-                    var defender = request.Defenders.Pop();
+                    var fighter = request.Fighters.Dequeue();
+                    var defender = request.Defenders.Dequeue();
 
                     HandleAttack( fighter, defender );
 
                     if ( !DefenderEscaped( fighter, defender ) )
                     {
-                        request.Defenders.Push( defender );
+                        request.Defenders.Enqueue( defender );
                     }
 
-                    request.Fighters.Push( fighter );
+                    request.Fighters.Enqueue( fighter );
                 }
 
 
@@ -102,7 +101,7 @@
 
     public record CombatRequest( List<IActor> fighters, List<IActor> defenders )
     {
-        public Stack<IActor> Fighters { get; } = new Stack<IActor>( fighters );
-        public Stack<IActor> Defenders { get; } = new Stack<IActor>( defenders );
+        public Queue<IActor> Fighters { get; } = new Queue<IActor>( fighters );
+        public Queue<IActor> Defenders { get; } = new Queue<IActor>( defenders );
     }
 }

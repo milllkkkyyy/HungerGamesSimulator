@@ -5,14 +5,20 @@
 <div class="main">
   <h3>The 1st Annual Hunger Games</h3>
   <div class="simulationText">
-  @if ( !cannon )
+
+  @if ( state == SimulationState.Winner )
+  {
+      <p> @GetWinnerText() </p>
+
+  }
+    else if ( state == SimulationState.Description )
   {
       @foreach ( var message in MessageCenter.GetMessages() )
       {
         <p> @message </p>
       }
   }
-  else
+    else if ( state == SimulationState.Cannon )
   {
       <p> @MessageCenter.GetCannonMessages().Count Cannon shot(s) can be heard in the distance </p>
       @foreach ( var message in MessageCenter.GetCannonMessages() )
@@ -20,8 +26,13 @@
         <p> @message </p>
       }
   }
-  <button @onclick="Simulate"> Continue </button>
-        <button @onclick="Restart"> Restart </button>
+  else
+  {
+      <p> Click continue to start the simulation </p>
+  }
+
+    <button @onclick="UpdateState"> Continue </button>
+    <button @onclick="Restart"> Restart </button>
   </div>
 </div>
 
@@ -35,49 +46,89 @@
   [Parameter]
   public bool Reset { get; set; }
 
-  [Parameter, EditorRequired]
-  public List<IActor> Tributes { get; set; }
+  [Parameter]
+  public List<IActor>? Tributes { get; set; }
 
-  private bool cannon = false;
+  private SimulationState state = SimulationState.Empty;
+
   private SimulationService? simulationService;
+  private Storage? storage;
 
   protected override async Task OnInitializedAsync()
   {
-    if ( Simulation == null || Reset )
+    storage = new Storage(HttpClient);
+    
+    if ( Reset )
     {
-      // retrieve weapon data from a static json stored on the client
-      Storage storage = new Storage( HttpClient );
-      var response = await storage.GetWeaponsAsync();
+      await Restart();
+    }
 
-      // create new simulation
-      Simulation = new Simulation( Tributes, response );
-      await SimulationChanged.InvokeAsync( Simulation );
+    if (Simulation != null)
+    {
+      state = SimulationState.Description; 
+    }
+  }
 
-      simulationService = new SimulationService( Simulation, MessageCenter );
+  private async Task UpdateState()
+  {
+    switch (state)
+    {
+      case SimulationState.Cannon:
+      {
+        if (simulationService != null && simulationService.IsSimulationFinished())
+        {
+          state = SimulationState.Winner;
+        }
+        else
+        {
+          state = SimulationState.Description; 
+        }
+      }
+      break;
+      case SimulationState.Description:
+      {
+        if (MessageCenter.GetCannonMessages().Count > 0)
+        {
+          state = SimulationState.Cannon;
+          return;
+        }
+
+        await Simulate();
+      }
+      break;
+      case SimulationState.Winner:
+      {
+        state = SimulationState.Empty;
+      }
+      break;
+      default:
+      {
+        await Restart();
+        state = SimulationState.Description;
+        await Simulate();
+      }
+      break;
     }
   }
 
   private async Task Simulate()
   {
-    if (MessageCenter.GetCannonMessages().Count > 0)
-    {
-      if (cannon)
-      {
-        cannon = false;
-      }
-      else
-      {
-        cannon = true;
-        return;
-      }
-    }
-
     simulationService?.Act();
     await SimulationChanged.InvokeAsync(Simulation);
   }
 
   private async Task Restart()
   {
+    if (storage == null)
+    {
+      throw new ArgumentNullException( "Storage was not initialized properly" );
+    }
+
+    if (Tributes == null)
+    {
+      throw new ArgumentNullException( "Tributes was not initialized properly" );
+    }
+
     // reset tributes
     foreach (var tribute in Tributes)
     {
@@ -90,16 +141,31 @@
     // Clear message center
     MessageCenter.ClearMessages();
     MessageCenter.ClearCannonMessages();
-    cannon = false; // must reset this also
+
     // TO:DO Maybe converting the storage local variable to a class property?
     // retrieve weapon data from a static json stored on the client
-    Storage storage = new Storage(HttpClient);
     var response = await storage.GetWeaponsAsync();
 
     // create new simulation
     Simulation = new Simulation(Tributes, response);
     await SimulationChanged.InvokeAsync(Simulation);
-
     simulationService = new SimulationService(Simulation, MessageCenter);
+    state = SimulationState.Empty;
+  }
+  
+  private string GetWinnerText()
+  {
+    if (Simulation == null)
+    {
+      return String.Empty; 
+    }
+
+    var actors = Simulation.GetAliveActors();
+    if ( actors == null )
+    {
+      return String.Empty;
+    }
+
+    return $"The winner of the Xst hunger games is {actors.First().Name}";
   }
 }

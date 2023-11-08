@@ -8,4 +8,12 @@
         Simulation
     }
 
+    public enum SimulationState
+    {
+        Cannon,
+        Winner,
+        Description,
+        Empty
+    }
+
 }

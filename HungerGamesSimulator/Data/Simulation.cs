@@ -39,7 +39,7 @@ public class Simulation
     return ( inArea.Count == 0 ) ? null : inArea[ Random.Shared.Next( inArea.Count ) ];
   }
 
-  public List<IActor>? GetActors( Predicate<IActor>? predicate = null )
+  public List<IActor> GetActors( Predicate<IActor>? predicate = null )
   {
     return _actors
             .Where( actor => predicate == null ? true : predicate( actor ) )

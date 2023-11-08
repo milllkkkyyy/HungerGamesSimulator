@@ -15,19 +15,19 @@
 <div class="body">
 
 
-@if ( _state == GameState.Home )
+  @if ( _state == GameState.Home )
 {
     <Home />
 
     <button @onclick="@ChangeState">Create Tributes</button>
 }
-else if ( _state == GameState.Reaping )
+  else if ( _state == GameState.Reaping )
 {
-    <Reaping @bind-Tributes=_tributes />
+    <Reaping Tributes=_tributes TributesChanged=OnTributesChanged />
 
     <button @onclick="@ChangeState">Start Simulation</button>
 }
-else if ( _state == GameState.Simulation )
+  else if ( _state == GameState.Simulation )
 {
     <Sim @bind-Simulation=_simulation Tributes=_tributes Reset=_resetSimulation />
 }
@@ -44,6 +44,12 @@ else if ( _state == GameState.Simulation )
 
     private bool _resetSimulation;
 
+    private void OnTributesChanged( List<IActor> actors )
+    {
+      _tributes = actors;
+      _tributeUpdated = true; 
+    }
+
     private void ChangeState()
     {
       switch (_state)
@@ -56,7 +62,7 @@ else if ( _state == GameState.Simulation )
           _resetSimulation = _tributeUpdated;
           _tributeUpdated = false;
 
-          _state = GameState.Simulation;
+        _state = GameState.Simulation;
           break;
       }
     }

@@ -28,8 +28,23 @@
             _messageCenter.ClearCannonMessages();
 
             _messageCenter.AddMessage( $"Day {_simulation.Day}" );
+            _simulation.IncreaseDay();
 
             var aliveActors = _simulation.GetAliveActors();
+            if ( aliveActors == null || !aliveActors.Any() )
+            {
+                _messageCenter.AddMessage( "There are not any alive actors to act with" );
+                return;
+            }
+
+            if ( ShouldSuddenDeathTrigger() )
+            {
+                var suddenDeathEvent = new SuddenDeathEvent( aliveActors, _messageCenter );
+                IActor lastAliveActor = suddenDeathEvent.Simulate();
+                _messageCenter.AddMessage($"{lastAliveActor.Name} is the last one standing in the suddent death event");
+                return;
+            }
+
             var partiesWent = new HashSet<Guid>();
             if ( aliveActors != null )
             {
@@ -42,7 +57,6 @@
                 }
             }
 
-            _simulation.IncreaseDay();
         }
 
         /// <summary>
@@ -222,6 +236,32 @@
         private IActor? GetRandomActorInArea( Coord origin, IActor? toIgnore = null, Predicate<IActor>? predicate = null )
         {
             return _simulation.GetRandomActorInArea( origin, toIgnore, predicate );
+        }
+
+        private bool ShouldSuddenDeathTrigger()
+        {
+           var aliveActors = _simulation.GetActors( actor => actor.Health > 1 );
+           if ( aliveActors.Count() == 2 )
+           {
+              return true;
+           }
+
+           List<IActor> actorsIsParty = GetParty( aliveActors.First() );
+           if ( aliveActors.Count() == actorsIsParty.Count() )
+           { 
+              return true;
+           }
+
+           return false;
+        }
+
+        public bool IsSimulationFinished()
+        {
+            if ( _simulation.GetActors( actor => actor.Health > 1 ).Count() == 1 )
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
