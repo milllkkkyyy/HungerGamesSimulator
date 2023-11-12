@@ -45,14 +45,16 @@
             }
 
             var partiesWent = new HashSet<Guid>();
-            if ( aliveActors != null )
+            foreach ( var actor in aliveActors )
             {
-                foreach ( var actor in aliveActors )
+                if ( ( actor.IsInParty() && !partiesWent.Contains( actor.PartyId ) ) || !actor.IsInParty() )
                 {
-                    if ( ( actor.IsInParty() && partiesWent.Add( actor.PartyId ) ) || !actor.IsInParty() )
-                    {
-                        Act( actor );
-                    }
+                    Act( actor );
+                }
+
+                if ( actor.IsInParty() )
+                {
+                    partiesWent.Add( actor.PartyId );
                 }
             }
 
@@ -245,8 +247,8 @@
               return true;
            }
 
-           List<IActor> actorsIsParty = GetParty( aliveActors.First() );
-           if ( aliveActors.Count() == actorsIsParty.Count() )
+           var actorsInParty = GetParty( aliveActors.First() );
+           if ( aliveActors.Count() == actorsInParty.Count() )
            { 
               return true;
            }
