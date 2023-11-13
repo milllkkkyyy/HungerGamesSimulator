@@ -28,6 +28,7 @@ public abstract class Actor : IActor
   {
     Weapon = new Weapon();  // Assign to null or a default weapon
     Health = 12;
+    PartyId = Guid.Empty;
   }
 
   public virtual ActorAction GetNextAction( SimulationSnapshot snapshot )
