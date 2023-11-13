@@ -69,7 +69,7 @@
             }
             else if ( actor.IsInParty() && !otherActor.IsInParty() )
             {
-                _manager.JoinParty( actor, actor.PartyId );
+                _manager.JoinParty( otherActor, actor.PartyId );
                 otherActorsParty.First().Location = actor.Location;
                 return $"{otherActorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames( actorsParty )}";
             }
