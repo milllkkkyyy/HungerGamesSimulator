@@ -2,6 +2,8 @@
 {
     public class CombatService
     {
+        public event EventHandler<CombatEndedEventArgs>? CombatEnded;
+        
         private bool AreAllTributesDead( List<IActor> tributes )
         {
             int deadTributes = 0;
@@ -45,6 +47,8 @@
             // retrieve data needed for combat
             int fightersCount = request.Fighters.Count;
             int defendersCount = request.Defenders.Count;
+            var fightersArchive = request.Fighters.ToList();
+            var defendersArchive = request.Defenders.ToList();
 
             if ( fightersCount == 0 || defendersCount == 0 )
             {
@@ -88,6 +92,10 @@
                 escaped = request.Defenders.Count <= 0;
             }
 
+            // signal event
+            var eventArgs = new CombatEndedEventArgs { Fighters = fightersArchive, Defenders = defendersArchive };
+            CombatEnded?.Invoke( this, eventArgs );
+
             return new CombatResponse( AreAnyTributesDead( request.fighters ), AreAnyTributesDead( request.defenders ), escaped );
         }
     }
@@ -103,5 +111,11 @@
     {
         public Queue<IActor> Fighters { get; } = new Queue<IActor>( fighters );
         public Queue<IActor> Defenders { get; } = new Queue<IActor>( defenders );
+    }
+
+    public class CombatEndedEventArgs : EventArgs
+    {
+        public List<IActor> Fighters { get; set;  }
+        public List<IActor> Defenders { get; set; }
     }
 }

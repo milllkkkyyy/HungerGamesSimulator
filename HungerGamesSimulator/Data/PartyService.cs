@@ -3,20 +3,39 @@
     /// <summary>
     /// Creates and manages tributes parties
     /// </summary>
-    public class PartyService
+    public class PartyService : IDisposable
     {
-        private readonly string failMessage = "Party service cannot handle this party request type";
+        private readonly string FailMessage = "Party service cannot handle this party request type";
 
-        private PartyManager manager;
+        private PartyManager _manager;
+        private CombatService _combatService;
 
-        public PartyService()
+        public PartyService( CombatService combatService )
         {
-            manager = new PartyManager();
+            _combatService = combatService;
+            _manager = new PartyManager();
+
+            _combatService.CombatEnded += CombatService_CombatEnded;
+        }
+
+        private void CombatService_CombatEnded( object? sender, CombatEndedEventArgs e )
+        {
+            var deadFighters = e.Fighters.Count( actor => actor.Health < 1 );
+            if ( deadFighters == e.Fighters.Count() - 1 )
+            {
+                _manager.DisbandParty( e.Fighters );
+            }
+
+            var deadDefenders = e.Defenders.Count( actor => actor.Health < 1 );
+            if ( deadDefenders == e.Defenders.Count() - 1 )
+            {
+                _manager.DisbandParty( e.Defenders );
+            }
         }
 
         public PartyResponse HandlePartyRequest( PartyRequest request )
         {
-            string message = failMessage;
+            string message = FailMessage;
 
             switch ( request.PartyRequestType )
             {
@@ -40,7 +59,7 @@
 
             if ( actor.IsInParty() && otherActor.IsInParty() )
             {
-                manager.MergeParties( actorsParty, otherActorsParty );
+                _manager.MergeParties( actorsParty, otherActorsParty );
 
                 foreach ( var partyMember in actorsParty.Concat( otherActorsParty ) )
                 {
@@ -50,19 +69,19 @@
             }
             else if ( actor.IsInParty() && !otherActor.IsInParty() )
             {
-                manager.JoinParty( actor, actor.PartyId );
+                _manager.JoinParty( actor, actor.PartyId );
                 otherActorsParty.First().Location = actor.Location;
                 return $"{otherActorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames( actorsParty )}";
             }
             else if ( !actor.IsInParty() && otherActor.IsInParty() )
             {
-                manager.JoinParty( actor, otherActor.PartyId );
+                _manager.JoinParty( actor, otherActor.PartyId );
                 actor.Location = otherActor.Location;
                 return $"{actorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames( otherActorsParty )}";
             }
             else
             {
-                manager.CreateParty( actor, otherActor );
+                _manager.CreateParty( actor, otherActor );
                 otherActor.Location = actor.Location;
                 return $"{actorsParty.First().Name} created a party with {otherActorsParty.First().Name}";
             }
@@ -78,18 +97,22 @@
             // dispand any parties that are have less than two people
             if ( actorsParty.Count <= 2 )
             {
-                manager.DisbandParty( actorsParty );
+                _manager.DisbandParty( actorsParty );
                 return $"the party with {SimulationUtils.GetConcatenatedActorNames( actorsParty )} has been dispanded";
             }
             else
             {
                 // otherwise, just leave the party
-                manager.LeaveParty( actor );
+                _manager.LeaveParty( actor );
                 actorsParty.Remove( actor );
                 return $"{actor.Name} left {SimulationUtils.GetConcatenatedActorNames( actorsParty )} party";
             }
         }
 
+        public void Dispose()
+        {
+            _combatService.CombatEnded -= CombatService_CombatEnded;
+        }
     }
 
     public enum PartyRequestType

@@ -13,7 +13,7 @@
         {
             _simulation = simulation;
             _combatService = new CombatService();
-            _partyService = new PartyService();
+            _partyService = new PartyService( _combatService );
             _movementService = new MovementService();
             _partyFinder = new PartyFinder();
             _messageCenter = new MessageCenter();
@@ -58,6 +58,11 @@
                 }
             }
 
+            System.Diagnostics.Debug.WriteLine( $"Day {_simulation.Day}" );
+            foreach ( var actor in aliveActors )
+            {
+                System.Diagnostics.Debug.WriteLine( $"Actor with name: {actor.Name} has party: {actor.PartyId} and health: {actor.Health} with location: {actor.Location}" );
+            }
         }
 
         /// <summary>
@@ -81,6 +86,8 @@
                 case ActorAction.LeaveParty:
                 PartyRequest( actor, PartyRequestType.Leave );
                 break;
+                case ActorAction.Dead:
+                break;
                 default:
                 _messageCenter.AddMessage( $"There is no way for the simulation to handle state ({state}) for {actor.Name}" );
                 break;
@@ -103,7 +110,8 @@
                     if ( otherActor == null )
                     {
                         // joining a party cannot be processed without a tribute
-                        _messageCenter.AddMessage( $"{actor.Name} searched for a tribute to band with but couldn't find anyone" );
+                        var concatedPartyNames = SimulationUtils.GetConcatenatedActorNames( GetParty( actor ) );
+                        _messageCenter.AddMessage( $"{concatedPartyNames} searched for a tribute to band with but couldn't find anyone" );
                         return;
                     }
 
@@ -145,8 +153,10 @@
             IActor? otherActor = GetRandomActor( actor );
             if ( otherActor == null )
             {
+
                 // combat cannot be processed without a tribute
-                _messageCenter.AddMessage( $"{actor.Name} searched for a tribute to attack, but couldn't find any" );
+                var concatedPartyNames = SimulationUtils.GetConcatenatedActorNames( GetParty( actor ) );
+                _messageCenter.AddMessage( $"{concatedPartyNames} searched for a tribute to attack, but couldn't find any" );
                 return;
             }
 
@@ -241,7 +251,7 @@
 
         private bool ShouldSuddenDeathTrigger()
         {
-           var aliveActors = _simulation.GetActors( actor => actor.Health > 1 );
+           var aliveActors = _simulation.GetActors( actor => actor.Health >= 1 );
            if ( aliveActors.Count() == 2 )
            {
               return true;
@@ -258,7 +268,7 @@
 
         public bool IsSimulationFinished()
         {
-            if ( _simulation.GetActors( actor => actor.Health > 1 ).Count() == 1 )
+            if ( _simulation.GetActors( actor => actor.Health >= 1 ).Count() == 1 )
             {
                 return true;
             }
@@ -283,7 +293,7 @@
 
         public IActor GetWinner()
         {
-           return _simulation.GetActors( actor => actor.Health > 1 ).First();
+           return _simulation.GetActors( actor => actor.Health >= 1 ).First();
         }
     }
 }
