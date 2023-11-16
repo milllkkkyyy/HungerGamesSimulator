@@ -21,7 +21,7 @@
     /// <returns>the actor who wins the sudden death event</returns>
     public IActor Simulate()
     {
-      messageCenter.AddMessage( $"Sudden Death Event started with {SimulationUtils.GetConcatenatedActorNames(actorsInEvent)}" );
+      messageCenter.AddMessage( $"A Sudden Death Event started with {SimulationUtils.GetConcatenatedActorNames(actorsInEvent)}" );
 
       while ( !eventFinished )
       {
@@ -37,7 +37,7 @@
           if ( actor.SimulateHit( otherActor ) )
           {
             otherActor.TakeDamage( SimulationUtils.CalculateDamage( actor ) );
-            messageCenter.AddMessage( $"{actor.Name} struck {otherActor.Name} with {actor.Weapon.Name}" );
+            messageCenter.AddMessage( $"{actor.Name} hit {otherActor.Name} with {actor.Weapon.Name}" );
           }
           else
           {
@@ -49,6 +49,7 @@
             messageCenter.AddMessage( $"{actor.Name} slayed {otherActor.Name}" );
             messageCenter.AddCannonMessage( otherActor );
           }
+
         }
 
         UpdateEventFinished();

@@ -32,7 +32,7 @@
             var aliveActors = _simulation.GetAliveActors();
             if ( aliveActors == null || !aliveActors.Any() )
             {
-                _messageCenter.AddMessage( "There are not any alive actors to act with" );
+                _messageCenter.AddMessage( "There are not any alive actors to act with." );
                 return;
             }
 
@@ -40,7 +40,7 @@
             {
                 var suddenDeathEvent = new SuddenDeathEvent( aliveActors, _messageCenter );
                 IActor lastAliveActor = suddenDeathEvent.Simulate();
-                _messageCenter.AddMessage($"{lastAliveActor.Name} is the last one standing in the suddent death event");
+                _messageCenter.AddMessage($"{lastAliveActor.Name} is the last one standing after the suddent death event.");
                 return;
             }
 
@@ -111,7 +111,7 @@
                     {
                         // joining a party cannot be processed without a tribute
                         var concatedPartyNames = SimulationUtils.GetConcatenatedActorNames( GetParty( actor ) );
-                        _messageCenter.AddMessage( $"{concatedPartyNames} searched for a tribute to band with but couldn't find anyone" );
+                        _messageCenter.AddMessage( $"{concatedPartyNames} searched for tributes to join their party but couldn't find anyone" );
                         return;
                     }
 
@@ -156,7 +156,7 @@
 
                 // combat cannot be processed without a tribute
                 var concatedPartyNames = SimulationUtils.GetConcatenatedActorNames( GetParty( actor ) );
-                _messageCenter.AddMessage( $"{concatedPartyNames} searched for a tribute to attack, but couldn't find any" );
+                _messageCenter.AddMessage( $"{concatedPartyNames} searched for a tribute to attack, but couldn't find anyone around them" );
                 return;
             }
 

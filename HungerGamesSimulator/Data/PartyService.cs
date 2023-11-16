@@ -65,13 +65,13 @@
                 {
                     partyMember.Location = actor.Location;
                 }
-                return $"{SimulationUtils.GetConcatenatedActorNames( otherActorsParty )} merged parties with {SimulationUtils.GetConcatenatedActorNames( actorsParty )}";
+                return $"{SimulationUtils.GetConcatenatedActorNames(actorsParty)} merged parties with {SimulationUtils.GetConcatenatedActorNames(otherActorsParty)}";
             }
             else if ( actor.IsInParty() && !otherActor.IsInParty() )
             {
                 _manager.JoinParty( otherActor, actor.PartyId );
                 otherActorsParty.First().Location = actor.Location;
-                return $"{otherActorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames( actorsParty )}";
+                return $"{SimulationUtils.GetConcatenatedActorNames(actorsParty)} conviced {otherActorsParty.First().Name} to join their party";
             }
             else if ( !actor.IsInParty() && otherActor.IsInParty() )
             {
