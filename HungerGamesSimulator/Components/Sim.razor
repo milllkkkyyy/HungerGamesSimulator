@@ -149,11 +149,13 @@
 
     // TO:DO Maybe converting the storage local variable to a class property?
     // retrieve weapon data from a static json stored on the client
-    var response = await storage.GetWeaponsAsync();
+    var weaponsResponse = await storage.GetWeaponsAsync();
+    var templatesResponse = await storage.GetMessageCenterTemplatesAsync();
 
     // create new simulation
-    var simulation = new Simulation(Tributes, response);
-    var simulationService = new SimulationService( simulation );
+    var simulation = new Simulation(Tributes, weaponsResponse);
+    var messageCenter = new MessageCenter(templatesResponse);
+    var simulationService = new SimulationService( simulation, messageCenter );
     state = SimulationState.Empty;
 
     // save the new user state

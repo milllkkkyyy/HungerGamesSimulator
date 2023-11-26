@@ -9,14 +9,14 @@
         private MovementService _movementService;
         private PartyFinder _partyFinder;
 
-        public SimulationService( Simulation simulation )
+        public SimulationService( Simulation simulation, IMessageCenter messageCenter )
         {
             _simulation = simulation;
             _combatService = new CombatService();
-            _partyService = new PartyService( _combatService );
             _movementService = new MovementService();
             _partyFinder = new PartyFinder();
-            _messageCenter = new MessageCenter();
+            _messageCenter = messageCenter;
+            _partyService = new PartyService( _combatService );
         }
 
         /// <summary>
