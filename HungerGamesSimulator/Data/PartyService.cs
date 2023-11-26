@@ -9,79 +9,123 @@
 
         private PartyManager _manager;
         private CombatService _combatService;
+        private EventService _eventService;
 
-        public PartyService( CombatService combatService )
+        public PartyService(CombatService combatService, EventService eventService)
         {
             _combatService = combatService;
+            _eventService = eventService;
             _manager = new PartyManager();
 
+            _eventService.OnEventCompleted += EventService_OnEventCompleted;
             _combatService.CombatEnded += CombatService_CombatEnded;
         }
 
-        private void CombatService_CombatEnded( object? sender, CombatEndedEventArgs e )
+        private void EventService_OnEventCompleted(object? sender, OnEventCompletedArgs args)
         {
-            var deadFighters = e.Fighters.Count( actor => actor.Health < 1 );
-            if ( deadFighters == e.Fighters.Count() - 1 )
+            bool TryGetParty(IActor actorToIgnore, out List<IActor> party)
             {
-                _manager.DisbandParty( e.Fighters );
+                party = args.ActorsAffected.Where(actor =>
+                    actorToIgnore != actor
+                    && actor.IsInParty()
+                    && actorToIgnore.PartyId == actor.PartyId).ToList();
+
+                if (party != null)
+                {
+                    return true;
+                }
+                return false;
             }
 
-            var deadDefenders = e.Defenders.Count( actor => actor.Health < 1 );
-            if ( deadDefenders == e.Defenders.Count() - 1 )
+            HashSet<Guid> partiesWent = new();
+            foreach (var actor in args.ActorsAffected)
             {
-                _manager.DisbandParty( e.Defenders );
+                if ( actor.IsInParty() && !partiesWent.Contains( actor.PartyId ) && TryGetParty(actor, out var party))
+                {
+                    partiesWent.Add(actor.PartyId);
+
+                    var deadMembers = party.Count(actor => actor.IsDead() );
+                    if (deadMembers <= party.Count() - 1)
+                    {
+                        _manager.DisbandParty( party );
+                        continue;
+                    }
+
+                    foreach ( var partyMember in party )
+                    {
+                        if (partyMember.IsDead())
+                        {
+                            _manager.LeaveParty(partyMember);  
+                        }
+                    }
+                }
             }
         }
 
-        public PartyResponse HandlePartyRequest( PartyRequest request )
+        private void CombatService_CombatEnded(object? sender, CombatEndedEventArgs e)
+        {
+            var deadFighters = e.Fighters.Count(actor => actor.Health < 1);
+            if (deadFighters == e.Fighters.Count() - 1)
+            {
+                _manager.DisbandParty(e.Fighters);
+            }
+
+            var deadDefenders = e.Defenders.Count(actor => actor.Health < 1);
+            if (deadDefenders == e.Defenders.Count() - 1)
+            {
+                _manager.DisbandParty(e.Defenders);
+            }
+        }
+
+        public PartyResponse HandlePartyRequest(PartyRequest request)
         {
             string message = FailMessage;
 
-            switch ( request.PartyRequestType )
+            switch (request.PartyRequestType)
             {
                 case PartyRequestType.Join:
-                if ( request.OtherActorsParty != null )
-                {
-                    message = HandleJoinParty( request.Actor, request.ActorsParty, request.OtherActorsParty );
-                }
-                break;
+                    if (request.OtherActorsParty != null)
+                    {
+                        message = HandleJoinParty(request.Actor, request.ActorsParty, request.OtherActorsParty);
+                    }
+                    break;
                 case PartyRequestType.Leave:
-                message = HandleLeaveParty( request.Actor, request.ActorsParty );
-                break;
+                    message = HandleLeaveParty(request.Actor, request.ActorsParty);
+                    break;
             }
 
-            return new PartyResponse( message );
+            return new PartyResponse(message);
         }
 
-        private string HandleJoinParty( IActor actor, List<IActor> actorsParty, List<IActor> otherActorsParty )
+        private string HandleJoinParty(IActor actor, List<IActor> actorsParty, List<IActor> otherActorsParty)
         {
             IActor otherActor = otherActorsParty.First();
 
-            if ( actor.IsInParty() && otherActor.IsInParty() )
+            if (actor.IsInParty() && otherActor.IsInParty())
             {
-                _manager.MergeParties( actorsParty, otherActorsParty );
+                _manager.MergeParties(actorsParty, otherActorsParty);
 
-                foreach ( var partyMember in actorsParty.Concat( otherActorsParty ) )
+                foreach (var partyMember in actorsParty.Concat(otherActorsParty))
                 {
                     partyMember.Location = actor.Location;
                 }
                 return $"{SimulationUtils.GetConcatenatedActorNames(actorsParty)} merged parties with {SimulationUtils.GetConcatenatedActorNames(otherActorsParty)}";
             }
-            else if ( actor.IsInParty() && !otherActor.IsInParty() )
+            else if (actor.IsInParty() && !otherActor.IsInParty())
             {
-                _manager.JoinParty( otherActor, actor.PartyId );
+                _manager.JoinParty(otherActor, actor.PartyId);
                 otherActorsParty.First().Location = actor.Location;
                 return $"{SimulationUtils.GetConcatenatedActorNames(actorsParty)} conviced {otherActorsParty.First().Name} to join their party";
             }
-            else if ( !actor.IsInParty() && otherActor.IsInParty() )
+            else if (!actor.IsInParty() && otherActor.IsInParty())
             {
-                _manager.JoinParty( actor, otherActor.PartyId );
+                _manager.JoinParty(actor, otherActor.PartyId);
                 actor.Location = otherActor.Location;
-                return $"{actorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames( otherActorsParty )}";
+                return $"{actorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames(otherActorsParty)}";
             }
             else
             {
-                _manager.CreateParty( actor, otherActor );
+                _manager.CreateParty(actor, otherActor);
                 otherActor.Location = actor.Location;
                 return $"{actorsParty.First().Name} created a party with {otherActorsParty.First().Name}";
             }
@@ -92,25 +136,26 @@
         /// Leave the current party the actor is a part of
         /// </summary>
         /// <param name="actor"></param>
-        private string HandleLeaveParty( IActor actor, List<IActor> actorsParty )
+        private string HandleLeaveParty(IActor actor, List<IActor> actorsParty)
         {
             // dispand any parties that are have less than two people
-            if ( actorsParty.Count <= 2 )
+            if (actorsParty.Count <= 2)
             {
-                _manager.DisbandParty( actorsParty );
-                return $"the party with {SimulationUtils.GetConcatenatedActorNames( actorsParty )} has been dispanded";
+                _manager.DisbandParty(actorsParty);
+                return $"the party with {SimulationUtils.GetConcatenatedActorNames(actorsParty)} has been dispanded";
             }
             else
             {
                 // otherwise, just leave the party
-                _manager.LeaveParty( actor );
-                actorsParty.Remove( actor );
-                return $"{actor.Name} left {SimulationUtils.GetConcatenatedActorNames( actorsParty )} party";
+                _manager.LeaveParty(actor);
+                actorsParty.Remove(actor);
+                return $"{actor.Name} left {SimulationUtils.GetConcatenatedActorNames(actorsParty)} party";
             }
         }
 
         public void Dispose()
         {
+            _eventService.OnEventCompleted -= EventService_OnEventCompleted;
             _combatService.CombatEnded -= CombatService_CombatEnded;
         }
     }
@@ -121,7 +166,7 @@
         Leave
     }
 
-    public record PartyRequest( PartyRequestType partyRequestType, IActor actor, List<IActor> actorsParty, List<IActor> otherActorsParty = null )
+    public record PartyRequest(PartyRequestType partyRequestType, IActor actor, List<IActor> actorsParty, List<IActor> otherActorsParty = null)
     {
         public PartyRequestType PartyRequestType { get; set; } = partyRequestType;
 
@@ -132,7 +177,7 @@
         public List<IActor>? OtherActorsParty { get; set; } = otherActorsParty;
     }
 
-    public record PartyResponse( string message )
+    public record PartyResponse(string message)
     {
         public string Message { get; set; } = message;
     }

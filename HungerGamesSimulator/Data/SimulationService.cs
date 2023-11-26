@@ -8,15 +8,19 @@
         private PartyService _partyService;
         private MovementService _movementService;
         private PartyFinder _partyFinder;
+        private EventService _eventService;
+
+        private int actionsToTake;
 
         public SimulationService( Simulation simulation )
         {
             _simulation = simulation;
             _combatService = new CombatService();
-            _partyService = new PartyService( _combatService );
             _movementService = new MovementService();
             _partyFinder = new PartyFinder();
             _messageCenter = new MessageCenter();
+            _eventService = new EventService(_simulation, _messageCenter);
+            _partyService = new PartyService( _combatService, _eventService );
         }
 
         /// <summary>
@@ -26,43 +30,54 @@
         {
             ClearMessageCenter();
 
-            _messageCenter.AddMessage( $"Day {_simulation.Day}" );
-            _simulation.IncreaseDay();
-
             var aliveActors = _simulation.GetAliveActors();
-            if ( aliveActors == null || !aliveActors.Any() )
+            if (aliveActors == null || !aliveActors.Any())
             {
-                _messageCenter.AddMessage( "There are not any alive actors to act with." );
+                _messageCenter.AddMessage("There are not any alive actors to act with.");
                 return;
             }
+            _messageCenter.AddMessage( $"Day {_simulation.Day}" );
 
-            if ( ShouldSuddenDeathTrigger() )
-            {
-                var suddenDeathEvent = new SuddenDeathEvent( aliveActors, _messageCenter );
-                IActor lastAliveActor = suddenDeathEvent.Simulate();
-                _messageCenter.AddMessage($"{lastAliveActor.Name} is the last one standing after the suddent death event.");
-                return;
-            }
+            // number of actions tributes can take reduces if there are events
+            actionsToTake = _simulation.ActionsPerDay - DecideEvents();
 
             var partiesWent = new HashSet<Guid>();
-            foreach ( var actor in aliveActors )
+            for (int i = 0; i < actionsToTake; i++)
             {
-                if ( ( actor.IsInParty() && !partiesWent.Contains( actor.PartyId ) ) || !actor.IsInParty() )
+                foreach (var actor in aliveActors)
                 {
-                    Act( actor );
+                    if ((actor.IsInParty() && !partiesWent.Contains(actor.PartyId)) || !actor.IsInParty())
+                    {
+                        Act(actor);
+                    }
+
+                    if (actor.IsInParty())
+                    {
+                        partiesWent.Add(actor.PartyId);
+                    }
                 }
 
-                if ( actor.IsInParty() )
+                // diagnostic data for debugging
+                System.Diagnostics.Debug.WriteLine($"Day {_simulation.Day}");
+                foreach (var actor in aliveActors)
                 {
-                    partiesWent.Add( actor.PartyId );
+                    System.Diagnostics.Debug.WriteLine($"Actor with name: {actor.Name} has party: {actor.PartyId} and health: {actor.Health} with location: {actor.Location}");
                 }
+
+                // get next state of alive actors
+                aliveActors = _simulation.GetAliveActors();
+                if (aliveActors == null || !aliveActors.Any())
+                {
+                    _messageCenter.AddMessage("There are not any alive actors to act with.");
+                    break;
+                }
+
+                partiesWent.Clear();
             }
 
-            System.Diagnostics.Debug.WriteLine( $"Day {_simulation.Day}" );
-            foreach ( var actor in aliveActors )
-            {
-                System.Diagnostics.Debug.WriteLine( $"Actor with name: {actor.Name} has party: {actor.PartyId} and health: {actor.Health} with location: {actor.Location}" );
-            }
+            // increase simulation day
+            _simulation.IncreaseDay();
+
         }
 
         /// <summary>
@@ -217,6 +232,30 @@
         }
 
         /// <summary>
+        /// Decide if there will be an event for today
+        /// </summary>
+        /// <returns>the number of actions the event took, if there was one</returns>
+        private int DecideEvents()
+        {
+            if (_simulation.Day == 1)
+            {
+                return _eventService.HandleEventCreation(EventName.Cornucopia);
+            }
+
+            if (_simulation.Day % 3 == 0)
+            {
+                return _eventService.HandleEventCreation(EventName.Burn);
+            }
+
+            if (ShouldSuddenDeathEventTrigger())
+            {
+                return _eventService.HandleEventCreation(EventName.SuddenDeath);
+            }
+
+            return 0;
+        }
+
+        /// <summary>
         /// Get the party of an actor
         /// </summary>
         /// <param name="actor"></param>
@@ -249,7 +288,7 @@
             return _simulation.GetRandomActorInArea( origin, toIgnore, predicate );
         }
 
-        private bool ShouldSuddenDeathTrigger()
+        private bool ShouldSuddenDeathEventTrigger()
         {
            var aliveActors = _simulation.GetActors( actor => actor.Health >= 1 );
            if ( aliveActors.Count() == 2 )
