@@ -32,6 +32,7 @@
 
                 if (party != null)
                 {
+                    party.Add(actorToIgnore);
                     return true;
                 }
                 return false;
@@ -45,7 +46,7 @@
                     partiesWent.Add(actor.PartyId);
 
                     var deadMembers = party.Count(actor => actor.IsDead() );
-                    if (deadMembers <= party.Count() - 1)
+                    if (deadMembers >= party.Count - 1)
                     {
                         _manager.DisbandParty( party );
                         continue;
@@ -65,13 +66,13 @@
         private void CombatService_CombatEnded(object? sender, CombatEndedEventArgs e)
         {
             var deadFighters = e.Fighters.Count(actor => actor.Health < 1);
-            if (deadFighters == e.Fighters.Count() - 1)
+            if (deadFighters == e.Fighters.Count - 1)
             {
                 _manager.DisbandParty(e.Fighters);
             }
 
             var deadDefenders = e.Defenders.Count(actor => actor.Health < 1);
-            if (deadDefenders == e.Defenders.Count() - 1)
+            if (deadDefenders == e.Defenders.Count - 1)
             {
                 _manager.DisbandParty(e.Defenders);
             }

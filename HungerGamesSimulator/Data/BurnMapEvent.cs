@@ -1,4 +1,6 @@
-﻿namespace HungerGamesSimulator.Data
+﻿using System.Diagnostics;
+
+namespace HungerGamesSimulator.Data
 {
     public class BurnMapEvent : Event
     {
@@ -19,20 +21,37 @@
             _simulation.Height -= 1;
             _simulation.Width -= 1;
 
+            _messageCenter.AddMessage($"The map burns to {_simulation.Height} by {_simulation.Width}");
+
+
             bool ranFromFire;
             bool killedThemSelves;
-            List<IActor> actorsAffected = new();
+            var actorsAffected = _simulation.GetAliveActors();
+            Debug.Assert(actorsAffected != null, "Cannot have no alive actors in sudden dead event");
 
-            foreach (var actor in _simulation.GetActors())
+            foreach (var actor in actorsAffected )
             {
-                ranFromFire = SimulationUtils.RollD20() + actor.Dexerity >= _burnOffDC;
-                killedThemSelves = SimulationUtils.RollD20() + actor.Wisdom <= _suicideDC;
-
-                if ((actor.Location.X > _simulation.Width ||
-                    actor.Location.Y > _simulation.Height) &&
-                    ranFromFire && 
-                    !killedThemSelves)
+                if ( actor.Location.X > _simulation.Width || actor.Location.Y > _simulation.Height )
                 {
+                    ranFromFire = SimulationUtils.RollD20() + actor.Dexerity >= _burnOffDC;
+                    killedThemSelves = SimulationUtils.RollD20() + actor.Wisdom <= _suicideDC;
+
+                    if ( !ranFromFire || killedThemSelves)
+                    {
+                        actor.TakeDamage(_burnDamage);
+
+                        if (killedThemSelves)
+                        {
+                            _messageCenter.AddMessage($"{actor.Name} couldn't take the stress of being in the Hunger Games and killed themselves.");
+                        }
+                        else
+                        {
+                            _messageCenter.AddMessage($"{actor.Name} was eaten by the flames while running for safety.");
+                        }
+
+                        _messageCenter.AddCannonMessage(actor);
+                        continue;
+                    }
 
                     if (actor.Location.X > _simulation.Width && actor.Location.Y > _simulation.Height)
                     {
@@ -44,28 +63,16 @@
                     }
                     else
                     {
-                        actor.Location = new Coord(actor.Location.X, actor.Location.Y);
+                        actor.Location = new Coord(actor.Location.X, _simulation.Height);
                     }
 
                     _messageCenter.AddMessage($"{actor.Name} successfully ran from the flames.");
                 }
                 else
                 {
-                    actor.TakeDamage(_burnDamage);
-
-                    if (killedThemSelves)
-                    {
-                        _messageCenter.AddMessage($"{actor.Name} couldn't take the stress of being in the Hunger Games and killed themselves.");
-                    }
-                    else
-                    {
-                        _messageCenter.AddMessage($"{actor.Name} was eaten by the flames while running for safety.");
-                    }
+                    _messageCenter.AddMessage($"{actor.Name} was not affected by the shrinkage");
                 }
-
-                actorsAffected.Add(actor);
             }
-
 
             return actorsAffected;
         }

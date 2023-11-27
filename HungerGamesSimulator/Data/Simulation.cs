@@ -28,7 +28,7 @@ public class Simulation
 
     public Weapon GetRandomWeapon(Weapon? toIgnore = null)
     {
-        var weapons = _weapons.Where(weapon => !toIgnore.HasValue || weapon.Name == toIgnore.Value.Name).ToList();
+        var weapons = _weapons.Where(weapon => !toIgnore.HasValue || weapon.Name != toIgnore.Value.Name).ToList();
         return weapons[Random.Shared.Next(weapons.Count)];
     }
 

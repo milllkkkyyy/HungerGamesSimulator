@@ -41,9 +41,20 @@
             // number of actions tributes can take reduces if there are events
             actionsToTake = _simulation.ActionsPerDay - DecideEvents();
 
+            if (actionsToTake <= 0)
+            {
+                System.Diagnostics.Debug.WriteLine($"Day {_simulation.Day}");
+                foreach (var actor in aliveActors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Actor with name: {actor.Name} has party: {actor.PartyId} and health: {actor.Health} with location: {actor.Location}");
+                }
+            }
+
             var partiesWent = new HashSet<Guid>();
             for (int i = 0; i < actionsToTake; i++)
             {
+                _messageCenter.AddMessage($"Part {i + 1}/{actionsToTake} of Day {_simulation.Day}");
+
                 foreach (var actor in aliveActors)
                 {
                     if ((actor.IsInParty() && !partiesWent.Contains(actor.PartyId)) || !actor.IsInParty())
@@ -237,6 +248,11 @@
         /// <returns>the number of actions the event took, if there was one</returns>
         private int DecideEvents()
         {
+            if (ShouldSuddenDeathEventTrigger())
+            {
+                return _eventService.HandleEventCreation(EventName.SuddenDeath);
+            }
+
             if (_simulation.Day == 1)
             {
                 return _eventService.HandleEventCreation(EventName.Cornucopia);
@@ -245,11 +261,6 @@
             if (_simulation.Day % 3 == 0)
             {
                 return _eventService.HandleEventCreation(EventName.Burn);
-            }
-
-            if (ShouldSuddenDeathEventTrigger())
-            {
-                return _eventService.HandleEventCreation(EventName.SuddenDeath);
             }
 
             return 0;
@@ -290,14 +301,18 @@
 
         private bool ShouldSuddenDeathEventTrigger()
         {
+           if (_simulation.Width <= 1 && _simulation.Height <= 1)
+           {
+              return true;
+           }
            var aliveActors = _simulation.GetActors( actor => actor.Health >= 1 );
-           if ( aliveActors.Count() == 2 )
+           if ( aliveActors.Count == 2 )
            {
               return true;
            }
 
            var actorsInParty = GetParty( aliveActors.First() );
-           if ( aliveActors.Count() == actorsInParty.Count() )
+           if ( aliveActors.Count == actorsInParty.Count )
            { 
               return true;
            }

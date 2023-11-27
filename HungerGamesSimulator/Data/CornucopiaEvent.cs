@@ -5,9 +5,9 @@ namespace HungerGamesSimulator.Data
 {
     public class CornucopiaEvent : Event
     {
-        private const int ConfidenceDC = 10;
+        private const int ConfidenceDC = 4;
 
-        private const int GrabWeaponDC = 14;
+        private const int GrabWeaponDC = 8;
 
         private readonly IReadOnlyList<IActor> _actorsInEvent;
 
@@ -32,7 +32,7 @@ namespace HungerGamesSimulator.Data
             // determine which tributes run to cornucopia or away
             foreach (var actor in _actorsInEvent)
             {
-                if (actor.Dexerity + SimulationUtils.RollD20() > GrabWeaponDC && actor.Wisdom + SimulationUtils.RollD20() > ConfidenceDC)
+                if (actor.Dexerity + SimulationUtils.RollD20() >= GrabWeaponDC && actor.Wisdom + SimulationUtils.RollD20() >= ConfidenceDC)
                 {
                     actorsThatAreFighting.Add(actor);
                 }
@@ -96,7 +96,11 @@ namespace HungerGamesSimulator.Data
                     continue;
                 }
 
-                var otherActor = EventUtils.GetRandomActor(_actorsInEvent, actor);
+                var otherActor = EventUtils.GetRandomActor(actorsParticipatingInBloodBath, actor);
+                if (otherActor == null)
+                {
+                    break;
+                }
 
                 fighters.Add(actor);
                 defenders.Add(otherActor);
@@ -135,9 +139,9 @@ namespace HungerGamesSimulator.Data
         private bool TryGetRandomActorInEvent( List<IActor> actors, [NotNullWhen(returnValue: true)] out IActor? randomActor, HashSet<IActor>? actorsWent = null  )
         {
             var actorsPossible = actors.Where(actor => actorsWent != null && !actorsWent.Contains(actor)).ToList();
-            if (actorsPossible != null)
+            if (actorsPossible != null && actorsPossible.Count != 0)
             {
-                randomActor = actorsPossible[Random.Shared.Next(actorsPossible.Count())];
+                randomActor = actorsPossible[Random.Shared.Next(actorsPossible.Count)];
                 return true;
             }
 
@@ -157,8 +161,8 @@ namespace HungerGamesSimulator.Data
             inAdvantage.Weapon = GetWeaponFromLoot(inAdvantage);
             if (inAdvantage.Wisdom + SimulationUtils.RollD20() < ConfidenceDC)
             {
-                _messageCenter.AddMessage($"{inDisadvantage.Name} outpaced {inAdvantage.Name} in grabbing a {inAdvantage.Weapon.Name}, but they ran away. Allowing {inDisadvantage.Name} to get a {inDisadvantage.Weapon.Name} and escape");
                 inDisadvantage.Weapon = GetWeaponFromLoot(inDisadvantage);
+                _messageCenter.AddMessage($"{inAdvantage.Name} outpaced {inDisadvantage.Name} in grabbing a {inAdvantage.Weapon.Name}, but {inAdvantage.Name} ran away from the fight. Allowing {inDisadvantage.Name} to get a {inDisadvantage.Weapon.Name} and escape");
                 return;
             }
 
@@ -167,16 +171,16 @@ namespace HungerGamesSimulator.Data
             var response = _combatService.Simulate(new CombatRequest(fighters, defenders));
             if (response.Escaped)
             {
-                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon} and attacked {inDisadvantage.Name}. {inDisadvantage.Name} escaped");
+                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon.Name} and attacked {inDisadvantage.Name}. {inDisadvantage.Name} escaped");
             }
             else if (response.DefendersDied)
             {
-                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon} and slayed {inDisadvantage.Name}");
+                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon.Name} and slayed {inDisadvantage.Name}");
                 _messageCenter.AddCannonMessage(inDisadvantage);
             }
             else
             {
-                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon} and attacked {inDisadvantage.Name}, but {inDisadvantage.Name} was able to slay {inAdvantage.Name}");
+                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon.Name} and attacked {inDisadvantage.Name}, but {inDisadvantage.Name} was able to slay {inAdvantage.Name}");
                 inDisadvantage.Weapon = inAdvantage.Weapon;
                 _messageCenter.AddCannonMessage(inAdvantage);
             }

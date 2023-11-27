@@ -34,6 +34,10 @@ namespace HungerGamesSimulator.Data
                     }
 
                     var otherActor = EventUtils.GetRandomActor(_actorsInEvent, actor);
+                    if (otherActor == null)
+                    {
+                        break;
+                    }
 
                     if (actor.SimulateHit(otherActor))
                     {
