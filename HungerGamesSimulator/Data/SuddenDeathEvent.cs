@@ -1,75 +1,80 @@
-﻿namespace HungerGamesSimulator.Data
+﻿using System.Diagnostics;
+
+namespace HungerGamesSimulator.Data
 {
-  /// <summary>
-  /// Event that simulates suddent death. All actors will attack each other.
-  /// </summary>
-  public class SuddenDeathEvent
-  {
-    private List<IActor> actorsInEvent;
-    private IMessageCenter messageCenter;
-    private bool eventFinished = false;
-
-    public SuddenDeathEvent( List<IActor> actorsInEvent, IMessageCenter messageCenter )
-    {
-      this.actorsInEvent = actorsInEvent;
-      this.messageCenter = messageCenter;
-    }
-
     /// <summary>
-    /// Simulate a sudden death event
+    /// Event that simulates suddent death. All actors will attack each other.
     /// </summary>
-    /// <returns>the actor who wins the sudden death event</returns>
-    public IActor Simulate()
+    public class SuddenDeathEvent : Event
     {
-      messageCenter.AddMessage( $"A Sudden Death Event started with {SimulationUtils.GetConcatenatedActorNames(actorsInEvent)}" );
+        private readonly IReadOnlyList<IActor> _actorsInEvent;
 
-      while ( !eventFinished )
-      {
-        foreach ( var actor in actorsInEvent )
+        private bool _eventFinished = false;
+        public override int ActionsTook { get; }
+
+        public SuddenDeathEvent(Simulation simulation, IMessageCenter messageCenter) : base (simulation, messageCenter )
         {
-          if ( actor.Health < 1 )
-          {
-            continue;
-          }
-
-          var otherActor = GetRandomActor( actor );
-
-          if ( actor.SimulateHit( otherActor ) )
-          {
-            otherActor.TakeDamage( SimulationUtils.CalculateDamage( actor ) );
-            messageCenter.AddMessage( $"{actor.Name} hit {otherActor.Name} with {actor.Weapon.Name}" );
-          }
-          else
-          {
-            messageCenter.AddMessage( $"{actor.Name} missed their attack on {otherActor.Name}" );
-          }
-
-          if ( otherActor.Health < 1 )
-          {
-            messageCenter.AddMessage( $"{actor.Name} slayed {otherActor.Name}" );
-            messageCenter.AddCannonMessage( otherActor );
-          }
-
+            var participatingActors = simulation.GetAliveActors();
+            Debug.Assert(participatingActors != null, "Cannot have no alive actors in sudden dead event");
+            this._actorsInEvent = participatingActors;
+            ActionsTook = _simulation.ActionsPerDay;
         }
 
-        UpdateEventFinished();
-        CombatUtils.Shuffle( actorsInEvent );
+        public override IReadOnlyList<IActor> Run()
+        {
+            _messageCenter.AddMessage($"A Sudden Death Event started with {SimulationUtils.GetConcatenatedActorNames(_actorsInEvent)}");
+            List<IActor> actorsFighting = _actorsInEvent.ToList();
+            while (!_eventFinished)
+            {
+                foreach (var actor in actorsFighting)
+                {
+                    if (actor.Health < 1)
+                    {
+                        continue;
+                    }
 
-      }
+                    var otherActor = EventUtils.GetRandomActor(_actorsInEvent, actor);
+                    if (otherActor == null)
+                    {
+                        break;
+                    }
 
-      return actorsInEvent.First( actor => actor.Health > 0 );
+                    if (actor.SimulateHit(otherActor))
+                    {
+                        otherActor.TakeDamage(SimulationUtils.CalculateDamage(actor));
+                        _messageCenter.AddMessage($"{actor.Name} hit {otherActor.Name} with {actor.Weapon.Name}");
+                    }
+                    else
+                    {
+                        _messageCenter.AddMessage($"{actor.Name} missed their attack on {otherActor.Name}");
+                    }
+
+                    if (otherActor.Health < 1)
+                    {
+                        _messageCenter.AddMessage($"{actor.Name} slayed {otherActor.Name}");
+                        _messageCenter.AddCannonMessage(otherActor);
+                    }
+
+                }
+
+                UpdateEventFinished();
+                CombatUtils.Shuffle(actorsFighting);
+
+            }
+
+            _messageCenter.AddMessage($"{GetWinner().Name} is the last one standing after the suddent death event.");
+
+            return _actorsInEvent;
+        }
+
+        private IActor GetWinner()
+        {
+            return _actorsInEvent.First(actor => !actor.IsDead());
+        }
+
+        private void UpdateEventFinished()
+        {
+            _eventFinished = _actorsInEvent.Count(actor => !actor.IsDead()) == 1;
+        }
     }
-
-    private void UpdateEventFinished()
-    {
-      eventFinished = actorsInEvent.Count( actor => actor.Health > 0 ) == 1;
-    }
-
-    private IActor GetRandomActor( IActor toIgnore )
-    {
-      var aliveActors = actorsInEvent.Where( actor => actor.Health > 0 ).Where( actor => actor != toIgnore ).ToList();
-      var otherActor = aliveActors[ Random.Shared.Next( aliveActors.Count() ) ];
-      return otherActor;
-    }
-  }
 }

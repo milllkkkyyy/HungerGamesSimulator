@@ -18,13 +18,13 @@ namespace HungerGamesSimulator.Data
             {
                 Converters =
                 {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    new JsonStringEnumConverter()
                 }
             };
 
-            var response = await _httpClient.GetFromJsonAsync<IEnumerable<Weapon>>( "https://localhost:7142/data/weapons.json", options );
+            var response = await _httpClient.GetFromJsonAsync<List<Weapon>>( "https://localhost:7142/data/weapons.json", options );
             System.Diagnostics.Debug.Assert( response != null );
-            return response.ToList();
+            return response;
         }
     }
 }

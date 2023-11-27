@@ -5,6 +5,7 @@ public class Simulation
   public int Width { get; set; } = 5;
   public int Height { get; set; } = 5;
   public int Day { get; internal set; } = 1;
+  public int ActionsPerDay { get; set; } = 2;
 
   private List<IActor> _actors;
   private List<Weapon> _weapons;
@@ -24,6 +25,12 @@ public class Simulation
   {
     Day++;
   }
+
+    public Weapon GetRandomWeapon(Weapon? toIgnore = null)
+    {
+        var weapons = _weapons.Where(weapon => !toIgnore.HasValue || weapon.Name != toIgnore.Value.Name).ToList();
+        return weapons[Random.Shared.Next(weapons.Count)];
+    }
 
   public IActor? GetRandomActorInArea( Coord center, IActor? toIgnore = null, Predicate<IActor>? predicate = null )
   {
