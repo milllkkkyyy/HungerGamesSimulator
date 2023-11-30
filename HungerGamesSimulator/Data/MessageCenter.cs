@@ -34,4 +34,9 @@ public class MessageCenter : IMessageCenter
     {
         _cannonMessages.Add( $"{actor.Name}" );
     }
+
+    public int GetCannonMessagesCount()
+    {
+        return _cannonMessages.Count;
+    }
 }

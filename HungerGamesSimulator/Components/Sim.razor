@@ -2,174 +2,169 @@
 @inject HttpClient HttpClient;
 
 <div class="main">
-  <h3>The 1st Annual Hunger Games</h3>
-  <div class="simulationText">
-
-  @if ( state == SimulationState.Winner )
-  {
-      <p> @GetWinnerText() </p>
-
-  }
-    else if ( state == SimulationState.Description )
-  {
-      @foreach ( var message in UserState?.ActiveSimulation.GetMessages() ?? new List<string>() )
-      {
-        <p> @message </p>
-      }
-  }
-    else if ( state == SimulationState.Cannon )
-  {
-      <p> @UserState?.ActiveSimulation.GetCannonMessages().Count Cannon shot(s) can be heard in the distance </p>
-      @foreach ( var message in UserState?.ActiveSimulation.GetCannonMessages() ?? new List<string>() )
-      {
-        <p> @message </p>
-      }
-  }
-  else
-  {
-      <p> Click continue to start the simulation </p>
-  }
-
-    <button @onclick="UpdateState"> Continue </button>
-    <button @onclick="Restart"> Restart </button>
-  </div>
+    <h3>The 1st Annual Hunger Games</h3>
+    <div class="simulationText">
+        @if (state == SimulationState.Winner)
+        {
+            <p> @GetWinnerText() </p>
+        }
+        else if (state == SimulationState.Description)
+        {
+            <DisplayList Text="UserState?.ActiveSimulation.GetMessages()"></DisplayList>
+        }
+        else if (state == SimulationState.Cannon)
+        {
+            <p> @UserState?.ActiveSimulation.GetCannonShotAmounts() Cannon shot(s) can be heard in the distance </p>
+            <DisplayList Text="UserState?.ActiveSimulation.GetCannonMessages()"></DisplayList>
+        }
+        else
+        {
+            <p> Click continue to start the simulation </p>
+        }
+        <button @onclick="UpdateState"> Continue </button>
+        <button @onclick="Restart"> Restart </button>
+    </div>
 </div>
 
 @code {
-  [Parameter]
-  public UserState? UserState { get; set; }
+    [Parameter]
+    public UserState? UserState { get; set; }
 
-  [Parameter]
-  public EventCallback<UserState?> UserStateChanged { get; set; }
+    [Parameter]
+    public EventCallback<UserState?> UserStateChanged { get; set; }
 
-  [Parameter]
-  public bool Reset { get; set; }
+    [Parameter]
+    public bool Reset { get; set; }
 
-  [Parameter]
-  public List<IActor>? Tributes { get; set; }
+    [Parameter]
+    public List<IActor>? Tributes { get; set; }
 
-  private SimulationState state = SimulationState.Empty;
+    private SimulationState state = SimulationState.Empty;
 
-  private Storage? storage;
+    private Storage? storage;
 
-  protected override async Task OnInitializedAsync()
-  {
-    storage = new Storage(HttpClient);
-
-    if ( Reset )
+    protected override async Task OnInitializedAsync()
     {
-      await Restart();
+        storage = new Storage(HttpClient);
+
+        if (Reset)
+        {
+            await Restart();
+        }
+
+        if (UserState != null)
+        {
+            state = UserState.CurrentState;
+        }
     }
 
-    if ( UserState != null)
+    private async Task UpdateState()
     {
-      state = UserState.CurrentState;
-    }
-  }
+        switch (state)
+        {
+            case SimulationState.Cannon:
+                {
+                    if (UserState != null && UserState.ActiveSimulation.IsSimulationFinished())
+                    {
+                        state = SimulationState.Winner;
+                    }
+                    else
+                    {
+                        state = SimulationState.Description;
+                        Simulate();
+                    }
+                }
+                break;
+            case SimulationState.Description:
+                {
+                    if (UserState != null && UserState.ActiveSimulation.GetCannonMessages().Count > 0)
+                    {
+                        state = SimulationState.Cannon;
+                    }
+                    else if (UserState != null && UserState.ActiveSimulation.IsSimulationFinished())
+                    {
+                        state = SimulationState.Winner;
+                    }
+                    else
+                    {
+                        Simulate();
+                    }
+                }
+                break;
+            case SimulationState.Winner:
+                {
+                    state = SimulationState.Empty;
+                }
+                break;
+            default:
+                {
+                    await Restart();
+                    state = SimulationState.Description;
+                    Simulate();
+                }
+                break;
+        }
 
-  private async Task UpdateState()
-  {
-    switch (state)
+        if (UserState != null)
+        {
+            UserState.CurrentState = state;
+        }
+    }
+
+    private void Simulate()
     {
-      case SimulationState.Cannon:
-      {
-        if ( UserState != null && UserState.ActiveSimulation.IsSimulationFinished() )
+        if (UserState == null)
         {
-          state = SimulationState.Winner;
+            return;
         }
-        else
+
+        UserState.ActiveSimulation.Act();
+    }
+
+    private async Task Restart()
+    {
+        if (storage == null)
         {
-          state = SimulationState.Description;
-          Simulate();
+            throw new ArgumentNullException("Storage was not initialized properly");
         }
-      }
-      break;
-      case SimulationState.Description:
-      {
-        if (UserState != null && UserState.ActiveSimulation.GetCannonMessages().Count > 0)
+
+        if (Tributes == null)
         {
-          state = SimulationState.Cannon;
+            throw new ArgumentNullException("Tributes was not initialized properly");
         }
-        else
+
+        // reset tributes
+        foreach (var tribute in Tributes)
         {
-          Simulate();
+            if (tribute is Actor actor)  // This check is needed if IActor might have implementations other than Actor
+            {
+                actor.Reset();
+            }
         }
-      }
-      break;
-      case SimulationState.Winner:
-      {
+
+        // TO:DO Maybe converting the storage local variable to a class property?
+        // retrieve weapon data from a static json stored on the client
+        var response = await storage.GetWeaponsAsync();
+
+        // create new simulation
+        var simulation = new Simulation(Tributes, response);
+        var simulationService = new SimulationService(simulation);
         state = SimulationState.Empty;
-      }
-      break;
-      default:
-      {
-        await Restart();
-        state = SimulationState.Description;
-        Simulate();
-      }
-      break;
+
+        // save the new user state
+        UserState = new UserState(state, simulationService);
+        await UserStateChanged.InvokeAsync(UserState);
     }
 
-    if (UserState != null)
-    {      
-      UserState.CurrentState = state;
-    }
-  }
-
-  private void Simulate()
-  {
-    if (UserState == null)
+    private string GetWinnerText()
     {
-      return; 
+        if (UserState == null || UserState.ActiveSimulation == null)
+        {
+            return String.Empty;
+        }
+
+        var actor = UserState.ActiveSimulation.GetWinner();
+
+        return $"The winner of the Xst hunger games is {actor.Name}";
     }
-
-    UserState.ActiveSimulation.Act();
-  }
-
-  private async Task Restart()
-  {
-    if (storage == null)
-    {
-      throw new ArgumentNullException( "Storage was not initialized properly" );
-    }
-
-    if (Tributes == null)
-    {
-      throw new ArgumentNullException( "Tributes was not initialized properly" );
-    }
-
-    // reset tributes
-    foreach (var tribute in Tributes)
-    {
-      if (tribute is Actor actor)  // This check is needed if IActor might have implementations other than Actor
-      {
-        actor.Reset();
-      }
-    }
-
-    // TO:DO Maybe converting the storage local variable to a class property?
-    // retrieve weapon data from a static json stored on the client
-    var response = await storage.GetWeaponsAsync();
-
-    // create new simulation
-    var simulation = new Simulation(Tributes, response);
-    var simulationService = new SimulationService( simulation );
-    state = SimulationState.Empty;
-
-    // save the new user state
-    UserState = new UserState( state, simulationService );
-    await UserStateChanged.InvokeAsync( UserState );
-  }
-  
-  private string GetWinnerText()
-  {
-    if ( UserState == null || UserState.ActiveSimulation == null )
-    {
-      return String.Empty; 
-    }
-
-    var actor = UserState.ActiveSimulation.GetWinner();
-
-    return $"The winner of the Xst hunger games is {actor.Name}";
-  }
 }

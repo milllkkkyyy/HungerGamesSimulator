@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HungerGamesSimulator", "HungerGamesSimulator\HungerGamesSimulator.csproj", "{77B0E0F6-5E64-4EEA-BB91-7C7132510A7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HungerGamesTests", "HungerGamesTests\HungerGamesTests.csproj", "{8A89A204-FA13-4A45-AD03-84927C1D32B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HungerGamesTests", "HungerGamesTests\HungerGamesTests.csproj", "{8A89A204-FA13-4A45-AD03-84927C1D32B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

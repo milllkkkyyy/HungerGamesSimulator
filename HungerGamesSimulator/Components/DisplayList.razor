@@ -1,0 +1,9 @@
+﻿@foreach (var line in Text)
+{
+    <p> @line </p>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public List<string> Text { get; set; } = null!;
+}

@@ -345,6 +345,11 @@
             return _messageCenter.GetCannonMessages();
         }
 
+        public int GetCannonShotAmounts()
+        {
+            return _messageCenter.GetCannonMessagesCount();
+        }
+
         public IActor GetWinner()
         {
            return _simulation.GetActors( actor => actor.Health >= 1 ).First();
