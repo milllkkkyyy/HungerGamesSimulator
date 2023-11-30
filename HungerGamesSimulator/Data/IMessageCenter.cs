@@ -8,5 +8,7 @@
         public void ClearMessages();
         public List<string> GetMessages();
         public List<string> GetCannonMessages();
+
+        public int GetCannonMessagesCount();
     }
 }
