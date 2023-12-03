@@ -8,14 +8,14 @@ public class MessageCenterTests
     
     [Fact] public void Test_Class_Creation()
     {
-        var messageCenter = new MessageCenter();
+        var messageCenter = new MessageCenter( new Dictionary<string, IReadOnlyList<string>>() );
         Assert.NotNull(messageCenter);
     }
 
     [Fact]
     public void Test_Add_Message()
     {
-        var messageCenter = new MessageCenter();
+        var messageCenter = new MessageCenter( new Dictionary<string, IReadOnlyList<string>>() );
         messageCenter.AddMessage( message );
         Assert.Contains(message, messageCenter.GetMessages());
     }
@@ -23,7 +23,7 @@ public class MessageCenterTests
     [Fact]
     public void Test_Clear_Message()
     {
-        var messageCenter = new MessageCenter();
+        var messageCenter = new MessageCenter(new Dictionary<string, IReadOnlyList<string>>());
         messageCenter.AddMessage( message );
         messageCenter.ClearMessages();
         Assert.Empty(messageCenter.GetMessages());
