@@ -1,19 +1,38 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace HungerGamesSimulator.Data;
 
 public abstract class Actor : IActor
 {
-  private readonly int stayInPartyDC = 4;
-  private readonly int lookForPartyDC = 16;
-  private readonly int lookForCombatDC = 14;
+  private readonly int _stayInPartyDC = 4;
+  private readonly int _lookForPartyDC = 16;
+  private readonly int _lookForCombatDC = 14;
 
-  public string Name { get; }
-  public Guid ActorId { get; } = Guid.Empty;
-  public int ArmourClass { get; } = 12;
-  public int Speed { get; } = 1;
-  public int Strength { get; } = 2;
-  public int Dexerity { get; } = 1;
-  public int Charisma { get; } = 0;
-  public int Wisdom { get; } = 0;
+  // Form variables
+
+  [Required]
+  public string Name { get; set; }
+  
+  [Required]
+  public int ArmourClass { get; set; } = 12;
+  
+  [Required]
+  [Range( 1, int.MaxValue, ErrorMessage = "Strength modifier must be between -4 and 4" )]
+  public int Speed { get; set; } = 1;
+  
+  [Range( -4, 4, ErrorMessage = "Strength modifier must be between -4 and 4" )]
+  public int Strength { get; set; } = 2;
+
+  [Range( -4, 4, ErrorMessage = "Dexerity modifier must be between -4 and 4" )]
+  public int Dexerity { get; set; } = 1;
+
+  [Range( -4, 4, ErrorMessage = "Charisma modifier must be between -4 and 4" )]
+  public int Charisma { get; set; } = 0;
+
+  [Range( -4, 4, ErrorMessage = "Wisdom modifier must be between -4 and 4" )]
+  public int Wisdom { get; set; } = 0;
+
+  public Guid ActorId { get; set; } = Guid.Empty;
   public Coord Location { get; set; }
   public int Health { get; set; } = 12;
   public Weapon Weapon { get; set; } = new Weapon();
@@ -40,18 +59,18 @@ public abstract class Actor : IActor
 
     if ( IsInParty() )
     {
-      if ( SimulationUtils.RollD20() + Charisma <= stayInPartyDC )
+      if ( SimulationUtils.RollD20() + Charisma <= _stayInPartyDC )
       {
         return ActorAction.LeaveParty;
       }
     }
 
-    if ( SimulationUtils.RollD20() + Charisma >= lookForPartyDC )
+    if ( SimulationUtils.RollD20() + Charisma >= _lookForPartyDC )
     {
       return ActorAction.JoinParty;
     }
 
-    if ( SimulationUtils.RollD20() + Strength >= lookForCombatDC )
+    if ( SimulationUtils.RollD20() + Strength >= _lookForCombatDC )
     {
       return ActorAction.Attacking;
     }

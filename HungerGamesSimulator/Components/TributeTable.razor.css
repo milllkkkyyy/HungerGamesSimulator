@@ -1,0 +1,51 @@
+﻿.tributes-table {
+  overflow-x: auto;
+}
+
+#tributes {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0px;
+  border: none;
+  border-radius: 8px;
+}
+
+  #tributes tr.header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  #tributes tr:nth-child(even) {
+    background-color: lightgoldenrodyellow;
+  }
+
+  #tributes th.header {
+    background: pink;
+    padding: 2px
+  }
+
+  #tributes tr.info,
+  #tributes td.info {
+    text-align: center;
+    padding: 10px
+  }
+
+tr.info:first-child,
+th.header:first-child {
+}
+
+th.header:first-child {
+  border-radius: 5px 0 0 0;
+}
+
+th.header:last-child {
+  border-radius: 0 5px 0 0;
+}
+
+
+#tributes td.info {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

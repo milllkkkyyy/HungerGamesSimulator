@@ -1,42 +1,30 @@
+
+@font-face {
+  font-family: 'lemonmilk-regular';
+  src: url('fonts/lemonmilk-regular.otf');
+}
+
+@font-face {
+  font-family: 'lemonmilk-italic';
+  src: url('fonts/lemonmilk-regularitalic.otf');
+}
+
+@font-face {
+  font-family: 'dortmund-extrabold';
+  src: url('fonts/dortmund-extrabold.otf');
+}
+
+@font-face {
+  font-family: 'young';
+  src: url('fonts/young.ttf') format('truetype');
+}
+
 button {
-    height: 50px;
-    width: 200px;
-    font-size: medium;
+  height: 50px;
+  width: 200px;
+  font-size: medium;
+  font-family: young;
 }
-
-.header {
-  display: flex;
-  max-width: 100%;
-  height: 65px;
-  background: pink;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.navigation {
-  list-style: none;
-  text-decoration: none;
-  padding-right: 5%;
-}
-
- .navigation li {
-   display: inline-block;
-   font-size: 15px;
-   overflow: hidden;
-   padding: 0 10px 0 10px;
-   color: black;
-   cursor: pointer;
- }
-
-h1 {
-  padding-left: 5%;
-  margin: 0;
-}
-
-p {
-  font-style: italic;
-}
-
 
 .body {
   margin: 0 5% 0 5%;

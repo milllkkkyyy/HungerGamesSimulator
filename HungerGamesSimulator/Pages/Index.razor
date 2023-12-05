@@ -3,19 +3,11 @@
 @using HungerGamesSimulator.Data;
 @using HungerGamesSimulator.Components;
 
-<div class="header">
-  <h1> Hunger Games Simulator </h1>
-  <p>"May the odds be ever in your favor"</p>
-  <ul class="navigation">
-    <li @onclick="@( () => _state = GameState.Home )">Home</li>
-    <li>About</li>
-  </ul>
-</div>
+<Header RequestStateChangeAsync="RequestStateChange"/>
 
 <div class="body">
 
-
-  @if ( _state == GameState.Home )
+@if ( _state == GameState.Home )
 {
     <Home />
 
@@ -23,48 +15,37 @@
 }
   else if ( _state == GameState.Reaping )
 {
-    <Reaping Tributes=_tributes TributesChanged=OnTributesChanged />
+    <Reaping UserState=_userState/>
 
     <button @onclick="@ChangeState">Start Simulation</button>
 }
   else if ( _state == GameState.Simulation )
 {
-    <Sim @bind-UserState=_userState Tributes=_tributes Reset=_resetSimulation />
+    <Sim UserState=_userState />
 }
 
 @code
   {
     private GameState _state = GameState.Home;
 
-    private UserState? _userState;
-
-    private List<IActor> _tributes = new List<IActor>();
-
-    private bool _tributeUpdated;
-
-    private bool _resetSimulation;
-
-    private void OnTributesChanged( List<IActor> actors )
-    {
-      _tributes = actors;
-      _tributeUpdated = true; 
-    }
+    private UserState _userState = new UserState();
 
     private void ChangeState()
     {
       switch (_state)
       {
         case GameState.Home:
-          _state = GameState.Reaping;
-          break;
+        _state = GameState.Reaping;
+        break;
         case GameState.Reaping:
-       
-          _resetSimulation = _tributeUpdated;
-          _tributeUpdated = false;
-
         _state = GameState.Simulation;
-          break;
+        break;
       }
+    }
+
+    private void RequestStateChange(GameState state)
+    {
+      _state = state; 
     }
 }
      

@@ -9,11 +9,11 @@
     }
 
     public enum SimulationState
-    {
+  {
+        Empty,
         Cannon,
         Winner,
-        Description,
-        Empty
+        Description
     }
 
 }

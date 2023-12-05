@@ -3,71 +3,45 @@
 <h2>Tributes</h2>
 
 <p> Add your Tributes names in the form below.</p>
-<form>
-  <label for="tribute-name"> Name: </label>
-  <input type="text" id="tribute-name" @bind="_name" placeholder="Tributes Name" @onkeyup="@(async args => { if (args.Code == EnterCode) { await CreateTribute(); } })">
+<TributeForm OnTributeCreated="AddTribute" />
 
-  <label for="tribute-attribute"> Attribute: </label>
-  <input type="text" id="tribute-attribute" placeholder="Tributes Attribute">
+<br>
+
+<div class="tribute-table">
+<p> Here is the current list of Tributes:</p>
+  <TributeTable OnTributeDeleted="RemoveTribute" actors="UserState.Tributes"/>  
+  
+  <br>
 
   <div class="button-container">
-    <button type="button" @onclick="@CreateTribute">Add Tribute</button>
     <button type="button" id="tribute-clear" @onclick="@ClearTributes">Clear Tributes</button>
-  </div> <!-- end button-container-->
-</form>
+  </div>
+</div>
 
-<p> Here is the current list of Tributes:</p>
-<div class="tributes-table">
-  <table id="tributes">
-    <tr class="header">
-      <th class="header">Names</th>
-      <th class="header">Delete</th>
-    </tr>
-    @foreach ( var tribute in Tributes )
-    {
-      <tr class="info">
-        <td class="info">@tribute.Name</td>
-        <td class="info">
-          <button @onclick="@( async () => await RemoveTribute(tribute))">Remove Tribute</button>
-        </td>
-      </tr>
-    }
-  </table>
-</div> <!-- end tributes table-->
 <br>
 
 @code
 {
-  [Parameter]
-  public List<IActor> Tributes { get; set; }
-
-  [Parameter]
-  public EventCallback<List<IActor>> TributesChanged { get; set; }
-
-  private string? _name;
+  [Parameter, EditorRequired]
+  public UserState UserState { get; set; } = null!;
 
   private const string EnterCode = "Enter";
 
-  private async Task CreateTribute()
+  private void AddTribute( IActor tribute )
   {
-    if ( string.IsNullOrWhiteSpace( _name ) )
-    {
-      return;
-    }
-
-    Tributes.Add( new Tribute( _name ) );
-    await TributesChanged.InvokeAsync( Tributes );
+    UserState.Tributes.Add( tribute );
+    UserState.Reset = true;
   }
 
-  private async Task RemoveTribute( IActor tribute )
+  private void RemoveTribute( IActor tribute )
   {
-    Tributes.Remove(tribute);
-    await TributesChanged.InvokeAsync( Tributes );
+    UserState.Tributes.Remove( tribute );
+    UserState.Reset = true;
   }
 
-  private async Task ClearTributes()
+  private void ClearTributes()
   {
-    Tributes.Clear();
-    await TributesChanged.InvokeAsync( Tributes );
+    UserState.Tributes.Clear();
+    UserState.Reset = true;
   }
 }

@@ -10,12 +10,12 @@
         }
         else if (state == SimulationState.Description)
         {
-            <DisplayList Text="UserState?.ActiveSimulation.GetMessages()"></DisplayList>
+            <DisplayList Text="UserState?.ActiveSimulation?.GetMessages()"></DisplayList>
         }
         else if (state == SimulationState.Cannon)
         {
-            <p> @UserState?.ActiveSimulation.GetCannonShotAmounts() Cannon shot(s) can be heard in the distance </p>
-            <DisplayList Text="UserState?.ActiveSimulation.GetCannonMessages()"></DisplayList>
+            <p> @UserState?.ActiveSimulation?.GetCannonShotAmounts() Cannon shot(s) can be heard in the distance </p>
+            <DisplayList Text="UserState?.ActiveSimulation?.GetCannonMessages()"></DisplayList>
         }
         else
         {
@@ -27,17 +27,8 @@
 </div>
 
 @code {
-    [Parameter]
-    public UserState? UserState { get; set; }
-
-    [Parameter]
-    public EventCallback<UserState?> UserStateChanged { get; set; }
-
-    [Parameter]
-    public bool Reset { get; set; }
-
-    [Parameter]
-    public List<IActor>? Tributes { get; set; }
+    [Parameter, EditorRequired]
+    public UserState UserState { get; set; } = null!;
 
     private SimulationState state = SimulationState.Empty;
 
@@ -47,15 +38,13 @@
     {
         storage = new Storage(HttpClient);
 
-        if (Reset)
+        if (UserState.Reset)
         {
             await Restart();
+            UserState.Reset = false;
         }
 
-        if (UserState != null)
-        {
-            state = UserState.CurrentState;
-        }
+        state = UserState.CurrentState;
     }
 
     private async Task UpdateState()
@@ -118,7 +107,7 @@
             return;
         }
 
-        UserState.ActiveSimulation.Act();
+        UserState.ActiveSimulation?.Act();
     }
 
     private async Task Restart()
@@ -128,13 +117,8 @@
             throw new ArgumentNullException("Storage was not initialized properly");
         }
 
-        if (Tributes == null)
-        {
-            throw new ArgumentNullException("Tributes was not initialized properly");
-        }
-
         // reset tributes
-        foreach (var tribute in Tributes)
+        foreach (var tribute in UserState.Tributes )
         {
             if (tribute is Actor actor)  // This check is needed if IActor might have implementations other than Actor
             {
@@ -147,13 +131,13 @@
         var response = await storage.GetWeaponsAsync();
 
         // create new simulation
-        var simulation = new Simulation(Tributes, response);
+        var simulation = new Simulation(UserState.Tributes, response);
         var simulationService = new SimulationService(simulation);
         state = SimulationState.Empty;
 
         // save the new user state
-        UserState = new UserState(state, simulationService);
-        await UserStateChanged.InvokeAsync(UserState);
+        UserState.ActiveSimulation = simulationService;
+        UserState.CurrentState = state;
     }
 
     private string GetWinnerText()

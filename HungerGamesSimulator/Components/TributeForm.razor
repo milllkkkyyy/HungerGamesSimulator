@@ -1,0 +1,40 @@
+﻿@using HungerGamesSimulator.Data;
+
+<div class="edit-form">
+<EditForm class="edit-form" Model=@tribute OnValidSubmit=@ValidFormSubmitted>
+  <DataAnnotationsValidator/>
+    <ValidationSummary />
+    <label for="name"> Name: </label>
+    <InputText class="form-control" id="name" @bind-Value="tribute.Name" placeholder="John Doe"></InputText>
+    <label for="armourclass"> Armour Class: </label>
+    <InputNumber class="form-control" id="armourclass" @bind-Value="tribute.ArmourClass"></InputNumber>
+    <label for="speed"> Speed (a number greater than zero):  </label>
+    <InputNumber class="form-control" id="speed" @bind-Value="tribute.Speed"></InputNumber>
+    <label for="strength"> Strength (a number between -4 and 4):  </label>
+    <InputNumber class="form-control" id="strength" @bind-Value="tribute.Strength"></InputNumber>
+    <label for="dexerity"> Dexerity (a number between -4 and 4):  </label>
+    <InputNumber class="form-control" id="dexerity" @bind-Value="tribute.Dexerity"></InputNumber>
+    <label for="charisma"> Charisma (a number between -4 and 4):  </label>
+    <InputNumber class="form-control" id="charisma" @bind-Value="tribute.Charisma"></InputNumber>
+    <label for="wisdom"> Wisdom (a number between -4 and 4):  </label>
+    <InputNumber class="form-control" id="wisdom" @bind-Value="tribute.Wisdom"></InputNumber>
+     <div class="button-container">
+       <button class="button" type="submit">Sumbit</button>
+     </div>
+</EditForm>
+</div>
+
+  @code {
+    [Parameter]
+    public EventCallback<IActor> OnTributeCreated { get; set; }
+
+    private const string EnterCode = "Enter";
+
+    private Tribute tribute = new Tribute();
+
+    public async Task ValidFormSubmitted( EditContext editContext )
+    {
+        await OnTributeCreated.InvokeAsync( tribute );
+        tribute = new Tribute();
+    }
+}

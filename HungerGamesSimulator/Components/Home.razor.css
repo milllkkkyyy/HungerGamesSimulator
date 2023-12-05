@@ -1,5 +1,7 @@
-button {
-    height: 50px;
-    width: 200px;
-    font-size: medium;
+﻿h2, h3 {
+  font-family: "lemonmilk-regular"
+}
+
+p, ul {
+  font-family: young;
 }

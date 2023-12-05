@@ -1,0 +1,15 @@
+﻿@using HungerGamesSimulator.Data;
+
+<div class="header">
+  <h1> Hunger Games Simulator </h1>
+  <p>"May the odds be ever in your favor"</p>
+  <ul class="navigation">
+    <li @onclick="@( async () => await RequestStateChangeAsync.InvokeAsync( GameState.Home ) )">Home</li>
+    <li>About</li>
+  </ul>
+</div>
+
+@code {
+  [Parameter]
+  public EventCallback<GameState> RequestStateChangeAsync { get; set; }
+}
