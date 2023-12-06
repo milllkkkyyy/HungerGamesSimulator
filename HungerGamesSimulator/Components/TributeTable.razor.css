@@ -1,38 +1,31 @@
 ﻿.tributes-table {
-  overflow-x: auto;
+  margin-inline: auto;
+  max-width: 100%;
+  overflow-x: scroll;
 }
 
-#tributes {
-  table-layout: fixed;
+#tributes { 
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0px;
-  border: none;
-  border-radius: 8px;
+  border-collapse: collapse;
 }
 
-  #tributes tr.header {
-    padding-top: 12px;
-    padding-bottom: 12px;
-  }
+#tributes tr.header {
+}
 
-  #tributes tr:nth-child(even) {
-    background-color: lightgoldenrodyellow;
-  }
+#tributes tr:nth-child(even) {
+  background-color: lightgoldenrodyellow;
+}
 
-  #tributes th.header {
-    background: pink;
-    padding: 2px
-  }
+#tributes th.header {
+  padding: 1rem;
+  background: pink;
+  text-align: left;
+}
 
-  #tributes tr.info,
-  #tributes td.info {
-    text-align: center;
-    padding: 10px
-  }
-
-tr.info:first-child,
-th.header:first-child {
+#tributes tr.info,
+#tributes td.info {
+  text-align: center;
+  padding: 1rem;
 }
 
 th.header:first-child {
@@ -45,7 +38,9 @@ th.header:last-child {
 
 
 #tributes td.info {
-  text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
+}
+
+::deep button {
+    width: 100%;
 }

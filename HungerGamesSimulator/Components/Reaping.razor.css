@@ -1,13 +1,3 @@
-﻿.tribute-table {
-  border: 1px dotted pink;
-  border-radius: 4px;
-  padding: 10px;
-  min-width: 13%;
-}
-
-
-::deep button {
-  background: #EC9706;
-  border: 1px solid pink;
-  border-radius: 5px;
+﻿::deep button {
+  font-size: smaller;
 }

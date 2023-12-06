@@ -19,14 +19,26 @@
   src: url('fonts/young.ttf') format('truetype');
 }
 
+::deep button {
+    font-family: lemonmilk-regular;
+    border-radius: 5px;
+    color: #d4924c;
+    background: #303030;
+}
+
 button {
-  height: 50px;
-  width: 200px;
-  font-size: medium;
-  font-family: young;
+    height: 50px;
+    width: 200px;
+    font-size: medium;
+}
+
+::deep button:hover,
+button:focus {
+    color: white;
 }
 
 .body {
     margin: auto;
-    max-width: 50%;
+    max-width: 75%;
+    font-family: young;
 }
