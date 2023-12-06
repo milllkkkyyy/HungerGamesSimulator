@@ -1,13 +1,17 @@
 ﻿@using HungerGamesSimulator.Data;
 
-<div class="header">
-  <h1> Hunger Games Simulator </h1>
-  <p>"May the odds be ever in your favor"</p>
-  <ul class="navigation">
-    <li @onclick="@( async () => await RequestStateChangeAsync.InvokeAsync( GameState.Home ) )">Home</li>
-    <li>About</li>
-  </ul>
-</div>
+<header>
+    <div class="container container-nav">
+        <h1> Hunger Games Simulator </h1>
+        <p>"May the odds be ever in your favor"</p>
+        <nav>
+            <ul>
+                <li @onclick="@( async () => await RequestStateChangeAsync.InvokeAsync( GameState.Home ) )">Home</li>
+                <li>About</li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
 @code {
   [Parameter]
