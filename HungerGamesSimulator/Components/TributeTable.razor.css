@@ -9,17 +9,15 @@
   border-collapse: collapse;
 }
 
-#tributes tr.header {
-}
-
 #tributes tr:nth-child(even) {
-  background-color: lightgoldenrodyellow;
+  background-color: #e1e1e1;
 }
 
-#tributes th.header {
+#tributes th.header {  
+  color: #d4924c;
   padding: 1rem;
-  background: pink;
-  text-align: left;
+  background: #303030;
+  text-align: center;
 }
 
 #tributes tr.info,

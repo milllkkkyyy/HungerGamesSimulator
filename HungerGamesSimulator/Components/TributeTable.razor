@@ -4,9 +4,12 @@
   <table id="tributes">
     <tr class="header">
       <th class="header">Names</th>
-      <th class="header">Armour Class</th>
+      <th class="header">AC</th>
       <th class="header">Speed</th>
-      <th class="header">STR, DEX, CHR, WIS</th>
+      <th class="header">STR</th>
+      <th class="header">DEX</th>
+      <th class="header">CHR</th>
+      <th class="header">WIS</th>
       <th class="header">Delete</th>
     </tr>
     @foreach ( var tribute in actors )
@@ -15,7 +18,10 @@
         <td class="info">@tribute.Name</td>
         <td class="info">@tribute.ArmourClass</td>
         <td class="info">@tribute.Speed</td>
-        <td class="info">@tribute.Strength, @tribute.Dexerity, @tribute.Charisma, @tribute.Wisdom</td>
+        <td class="info">@tribute.Strength</td>
+        <td class="info">@tribute.Dexerity</td>
+        <td class="info">@tribute.Charisma</td>
+        <td class="info">@tribute.Wisdom</td>
         <td class="info">
           <button @onclick="@( async () => await DeleteTribute(tribute))">Remove Tribute</button>
         </td>
