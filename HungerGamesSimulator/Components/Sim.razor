@@ -2,7 +2,7 @@
 @inject HttpClient HttpClient;
 
 <div class="main">
-    <h3>The 1st Annual Hunger Games</h3>
+    <h1>The 1st Annual Hunger Games</h1>
     <div class="simulationText">
         @if (state == SimulationState.Winner)
         {
@@ -21,8 +21,10 @@
         {
             <p> Click continue to start the simulation </p>
         }
-        <button @onclick="UpdateState"> Continue </button>
-        <button @onclick="Restart"> Restart </button>
+        <div class="button-container">
+            <button @onclick="UpdateState"> Continue </button>
+            <button @onclick="Restart"> Restart </button>
+        </div>
     </div>
 </div>
 

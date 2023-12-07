@@ -1,6 +1,6 @@
 ﻿@foreach (var line in Text)
 {
-    <p> @line </p>
+   <p> @( new MarkupString(line) ) </p>
 }
 
 @code {

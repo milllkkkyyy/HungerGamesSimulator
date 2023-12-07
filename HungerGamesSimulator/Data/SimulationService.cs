@@ -36,7 +36,7 @@
                 _messageCenter.AddMessage("There are not any alive actors to act with.");
                 return;
             }
-            _messageCenter.AddMessage( $"Day {_simulation.Day}" );
+            _messageCenter.AddMessage( $"<h2>Day {_simulation.Day}</h2>" );
 
             // number of actions tributes can take reduces if there are events
             actionsToTake = _simulation.ActionsPerDay - DecideEvents();

@@ -3,7 +3,11 @@
 }
 
 .simulationText {
-    margin: 25px auto;
-    width: 50%;
-    border: 1px solid black;
+    width: 100%;
+    border: 2px solid #303030;
+    border-radius: 2px;
+}
+
+.button-container {
+    padding: 10px 0;
 }

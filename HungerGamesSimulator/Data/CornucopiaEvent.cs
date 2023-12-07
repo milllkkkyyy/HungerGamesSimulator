@@ -74,8 +74,8 @@ namespace HungerGamesSimulator.Data
                 }
                 else
                 {
-                    var weapon = GetWeaponFromLoot(actor);
-                    _messageCenter.AddMessage($"{actor.Name} ran towards the cornucopia and grabbed a {weapon.Name} while everyone was distracted");
+                    actor.Weapon = GetWeaponFromLoot(actor);
+                    _messageCenter.AddMessage($"{actor.Name} ran towards the cornucopia and grabbed a {actor.Weapon.Name} while everyone was distracted");
                 }
 
 
