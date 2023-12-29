@@ -28,6 +28,8 @@ Basic Service.json Template
 ]
 ```
 
+When you create a new json for a service you must add it to the Files.Json in the same folder
+
 ### Contexts
 
 An array of contexts which describe what the string should be used for. These need to be implemented in the codebase in order to be used in the designer string system.
