@@ -14,7 +14,7 @@ Basic Service.json Template
     "Inputs": [
       {
         "Type": "Tribute",
-        "Requirements": [ "HasWeapon=Bow" ]
+        "Requirements": [ "HasWeapon=Bow", "!IsDead" ]
       },
       {
         "Type": "Tribute",
@@ -42,6 +42,8 @@ Currently implemented types (with implemented requirements):
 * Tribute ( IsDead, HasWeapon=OptionalWeaponName, IsInParty )
 * Party
 * Int
+
+With requirements you can negate them by inserting a "!" infront of the requirement string
 
 ### Texts
 
