@@ -1,8 +1,10 @@
-﻿namespace HungerGamesSimulator.Data
+﻿using HungerGamesSimulator.MessageCenter;
+
+namespace HungerGamesSimulator.Data
 {
     public class MovementService
     {
-        public MovementResponse Move( MovementRequest request )
+        public void Simulate( MovementRequest request )
         {
             if ( !request.actorsToMove.Any() )
             {
@@ -38,8 +40,6 @@
             {
                 actor.Location = wishLocation;
             }
-
-            return new MovementResponse( lastLocation, wishLocation );
         }
 
     }
@@ -50,11 +50,4 @@
 
         public SimulationSnapshot SimulationSnapshot { get; } = snapshot;
     }
-
-    public record MovementResponse( Coord pastLocation, Coord newLocation )
-    {
-        public Coord PastLocation { get; } = pastLocation;
-        public Coord NewLocation { get; } = newLocation;
-    }
-
 }

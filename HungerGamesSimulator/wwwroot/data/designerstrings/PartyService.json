@@ -1,0 +1,58 @@
+[
+  {
+    "Contexts": [ "PartyJoin" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} convinced {input[1]} to join them to fight the hunger games"
+    ]
+  },
+  {
+    "Contexts": [ "PartyJoin" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Party"
+      }
+    ],
+    "Texts": [
+      "{input[0]} and {input[1]} decided they would be better off fighting together"
+    ]
+  },
+  {
+    "Contexts": [ "PartyJoin" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} and {input[1]} join arms to take on the hunger games"
+    ]
+  },
+  {
+    "Contexts": [ "PartyLeave" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} decided to part ways with {input[1]} after they called someones mom fat"
+    ]
+  }
+]

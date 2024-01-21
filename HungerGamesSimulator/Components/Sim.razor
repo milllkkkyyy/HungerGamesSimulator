@@ -10,12 +10,12 @@
         }
         else if (state == SimulationState.Description)
         {
-            <DisplayList Text="UserState?.ActiveSimulation?.GetMessages()"></DisplayList>
+            <DisplayList Text="UserState?.MessageCenter?.GetMessages()"></DisplayList>
         }
         else if (state == SimulationState.Cannon)
         {
-            <p> @UserState?.ActiveSimulation?.GetCannonShotAmounts() Cannon shot(s) can be heard in the distance </p>
-            <DisplayList Text="UserState?.ActiveSimulation?.GetCannonMessages()"></DisplayList>
+            <p> @UserState?.MessageCenter?.GetCannonMessagesCount() Cannon shot(s) can be heard in the distance </p>
+            <DisplayList Text="UserState?.MessageCenter?.GetCannonMessages()"></DisplayList>
         }
         else
         {
@@ -38,7 +38,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        storage = new Storage(HttpClient);
+        if (storage == null)
+        {
+            storage = new Storage(HttpClient);            
+        }
 
         if (UserState.Reset)
         {
@@ -51,16 +54,19 @@
 
     private async Task UpdateState()
     {
+        UserState?.MessageCenter?.ClearMessages();
+
         switch (state)
         {
             case SimulationState.Cannon:
                 {
-                    if (UserState != null && UserState.ActiveSimulation.IsSimulationFinished())
+                    if (UserState != null && ( UserState?.ActiveSimulation?.IsSimulationFinished() ?? false ) )
                     {
                         state = SimulationState.Winner;
                     }
                     else
                     {
+                        UserState?.MessageCenter?.ClearCannonMessages();
                         state = SimulationState.Description;
                         Simulate();
                     }
@@ -68,11 +74,11 @@
                 break;
             case SimulationState.Description:
                 {
-                    if (UserState != null && UserState.ActiveSimulation.GetCannonMessages().Count > 0)
+                    if (UserState != null && UserState?.MessageCenter?.GetCannonMessages().Count > 0)
                     {
                         state = SimulationState.Cannon;
                     }
-                    else if (UserState != null && UserState.ActiveSimulation.IsSimulationFinished())
+                    else if (UserState != null && (UserState?.ActiveSimulation?.IsSimulationFinished() ?? false))
                     {
                         state = SimulationState.Winner;
                     }
@@ -131,15 +137,18 @@
         // TO:DO Maybe converting the storage local variable to a class property?
         // retrieve weapon data from a static json stored on the client
         var response = await storage.GetWeaponsAsync();
+        var otherResponse = await storage.GetServiceGameStrings();
 
         // create new simulation
-        var simulation = new Simulation(UserState.Tributes, response);
-        var simulationService = new SimulationService(simulation);
+        var simulation = new Simulation(UserState.Tributes, response, otherResponse);
+        var messageCenter = new MessageCenter();
+        var simulationService = new SimulationService(simulation, messageCenter);
         state = SimulationState.Empty;
 
         // save the new user state
         UserState.ActiveSimulation = simulationService;
         UserState.CurrentState = state;
+        UserState.MessageCenter = messageCenter;
     }
 
     private string GetWinnerText()

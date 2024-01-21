@@ -1,0 +1,24 @@
+[
+  {
+    "Contexts": [ "Move" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      }
+    ],
+    "Texts": [
+      "{input[0]} walked a couple miles to search for tributes"
+    ]
+  },
+  {
+    "Contexts": [ "Move" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} walked around to find a new hiding spot"
+    ]
+  }
+]

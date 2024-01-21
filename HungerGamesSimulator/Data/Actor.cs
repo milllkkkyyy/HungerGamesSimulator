@@ -32,7 +32,7 @@ public abstract class Actor : IActor
   [Range( -4, 4, ErrorMessage = "Wisdom modifier must be between -4 and 4" )]
   public int Wisdom { get; set; } = 0;
 
-  public Guid ActorId { get; set; } = Guid.Empty;
+  public Guid ActorId { get; set; } = Guid.NewGuid();
   public Coord Location { get; set; }
   public int Health { get; set; } = 12;
   public Weapon Weapon { get; set; } = new Weapon();
@@ -107,5 +107,10 @@ public abstract class Actor : IActor
   public bool IsInParty()
   {
     return PartyId != Guid.Empty;
+  }
+
+  public override string ToString()
+  { 
+    return Name;
   }
 }

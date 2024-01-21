@@ -1,0 +1,89 @@
+[
+  {
+    "Contexts": [ "Combat" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Bow" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} shoots an arrow in the chest of {input[1]} killing him swiftly"
+    ]
+  },
+  {
+    "Contexts": [ "Combat" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} hangs out with {input[1]}"
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute",
+        "Requriements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} murders {input[1]}"
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} attacks {input[1]} after noticing they were alone"
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} jumps {input[1]} who was making a fire"
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Party"
+      }
+    ],
+    "Texts": [
+      "{input[0]} jumps {input[1]}"
+    ]
+  }
+]
