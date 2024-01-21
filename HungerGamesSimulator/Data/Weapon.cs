@@ -53,5 +53,10 @@ namespace HungerGamesSimulator.Data
             }
             return sum;
         }
+
+        public override string ToString()
+        {
+            return Name ?? "Null";
+        }
     }
 }

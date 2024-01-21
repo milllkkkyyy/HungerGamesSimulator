@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using HungerGamesSimulator.MessageCenter;
+using System.Diagnostics;
 
 namespace HungerGamesSimulator.Data
 {
@@ -11,9 +12,13 @@ namespace HungerGamesSimulator.Data
         private const int _burnDamage = 999999;
         public override int ActionsTook { get; }
 
+        private readonly GameStringBuilder _gameStringBuilder;
+
+
         public BurnMapEvent( Simulation simulation, IMessageCenter messageCenter ) : base(simulation, messageCenter)
         {
             ActionsTook = _simulation.ActionsPerDay;
+            _gameStringBuilder = _simulation.GameStringFactory.CreateStringBuilder();
         }
 
         public override IReadOnlyList<IActor> Run()
@@ -21,7 +26,7 @@ namespace HungerGamesSimulator.Data
             _simulation.Height -= 1;
             _simulation.Width -= 1;
 
-            _messageCenter.AddMessage($"The map burns to {_simulation.Height} by {_simulation.Width}");
+            _messageCenter.AddMessage($"The map shrinks to {_simulation.Height} by {_simulation.Width}");
 
 
             bool ranFromFire;
@@ -42,11 +47,11 @@ namespace HungerGamesSimulator.Data
 
                         if (killedThemSelves)
                         {
-                            _messageCenter.AddMessage($"{actor.Name} couldn't take the stress of being in the Hunger Games and killed themselves.");
+                            _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.BurnMapSuicide }, actor );
                         }
                         else
                         {
-                            _messageCenter.AddMessage($"{actor.Name} was eaten by the flames while running for safety.");
+                            _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.BurnMapFail }, actor );
                         }
 
                         _messageCenter.AddCannonMessage(actor);
@@ -66,12 +71,14 @@ namespace HungerGamesSimulator.Data
                         actor.Location = new Coord(actor.Location.X, _simulation.Height);
                     }
 
-                    _messageCenter.AddMessage($"{actor.Name} successfully ran from the flames.");
+                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.BurnMapSucceed }, actor );
                 }
                 else
                 {
-                    _messageCenter.AddMessage($"{actor.Name} was not affected by the shrinkage");
+                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.BurnMapIgnore }, actor );
                 }
+
+                _messageCenter.AddMessage( _gameStringBuilder.ToString() );
             }
 
             return actorsAffected;

@@ -1,0 +1,46 @@
+[
+  {
+    "Contexts": [ "PartySearchFail" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      }
+    ],
+    "Texts": [
+      "{input[0]} searched for tributes to join their party but couldn't find anyone"
+    ]
+  },
+  {
+    "Contexts": [ "PartySearchFail" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} searched for tributes to join their party but couldn't find anyone"
+    ]
+  },
+  {
+    "Contexts": [ "CombatSearchFail" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      }
+    ],
+    "Texts": [
+      "{input[0]} searched for tributes to attack but couldn't find anyone"
+    ]
+  },
+  {
+    "Contexts": [ "CombatSearchFail" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} searched for tributes to attack but couldn't find anyone"
+    ]
+  }
+]

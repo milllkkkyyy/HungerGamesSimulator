@@ -1,20 +1,24 @@
-﻿namespace HungerGamesSimulator.Data
+﻿using HungerGamesSimulator.MessageCenter;
+using System.Collections.Immutable;
+
+namespace HungerGamesSimulator.Data
 {
     /// <summary>
     /// Creates and manages tributes parties
     /// </summary>
     public class PartyService : IDisposable
     {
-        private readonly string FailMessage = "Party service cannot handle this party request type";
-
         private PartyManager _manager;
         private CombatService _combatService;
         private EventService _eventService;
+        private MemoryService _memoryService;
 
-        public PartyService(CombatService combatService, EventService eventService)
+        public PartyService(CombatService combatService, EventService eventService, MemoryService memoryService)
         {
             _combatService = combatService;
             _eventService = eventService;
+            _memoryService = memoryService;
+
             _manager = new PartyManager();
 
             _eventService.OnEventCompleted += EventService_OnEventCompleted;
@@ -78,57 +82,40 @@
             }
         }
 
-        public PartyResponse HandlePartyRequest(PartyRequest request)
+        /// <summary>
+        /// Joins a party together depending on their situation
+        /// </summary>
+        /// <param name="request"></param>
+        public void JoinParty( JoinPartyRequest request )
         {
-            string message = FailMessage;
+            request.Builder.QueueInformation(new ContextType[] { ContextType.PartyJoin }, request.Actor.IsInParty() ? request.ActorsParty : request.Actor, !request.OtherActor.IsInParty() ? request.OtherActor : request.OtherActorsParty);
 
-            switch (request.PartyRequestType)
+            if (request.Actor.IsInParty() && request.OtherActor.IsInParty())
             {
-                case PartyRequestType.Join:
-                    if (request.OtherActorsParty != null)
-                    {
-                        message = HandleJoinParty(request.Actor, request.ActorsParty, request.OtherActorsParty);
-                    }
-                    break;
-                case PartyRequestType.Leave:
-                    message = HandleLeaveParty(request.Actor, request.ActorsParty);
-                    break;
+                _manager.MergeParties(request.ActorsParty, request.OtherActorsParty);
             }
-
-            return new PartyResponse(message);
-        }
-
-        private string HandleJoinParty(IActor actor, List<IActor> actorsParty, List<IActor> otherActorsParty)
-        {
-            IActor otherActor = otherActorsParty.First();
-
-            if (actor.IsInParty() && otherActor.IsInParty())
+            else if (request.Actor.IsInParty() && !request.OtherActor.IsInParty())
             {
-                _manager.MergeParties(actorsParty, otherActorsParty);
-
-                foreach (var partyMember in actorsParty.Concat(otherActorsParty))
-                {
-                    partyMember.Location = actor.Location;
-                }
-                return $"{SimulationUtils.GetConcatenatedActorNames(actorsParty)} merged parties with {SimulationUtils.GetConcatenatedActorNames(otherActorsParty)}";
+                _manager.JoinParty(request.OtherActor, request.Actor.PartyId);
             }
-            else if (actor.IsInParty() && !otherActor.IsInParty())
+            else if (!request.Actor.IsInParty() && request.OtherActor.IsInParty())
             {
-                _manager.JoinParty(otherActor, actor.PartyId);
-                otherActorsParty.First().Location = actor.Location;
-                return $"{SimulationUtils.GetConcatenatedActorNames(actorsParty)} conviced {otherActorsParty.First().Name} to join their party";
-            }
-            else if (!actor.IsInParty() && otherActor.IsInParty())
-            {
-                _manager.JoinParty(actor, otherActor.PartyId);
-                actor.Location = otherActor.Location;
-                return $"{actorsParty.First().Name} joined a party with {SimulationUtils.GetConcatenatedActorNames(otherActorsParty)}";
+                _manager.JoinParty(request.Actor, request.OtherActor.PartyId);
             }
             else
             {
-                _manager.CreateParty(actor, otherActor);
-                otherActor.Location = actor.Location;
-                return $"{actorsParty.First().Name} created a party with {otherActorsParty.First().Name}";
+                _manager.CreateParty(request.Actor, request.OtherActor);
+            }
+
+            // add new memory and set location
+            var allPartyMembers = request.ActorsParty.Concat(request.OtherActorsParty).ToImmutableList();
+            foreach (var partyMember in allPartyMembers)
+            {
+                partyMember.Location = request.Actor.Location;
+
+                var partyMemebersIds = allPartyMembers.Where(actor => actor.ActorId != partyMember.ActorId)
+                    .Select(actor => actor.ActorId); 
+                _memoryService.AddActorMemory(partyMember.ActorId, partyMemebersIds , MemoryType.Good);
             }
         }
 
@@ -137,20 +124,28 @@
         /// Leave the current party the actor is a part of
         /// </summary>
         /// <param name="actor"></param>
-        private string HandleLeaveParty(IActor actor, List<IActor> actorsParty)
+        public void LeaveParty(LeavePartyRequest request)
         {
-            // dispand any parties that are have less than two people
-            if (actorsParty.Count <= 2)
+            // add new memory and set location
+            foreach (var partyMember in request.ActorsParty)
             {
-                _manager.DisbandParty(actorsParty);
-                return $"the party with {SimulationUtils.GetConcatenatedActorNames(actorsParty)} has been dispanded";
+                partyMember.Location = request.Actor.Location;
+
+                var partyMemebersIds = request.ActorsParty.Where(actor => actor.ActorId != partyMember.ActorId)
+                    .Select(actor => actor.ActorId);
+                _memoryService.AddActorMemory(partyMember.ActorId, partyMemebersIds, MemoryType.Bad);
             }
-            else
+
+            _manager.LeaveParty(request.Actor);
+
+            request.ActorsParty.Remove(request.Actor);
+
+            request.Builder.QueueInformation(new ContextType[] { ContextType.PartyLeave }, new object[] { request.Actor, request.ActorsParty });
+
+            // dispand any parties that are have less than two people
+            if (request.ActorsParty.Count < 2)
             {
-                // otherwise, just leave the party
-                _manager.LeaveParty(actor);
-                actorsParty.Remove(actor);
-                return $"{actor.Name} left {SimulationUtils.GetConcatenatedActorNames(actorsParty)} party";
+                _manager.DisbandParty(request.ActorsParty);
             }
         }
 
@@ -167,19 +162,24 @@
         Leave
     }
 
-    public record PartyRequest(PartyRequestType partyRequestType, IActor actor, List<IActor> actorsParty, List<IActor> otherActorsParty = null)
+    public record LeavePartyRequest(IActor Actor, Party ActorsParty, GameStringBuilder Builder )
     {
-        public PartyRequestType PartyRequestType { get; set; } = partyRequestType;
+        public IActor Actor { get; } = Actor;
 
-        public IActor Actor { get; set; } = actor;
+        public Party ActorsParty { get; } = ActorsParty;
 
-        public List<IActor> ActorsParty { get; set; } = actorsParty;
-
-        public List<IActor>? OtherActorsParty { get; set; } = otherActorsParty;
+        public GameStringBuilder Builder { get; } = Builder;
     }
 
-    public record PartyResponse(string message)
+    public record JoinPartyRequest(IActor Actor, IActor OtherActor, Party ActorsParty, Party OtherActorsParty, GameStringBuilder Builder)
     {
-        public string Message { get; set; } = message;
+        public IActor Actor { get; } = Actor;
+
+        public IActor OtherActor { get; } = OtherActor;
+
+        public Party ActorsParty { get; } = ActorsParty;
+
+        public Party OtherActorsParty { get; } = OtherActorsParty;
+        public GameStringBuilder Builder { get; } = Builder;
     }
 }

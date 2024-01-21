@@ -19,10 +19,5 @@ namespace HungerGamesSimulator.Data
         {
             return actor.IsInParty() && actor.PartyId == partyId;
         }
-
-        public static string GetConcatenatedActorNames( IReadOnlyList<IActor> party )
-        {
-            return party.Count() > 1 ? string.Join( ", ", party.Select( fighter => fighter.Name ).Take( party.Count() - 1 ) ) + " and " + party.Last().Name : party.First().Name;
-        }
     }
 }

@@ -60,6 +60,19 @@ namespace HungerGamesSimulator.Data
             _memoryData[playerId].AddMemory( otherId, memoryType);
         }
 
+        public void AddActorMemory(Guid playerId, IEnumerable<Guid> otherIds, MemoryType memoryType)
+        {
+            if (!_memoryData.ContainsKey(playerId))
+            {
+                _memoryData[playerId] = new MemoryBank();
+            }
+
+            foreach (Guid id in otherIds)
+            {
+                _memoryData[playerId].AddMemory(id, memoryType);
+            }
+        }
+
         public bool TryGetMemoryData(Guid playerId, Guid otherId, [MaybeNullWhen(returnValue: false)] out IReadOnlyList<MemoryType> memories)
         {
             if ( _memoryData.TryGetValue( playerId, out var memoryBank ) && memoryBank.TryGetMemory( otherId, out var actualMemory))

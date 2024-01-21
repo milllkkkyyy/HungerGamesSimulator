@@ -1,0 +1,84 @@
+[
+  {
+    "Contexts": [ "CornucopiaRunAway" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} ran away from the Cornucopia"
+    ]
+  },
+  {
+    "Contexts": [ "CornucopiaLuck" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} retrieved a {input[0].Weapon} without anyone glancing their way"
+    ]
+  },
+  {
+    "Contexts": [ "CornucopiaOutpace" ],
+    "Inputs": [
+      {
+        "Type": "CornucopiaTribute",
+        "Requirements": [ "HasAdvantage" ]
+      },
+      {
+        "Type": "CornucopiaTribute",
+        "Requirements": [ "!HasAdvantage" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} outpaced {input[1]} for a {input[0].Weapon}"
+    ]
+  },
+  {
+    "Contexts": [ "BurnMapIgnore" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} watched the fire shink the map"
+    ]
+  },
+  {
+    "Contexts": [ "BurnMapSucceed" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} successfully ran from the fire"
+    ]
+  },
+  {
+    "Contexts": [ "BurnMapFail" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} died from the fire, getting eaten by the flames while sleeping"
+    ]
+  },
+  {
+    "Contexts": [ "BurnMapSuicide" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} was sick of the hunger games, so they let the fires eat them"
+    ]
+  }
+]

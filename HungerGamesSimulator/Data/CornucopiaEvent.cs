@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using HungerGamesSimulator.MessageCenter;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HungerGamesSimulator.Data
@@ -13,15 +14,18 @@ namespace HungerGamesSimulator.Data
 
         private readonly CombatService _combatService;
 
+        private readonly GameStringBuilder _gameStringBuilder;
+
         public override int ActionsTook { get; }
 
-        public CornucopiaEvent(Simulation simulation, IMessageCenter messageCenter) : base(simulation, messageCenter)
+        public CornucopiaEvent(Simulation simulation, IMessageCenter messageCenter, MemoryService memoryService ) : base(simulation, messageCenter)
         {
             var participatingActors = simulation.GetAliveActors();
             Debug.Assert(participatingActors != null, "Cannot have no alive actors in cornucopia event");
             _actorsInEvent = participatingActors;
             ActionsTook = simulation.ActionsPerDay;
-            _combatService = new CombatService();
+            _combatService = new CombatService( memoryService );
+            _gameStringBuilder = simulation.GameStringFactory.CreateStringBuilder();
         }
 
         public override IReadOnlyList<IActor> Run()
@@ -38,9 +42,11 @@ namespace HungerGamesSimulator.Data
                 }
                 else
                 {
-                    _messageCenter.AddMessage($"{actor.Name} ran away from the Cornucopia");
+                    _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.CornucopiaRunAway } , actor );
                 }
             }
+
+            _messageCenter.AddMessage(_gameStringBuilder.ToString());
 
             // keeps track of actors that want to fight after
             List<IActor> actorsParticipatingInBloodBath = new();
@@ -63,7 +69,7 @@ namespace HungerGamesSimulator.Data
                     else
                     {
                         SimulateRunningToCornicopia(actor, otherActor);
-                    }
+                    }   
 
                     if (!otherActor.IsDead() && otherActor.Wisdom + SimulationUtils.RollD20() >= ConfidenceDC)
                     {
@@ -75,7 +81,7 @@ namespace HungerGamesSimulator.Data
                 else
                 {
                     actor.Weapon = GetWeaponFromLoot(actor);
-                    _messageCenter.AddMessage($"{actor.Name} ran towards the cornucopia and grabbed a {actor.Weapon.Name} while everyone was distracted");
+                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaLuck }, actor);
                 }
 
 
@@ -83,7 +89,9 @@ namespace HungerGamesSimulator.Data
                 {
                     actorsParticipatingInBloodBath.Add(actor);
                 }
+
                 actorsWent.Add(actor);
+                _messageCenter.AddMessage(_gameStringBuilder.ToString());
             }
 
             // simulate battleing
@@ -105,24 +113,12 @@ namespace HungerGamesSimulator.Data
                 fighters.Add(actor);
                 defenders.Add(otherActor);
 
-                var response = _combatService.Simulate(new CombatRequest(fighters, defenders));
-                if (response.Escaped)
-                {
-                    _messageCenter.AddMessage($"{actor.Name} attacked {otherActor.Name}. {otherActor.Name} was grazed in the attack");
-                }
-                else if (response.DefendersDied)
-                {
-                    _messageCenter.AddMessage($"{actor.Name} slayed {otherActor.Name}");
-                    _messageCenter.AddCannonMessage(otherActor);
-                }
-                else
-                {
-                    _messageCenter.AddMessage($"{actor.Name} attacked {otherActor.Name}, but {otherActor.Name} was able to slay {actor.Name}");
-                    _messageCenter.AddCannonMessage(actor);
-                }
+                _combatService.Simulate(new CombatRequest(fighters, defenders), _gameStringBuilder, _messageCenter);
 
                 fighters.Clear();
                 defenders.Clear();
+
+                _messageCenter.AddMessage(_gameStringBuilder.ToString());
             }
 
 
@@ -156,34 +152,17 @@ namespace HungerGamesSimulator.Data
         /// <param name="inDisadvantage"></param>
         private void SimulateRunningToCornicopia(IActor inAdvantage, IActor inDisadvantage)
         {
-            var fighters = new List<IActor>();
-            var defenders = new List<IActor>();
             inAdvantage.Weapon = GetWeaponFromLoot(inAdvantage);
+            _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaOutpace }, new object[] { new CornucopiaTribute(inAdvantage, true), new CornucopiaTribute(inDisadvantage, false) });
+
             if (inAdvantage.Wisdom + SimulationUtils.RollD20() < ConfidenceDC)
             {
+                _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaLuck }, inDisadvantage);
                 inDisadvantage.Weapon = GetWeaponFromLoot(inDisadvantage);
-                _messageCenter.AddMessage($"{inAdvantage.Name} outpaced {inDisadvantage.Name} in grabbing a {inAdvantage.Weapon.Name}, but {inAdvantage.Name} ran away from the fight. Allowing {inDisadvantage.Name} to get a {inDisadvantage.Weapon.Name} and escape");
                 return;
             }
 
-            fighters.Add(inAdvantage);
-            defenders.Add(inDisadvantage);
-            var response = _combatService.Simulate(new CombatRequest(fighters, defenders));
-            if (response.Escaped)
-            {
-                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon.Name} and attacked {inDisadvantage.Name}. {inDisadvantage.Name} escaped");
-            }
-            else if (response.DefendersDied)
-            {
-                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon.Name} and slayed {inDisadvantage.Name}");
-                _messageCenter.AddCannonMessage(inDisadvantage);
-            }
-            else
-            {
-                _messageCenter.AddMessage($"{inAdvantage.Name} picked up a {inAdvantage.Weapon.Name} and attacked {inDisadvantage.Name}, but {inDisadvantage.Name} was able to slay {inAdvantage.Name}");
-                inDisadvantage.Weapon = inAdvantage.Weapon;
-                _messageCenter.AddCannonMessage(inAdvantage);
-            }
+            _combatService.Simulate(new CombatRequest( new List<IActor>() { inAdvantage } , new List<IActor>() { inDisadvantage } ), _gameStringBuilder, _messageCenter);
         }
 
         /// <summary>
@@ -194,6 +173,25 @@ namespace HungerGamesSimulator.Data
         private Weapon GetWeaponFromLoot( IActor actorToIgnore )
         {
             return _simulation.GetRandomWeapon(actorToIgnore.Weapon);
+        }
+    }
+
+    public class CornucopiaTribute : Tribute
+    {
+        public bool HasAdvantage { get; set; }
+
+        public CornucopiaTribute( IActor tribute, bool advantage )
+        {
+            this.ActorId = tribute.ActorId;
+            this.Name = tribute.Name;
+            this.ArmourClass = tribute.ArmourClass;
+            this.Weapon = tribute.Weapon;
+            this.Charisma = tribute.Charisma;
+            this.Dexerity = tribute.Dexerity;
+            this.Wisdom = tribute.Wisdom;
+            this.Strength = tribute.Strength;
+
+            HasAdvantage = advantage;
         }
     }
 }

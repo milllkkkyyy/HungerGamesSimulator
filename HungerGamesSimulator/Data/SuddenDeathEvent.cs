@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using HungerGamesSimulator.MessageCenter;
+using System.Diagnostics;
 
 namespace HungerGamesSimulator.Data
 {
@@ -12,17 +13,23 @@ namespace HungerGamesSimulator.Data
         private bool _eventFinished = false;
         public override int ActionsTook { get; }
 
-        public SuddenDeathEvent(Simulation simulation, IMessageCenter messageCenter) : base (simulation, messageCenter )
+        private readonly GameStringBuilder _gameStringBuilder;
+
+        private readonly CombatService _combatService;
+
+        public SuddenDeathEvent(Simulation simulation, IMessageCenter messageCenter, MemoryService memoryService) : base (simulation, messageCenter )
         {
             var participatingActors = simulation.GetAliveActors();
             Debug.Assert(participatingActors != null, "Cannot have no alive actors in sudden dead event");
             this._actorsInEvent = participatingActors;
             ActionsTook = _simulation.ActionsPerDay;
+            _gameStringBuilder = simulation.GameStringFactory.CreateStringBuilder();
+            _combatService = new CombatService( memoryService );
         }
 
         public override IReadOnlyList<IActor> Run()
         {
-            _messageCenter.AddMessage($"A Sudden Death Event started with {SimulationUtils.GetConcatenatedActorNames(_actorsInEvent)}");
+            _messageCenter.AddMessage($"Sudden Death Event");
             List<IActor> actorsFighting = _actorsInEvent.ToList();
             while (!_eventFinished)
             {
@@ -39,22 +46,7 @@ namespace HungerGamesSimulator.Data
                         break;
                     }
 
-                    if (actor.SimulateHit(otherActor))
-                    {
-                        otherActor.TakeDamage(SimulationUtils.CalculateDamage(actor));
-                        _messageCenter.AddMessage($"{actor.Name} hit {otherActor.Name} with {actor.Weapon.Name}");
-                    }
-                    else
-                    {
-                        _messageCenter.AddMessage($"{actor.Name} missed their attack on {otherActor.Name}");
-                    }
-
-                    if (otherActor.Health < 1)
-                    {
-                        _messageCenter.AddMessage($"{actor.Name} slayed {otherActor.Name}");
-                        _messageCenter.AddCannonMessage(otherActor);
-                    }
-
+                    _combatService.Simulate(new CombatRequest(new List<IActor> { actor }, new List<IActor> { otherActor }), _gameStringBuilder, _messageCenter);
                 }
 
                 UpdateEventFinished();
@@ -62,7 +54,7 @@ namespace HungerGamesSimulator.Data
 
             }
 
-            _messageCenter.AddMessage($"{GetWinner().Name} is the last one standing after the suddent death event.");
+            _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.SuddenDeathWinner } , new object[] { GetWinner() });
 
             return _actorsInEvent;
         }
