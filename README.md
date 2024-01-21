@@ -42,6 +42,7 @@ Currently implemented types (with implemented requirements):
 * Tribute ( IsDead, HasWeapon=OptionalWeaponName, IsInParty )
 * Party
 * Int
+* CornucopiaTribute ( HasAdvantage, HasDisadvantage )
 
 With requirements you can negate them by inserting a "!" infront of the requirement string
 
