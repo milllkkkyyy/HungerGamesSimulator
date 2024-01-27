@@ -1,0 +1,214 @@
+[
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Shortbow" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} shoots an arrow in the chest of {input[1]} killing them swiftly.", "Shooting an arrow from {input[0]}'s bow, they pierced through {input[1]}'s neck, the horn sounding after."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Spear" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} perfectly throws their spear into {input[1]}'s head, killing them brutally.", "The spear from {input[0]} whistles through the air, cleaving out from {input[1]'s chest."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Greatclub" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} bashes {input[1]} to death with their greatclub.", "{input[1] lays dead as {input[0] screams and smashes them to bits with their greatclub."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Handaxe" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} slashes {input[1]} with their handaxe until they're no more.", "{input[0]} yanks their handaxe out of {input[1]}'s chest, covering themselves in fluids." 
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Sling" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} aims their sling at {input[1]} and badgers them until they're dead.", "{input[0]} uses their slingshot to pierce through {input[1]}'s eye."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute",
+        "Requirements": [ "HasWeapon=Greatsword" ]
+      },
+      {
+        "Type": "Tribute",
+        "Requirements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} slashes {input[1]} with their greatsword, creating a mess on the battlefield.", "{input[0] stabs {input[1]} until they're no more."
+    ]
+  },
+  {
+    "Contexts": [ "Combat" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} attacks {input[1]}.", "{input[0]} goes to incapacitate {input[1]}."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Death" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute",
+        "Requriements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} murders {input[1]}.", "{input[0]} stares at the corpse of {input[1]}, shocked they could kill another person so easily."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} attacks {input[1]} after noticing they were alone.", "{input[0]} stares at the corpse of {input[1]}, shocked they could kill another person so easily."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Tribute"
+      }
+    ],
+    "Texts": [
+      "{input[0]} jumps {input[1]} who was making a fire.", "{input[0]} notices {input[1]} searching for food, and attacks at the perfect time."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Party"
+      }
+    ],
+    "Texts": [
+      "{input[0]} jumps {input[1]}.", "input[0] decides its better to fight {input[1]} now so there isn't another party to attack later."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Tribute"
+      },
+      {
+        "Type": "Tribute",
+        "Requriements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} hears the horn and stops attacking {input[1].}'s lifeless corpse.", "{input[0] stares at their hands with {input[1].}'s blood stained on them, dumbfounded on how easy it felt."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Tribute",
+        "Requriements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} hears the horn and goes to move away from {input[1].}'s body.", "{input[0] finish attacking {input[1].}'s body, figuring it'd be dealt with eventually."
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
+        "Type": "Party"
+      },
+      {
+        "Type": "Party",
+        "Requriements": [ "IsDead" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} slowly stop to hear the horn, and switch locations from {input[1]}'s corpse(s).", "{input[0] finsihes attacking {input[1]} when the horn sound comes on."
+    ]
+  }
+]
