@@ -28,7 +28,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} perfectly throws their spear into {input[1]}'s head, killing them brutally.", "The spear from {input[0]} whistles through the air, cleaving out from {input[1]'s chest."
+      "{input[0]} perfectly throws their spear into {input[1]}'s head, killing them brutally.", "The spear from {input[0]} whistles through the air, cleaving out from {input[1]}'s chest."
     ]
   },
   {
@@ -44,7 +44,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} bashes {input[1]} to death with their greatclub.", "{input[1] lays dead as {input[0] screams and smashes them to bits with their greatclub."
+      "{input[0]} bashes {input[1]} to death with their greatclub.", "{input[1]} lays dead as {input[0]} screams and smashes them to bits with their greatclub."
     ]
   },
   {
@@ -92,7 +92,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} slashes {input[1]} with their greatsword, creating a mess on the battlefield.", "{input[0] stabs {input[1]} until they're no more."
+      "{input[0]} slashes {input[1]} with their greatsword, creating a mess on the battlefield.", "{input[0]} stabs {input[1]} until they're no more."
     ]
   },
   {
@@ -163,7 +163,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} jumps {input[1]}.", "input[0] decides its better to fight {input[1]} now so there isn't another party to attack later."
+      "{input[0]} jumps {input[1]}.", "{input[0]} decides its better to fight {input[1]} now so there isn't another party to attack later."
     ]
   },
   {
@@ -178,7 +178,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} hears the horn and stops attacking {input[1].}'s lifeless corpse.", "{input[0] stares at their hands with {input[1].}'s blood stained on them, dumbfounded on how easy it felt."
+      "{input[0]} hears the horn and stops attacking {input[1]}'s lifeless corpse.", "{input[0]} stares at their hands with {input[1]}'s blood stained on them, dumbfounded on how easy it felt."
     ]
   },
   {
@@ -193,7 +193,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} hears the horn and goes to move away from {input[1].}'s body.", "{input[0] finish attacking {input[1].}'s body, figuring it'd be dealt with eventually."
+      "{input[0]} hears the horn and goes to move away from {input[1]}'s body.", "{input[0]} finish attacking {input[1]}'s body, figuring it'd be dealt with eventually."
     ]
   },
   {
@@ -208,7 +208,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} slowly stop to hear the horn, and switch locations from {input[1]}'s corpse(s).", "{input[0] finsihes attacking {input[1]} when the horn sound comes on."
+      "{input[0]} slowly stop to hear the horn, and switch locations from {input[1]}'s corpse(s).", "{input[0]} finsihes attacking {input[1]} when the horn sound comes on."
     ]
   }
 ]
