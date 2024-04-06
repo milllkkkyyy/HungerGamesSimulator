@@ -50,7 +50,7 @@ namespace HungerGamesSimulator.MessageCenter
                 // see if the string is able to be parsed
                 if (gameString.TryToString(builder.Inputs, out var finalString))
                 {
-                    stringBuilder.Append(finalString + "<br>");
+                    stringBuilder.Append(finalString + "\n");
                 }
             }
 
