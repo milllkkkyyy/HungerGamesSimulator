@@ -176,7 +176,7 @@ namespace HungerGamesSimulator.Data
         }
     }
 
-    public class CornucopiaTribute : Tribute
+    public class CornucopiaTribute : Tribute, IBuildable
     {
         public bool HasAdvantage { get; set; }
 
@@ -193,5 +193,14 @@ namespace HungerGamesSimulator.Data
 
             HasAdvantage = advantage;
         }
+
+        #region Implements IBuildable
+
+        public new Type GetBuildableType()
+        {
+            return typeof(CornucopiaTribute);
+        }
+
+        #endregion
     }
 }

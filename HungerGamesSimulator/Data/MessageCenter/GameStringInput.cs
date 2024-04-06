@@ -4,7 +4,7 @@
     {
         public required Type Type { get; set; }
         public Requirement[]? Requirements { get; set; }
-        public ContextType[]? Contexts { get; set; }
+        public  ContextType[]? Contexts { get; set; }
     }
 
     public class GameStringInputMatches : Dictionary<int, int>
@@ -68,7 +68,9 @@
                     if (matches.ContainsKey(i) || matches.ContainsValue(j))
                         continue;
 
-                    if (_validity[i].Type != inputs[j].Input.GetType())
+                    Console.WriteLine( inputs[j].Input.GetBuildableType() );
+
+                    if (_validity[i].Type != inputs[j].Input.GetBuildableType())
                         continue;
 
                     if (!DoesPassRequirements(_validity[i].Requirements, inputs[j].Input))
@@ -84,16 +86,14 @@
 
             return matches;
 
-            bool HasValidContext(ContextType[]? contextTypes, ContextType[]? contextInputs)
+            bool HasValidContext(ContextType[]? contextTypes, ContextType[] contextInputs)
             {
-                if (contextTypes == null && contextInputs == null) 
+                if (contextTypes == null && contextInputs.Length == 0 ) 
                 {
                     return true;
-                }
-
-                if (
+                } else if (
                     contextTypes is not null &&
-                    contextInputs is not null &&
+                    contextInputs.Length != 0 &&
                     contextTypes.Length == contextInputs.Length)
                 {
                     HashSet<ContextType> contextTypesSet = new(contextTypes);

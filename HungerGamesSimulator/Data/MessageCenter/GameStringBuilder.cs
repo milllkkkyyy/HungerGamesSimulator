@@ -41,7 +41,7 @@ namespace HungerGamesSimulator.MessageCenter
 
                 if (validGameStrings.Count == 0)
                 {
-                    throw new NotImplementedException( $"No valid game string for {String.Join(",", builder.Contexts)}" );
+                    throw new NotImplementedException( $"No valid game string for {String.Join(",", builder.Contexts)} with inputs:  {String.Join(",", builder.Inputs.ToList())}" );
                 }
 
                 // pick a random game string

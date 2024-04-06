@@ -21,6 +21,7 @@ namespace HungerGamesSimulator.MessageCenter
         [JsonRequired]
         public required string Type { get; set; }
         public string[]? Requirements { get; set; }
+        public ContextType[]? Contexts { get; set; }
     }
 
 }

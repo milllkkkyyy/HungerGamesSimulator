@@ -175,7 +175,7 @@ namespace HungerGamesSimulator.Data
                 return;
             }
 
-            builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Flavor }, new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor) , new BuilderObject( otherActor.IsInParty() ? GetParty(otherActor) : otherActor) );
+            builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Flavor }, new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor, ContextType.Attacker) , new BuilderObject( otherActor.IsInParty() ? GetParty(otherActor) : otherActor, ContextType.Defender) );
 
             ProcessCombat( actor, otherActor, builder );
         }
