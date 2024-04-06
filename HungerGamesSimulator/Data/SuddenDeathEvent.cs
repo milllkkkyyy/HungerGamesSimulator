@@ -54,7 +54,7 @@ namespace HungerGamesSimulator.Data
 
             }
 
-            _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.SuddenDeathWinner } , new object[] { GetWinner() });
+            _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.SuddenDeathWinner } , new BuilderObject( GetWinner() ));
 
             return _actorsInEvent;
         }

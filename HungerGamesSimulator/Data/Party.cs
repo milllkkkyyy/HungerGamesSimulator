@@ -1,9 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using HungerGamesSimulator.MessageCenter;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace HungerGamesSimulator.Data
 {
-    public class Party : List<IActor>
+    public class Party : List<IActor>, IBuildable
     {
 
         public Party Dead 

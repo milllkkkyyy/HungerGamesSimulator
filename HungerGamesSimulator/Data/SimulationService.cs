@@ -130,7 +130,7 @@ namespace HungerGamesSimulator.Data
                         if (otherActor == null)
                         {
                             // joining a party cannot be processed without a tribute
-                            builder.QueueInformation(new ContextType[] { ContextType.PartySearchFail }, new object[] { actor.IsInParty() ? GetParty(actor) : actor });
+                            builder.QueueInformation(new ContextType[] { ContextType.PartySearchFail },  new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor  ) );
                             _messageCenter.AddMessage(builder.ToString());
                             break;
                         }
@@ -170,12 +170,12 @@ namespace HungerGamesSimulator.Data
             if (otherActor == null)
             {
                 // combat cannot be processed without a tribute
-                builder.QueueInformation(new ContextType[] { ContextType.CombatSearchFail }, new object[] { actor.IsInParty() ? GetParty(actor) : actor });
+                builder.QueueInformation(new ContextType[] { ContextType.CombatSearchFail }, new BuilderObject(actor.IsInParty() ? GetParty(actor) : actor));
                 _messageCenter.AddMessage(builder.ToString());
                 return;
             }
 
-            builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Flavor }, new object[] { actor.IsInParty() ? GetParty(actor) : actor, otherActor.IsInParty() ? GetParty(otherActor) : otherActor });
+            builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Flavor }, new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor) , new BuilderObject( otherActor.IsInParty() ? GetParty(otherActor) : otherActor) );
 
             ProcessCombat( actor, otherActor, builder );
         }
@@ -198,7 +198,7 @@ namespace HungerGamesSimulator.Data
         private void MovementRequest(IActor actor)
         {
             var builder = _simulation.GameStringFactory.CreateStringBuilder();
-            builder.QueueInformation(new ContextType[] { ContextType.Move }, new object[] { actor.IsInParty() ? GetParty(actor) : actor });
+            builder.QueueInformation(new ContextType[] { ContextType.Move }, new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor ) );
             _messageCenter.AddMessage(builder.ToString());
 
             var party = GetParty(actor);

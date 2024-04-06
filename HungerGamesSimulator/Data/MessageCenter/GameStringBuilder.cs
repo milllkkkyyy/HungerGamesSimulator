@@ -11,7 +11,7 @@ namespace HungerGamesSimulator.MessageCenter
             _gameStrings = gameStrings;
         }
          
-        public void QueueInformation( ContextType[] contexts, params object[] inputs)
+        public void QueueInformation( ContextType[] contexts, params BuilderObject[] inputs)
         {
             Enqueue(new BuilderContainer(contexts, inputs));
         }
@@ -60,9 +60,9 @@ namespace HungerGamesSimulator.MessageCenter
     public class BuilderContainer
     {
         public ContextType[] Contexts { get; }
-        public object[] Inputs { get; }
+        public BuilderObject[] Inputs { get; }
 
-        public BuilderContainer(ContextType[] contexts, object[] inputs)
+        public BuilderContainer(ContextType[] contexts, BuilderObject[] inputs)
         {
             Contexts = contexts;
             Inputs = inputs;

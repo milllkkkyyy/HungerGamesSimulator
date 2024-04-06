@@ -47,11 +47,11 @@ namespace HungerGamesSimulator.Data
 
                         if (killedThemSelves)
                         {
-                            _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.BurnMapSuicide }, actor );
+                            _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.BurnMapSuicide }, new BuilderObject(actor) );
                         }
                         else
                         {
-                            _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.BurnMapFail }, actor );
+                            _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.BurnMapFail }, new BuilderObject(actor));
                         }
 
                         _messageCenter.AddCannonMessage(actor);
@@ -71,11 +71,11 @@ namespace HungerGamesSimulator.Data
                         actor.Location = new Coord(actor.Location.X, _simulation.Height);
                     }
 
-                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.BurnMapSucceed }, actor );
+                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.BurnMapSucceed }, new BuilderObject(actor));
                 }
                 else
                 {
-                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.BurnMapIgnore }, actor );
+                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.BurnMapIgnore }, new BuilderObject(actor));
                 }
 
                 _messageCenter.AddMessage( _gameStringBuilder.ToString() );
