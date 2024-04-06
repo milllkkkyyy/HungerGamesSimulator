@@ -7,7 +7,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} ran away from the Cornucopia"
+      "{input[0]} ran away from the Cornucopia."
     ]
   },
   {
@@ -18,7 +18,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} retrieved a {input[0].Weapon} without anyone glancing their way"
+      "{input[0]} retrieved a {input[0].Weapon} without anyone glancing their way."
     ]
   },
   {
@@ -34,7 +34,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} outpaced {input[1]} for a {input[0].Weapon}"
+      "{input[0]} outpaced {input[1]} for a {input[0].Weapon}."
     ]
   },
   {
@@ -45,7 +45,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} watched the fire shink the map"
+      "{input[0]} watched the fire shink the map."
     ]
   },
   {
@@ -56,7 +56,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} successfully ran from the fire"
+      "{input[0]} successfully ran from the fire."
     ]
   },
   {
@@ -67,7 +67,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} died from the fire, getting eaten by the flames while sleeping"
+      "{input[0]} died from the fire, getting eaten by the flames while sleeping."
     ]
   },
   {
@@ -78,7 +78,7 @@
       }
     ],
     "Texts": [
-      "{input[0]} was sick of the hunger games, so they let the fires eat them"
+      "{input[0]} was sick of the Hunger Games, so they let the fires eat them."
     ]
   }
 ]
