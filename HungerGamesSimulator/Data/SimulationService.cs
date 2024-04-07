@@ -37,7 +37,7 @@ namespace HungerGamesSimulator.Data
                 return;
             }
 
-            _messageCenter.AddMessage($"<h2>Day {_simulation.Day}</h2>");
+            _messageCenter.AddMessage($"Day {_simulation.Day}");
 
             // Number of actions tributes can take reduces if there are events
             int eventActions = _eventService.RunEventsIfNeeded();
