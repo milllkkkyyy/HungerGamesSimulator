@@ -1,10 +1,18 @@
-﻿using System.Collections.ObjectModel;
+﻿using HungerGamesSimulator.MessageCenter;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace HungerGamesSimulator.Data
 {
-    public class Party : List<IActor>
+    public class Party : List<IActor>, IBuildable
     {
+        #region Implements IBuildable
+        public Type GetBuildableType()
+        {
+            return typeof(Party);
+        }
+
+        #endregion
 
         public Party Dead 
         {
@@ -35,5 +43,6 @@ namespace HungerGamesSimulator.Data
 
             return this.Count > 1 ? string.Join(", ", this.GetRange(0, Count-1)) + " and " + this.Last().Name : this.First().Name;
         }
+
     }
 }

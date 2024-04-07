@@ -37,7 +37,7 @@ namespace HungerGamesSimulator.Data
                 return;
             }
 
-            _messageCenter.AddMessage($"<h2>Day {_simulation.Day}</h2>");
+            _messageCenter.AddMessage($"Day {_simulation.Day}");
 
             // Number of actions tributes can take reduces if there are events
             int eventActions = _eventService.RunEventsIfNeeded();
@@ -130,7 +130,7 @@ namespace HungerGamesSimulator.Data
                         if (otherActor == null)
                         {
                             // joining a party cannot be processed without a tribute
-                            builder.QueueInformation(new ContextType[] { ContextType.PartySearchFail }, new object[] { actor.IsInParty() ? GetParty(actor) : actor });
+                            builder.QueueInformation(new ContextType[] { ContextType.PartySearchFail },  new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor  ) );
                             _messageCenter.AddMessage(builder.ToString());
                             break;
                         }
@@ -170,12 +170,12 @@ namespace HungerGamesSimulator.Data
             if (otherActor == null)
             {
                 // combat cannot be processed without a tribute
-                builder.QueueInformation(new ContextType[] { ContextType.CombatSearchFail }, new object[] { actor.IsInParty() ? GetParty(actor) : actor });
+                builder.QueueInformation(new ContextType[] { ContextType.CombatSearchFail }, new BuilderObject(actor.IsInParty() ? GetParty(actor) : actor));
                 _messageCenter.AddMessage(builder.ToString());
                 return;
             }
 
-            builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Flavor }, new object[] { actor.IsInParty() ? GetParty(actor) : actor, otherActor.IsInParty() ? GetParty(otherActor) : otherActor });
+            builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Flavor }, new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor, ContextType.Attacker) , new BuilderObject( otherActor.IsInParty() ? GetParty(otherActor) : otherActor, ContextType.Defender) );
 
             ProcessCombat( actor, otherActor, builder );
         }
@@ -198,7 +198,7 @@ namespace HungerGamesSimulator.Data
         private void MovementRequest(IActor actor)
         {
             var builder = _simulation.GameStringFactory.CreateStringBuilder();
-            builder.QueueInformation(new ContextType[] { ContextType.Move }, new object[] { actor.IsInParty() ? GetParty(actor) : actor });
+            builder.QueueInformation(new ContextType[] { ContextType.Move }, new BuilderObject( actor.IsInParty() ? GetParty(actor) : actor ) );
             _messageCenter.AddMessage(builder.ToString());
 
             var party = GetParty(actor);

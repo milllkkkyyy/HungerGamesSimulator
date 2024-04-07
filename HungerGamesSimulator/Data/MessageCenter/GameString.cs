@@ -27,7 +27,7 @@ namespace HungerGamesSimulator.MessageCenter
             return !contexts.Except(_contexts).Any();
         }
 
-        public bool IsInputValid(object[] inputs)
+        public bool IsInputValid(BuilderObject[] inputs)
         {
             return _gameStringInput.IsInputValid(inputs);
         }
@@ -38,7 +38,7 @@ namespace HungerGamesSimulator.MessageCenter
         /// <param name="input"></param>
         /// <param name="gameString">null if the output is false, otherwise the converted string</param>
         /// <returns></returns>
-        public bool TryToString(object[] input, out string gameString )
+        public bool TryToString(BuilderObject[] input, out string gameString )
         {
             if (_gameStringInput.TryGetMatches(input, out var matches ))
             {
@@ -56,7 +56,7 @@ namespace HungerGamesSimulator.MessageCenter
         /// <param name="inputs">the dynamic inputs provided by services</param>
         /// <param name="text">the designer text that needs to be manipulated</param>
         /// <returns>a string which is formatted as the designers wanted</returns>
-        private string ToString( GameStringInputMatches inputMatches , object[] inputs, string text )
+        private string ToString( GameStringInputMatches inputMatches , BuilderObject[] inputs, string text )
         {
             Regex indexFinder = IndexFinder();
             Regex blockFinder = BlockFinder();
@@ -75,7 +75,7 @@ namespace HungerGamesSimulator.MessageCenter
                     }
                     else
                     {
-                        text = text.Replace(block.Value, inputs[actualIndex].ToString());
+                        text = text.Replace(block.Value, inputs[actualIndex].Input.ToString());
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace HungerGamesSimulator.MessageCenter
             // check to see if the designer used any properties using reflection
             bool TryGetPropertyValue( string match, int index, out string toString )
             {
-                var propertyInfo = inputs[index].GetType().GetProperties();
+                var propertyInfo = inputs[index].Input.GetType().GetProperties();
                 foreach (var property in propertyInfo)
                 {
                     if (!match.Contains(property.Name, StringComparison.OrdinalIgnoreCase))
@@ -93,7 +93,7 @@ namespace HungerGamesSimulator.MessageCenter
                         continue;
                     }
 
-                    toString = property.GetValue(inputs[0], null)?.ToString() ?? "";
+                    toString = property.GetValue(inputs[index].Input, null)?.ToString() ?? "";
                     return true;
                 }
 

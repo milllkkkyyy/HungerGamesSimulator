@@ -36,6 +36,8 @@ namespace HungerGamesSimulator.MessageCenter
                         Type = StringToType(designerStringInput.Type)
                     };
 
+                    inputArgs[j].Contexts = designerStringInput.Contexts;
+
                     if (designerStringInput.Requirements == null)
                     {
                         continue;

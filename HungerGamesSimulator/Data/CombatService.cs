@@ -77,7 +77,7 @@ namespace HungerGamesSimulator.Data
 
                     if (defender.IsDead())
                     {
-                        builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Death }, fighter, defender );
+                        builder.QueueInformation(new ContextType[] { ContextType.Combat, ContextType.Death }, new BuilderObject( fighter ), new BuilderObject( defender ) );
                         messageCenter.AddCannonMessage(defender);
                     }
                     else

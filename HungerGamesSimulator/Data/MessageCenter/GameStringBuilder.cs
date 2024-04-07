@@ -11,7 +11,7 @@ namespace HungerGamesSimulator.MessageCenter
             _gameStrings = gameStrings;
         }
          
-        public void QueueInformation( ContextType[] contexts, params object[] inputs)
+        public void QueueInformation( ContextType[] contexts, params BuilderObject[] inputs)
         {
             Enqueue(new BuilderContainer(contexts, inputs));
         }
@@ -41,7 +41,7 @@ namespace HungerGamesSimulator.MessageCenter
 
                 if (validGameStrings.Count == 0)
                 {
-                    throw new NotImplementedException( $"No valid game string for {String.Join(",", builder.Contexts)}" );
+                    throw new NotImplementedException( $"No valid game string for {String.Join(",", builder.Contexts)} with inputs:  {String.Join(",", builder.Inputs.ToList())}" );
                 }
 
                 // pick a random game string
@@ -50,7 +50,7 @@ namespace HungerGamesSimulator.MessageCenter
                 // see if the string is able to be parsed
                 if (gameString.TryToString(builder.Inputs, out var finalString))
                 {
-                    stringBuilder.Append(finalString + "<br>");
+                    stringBuilder.Append(finalString + "\n");
                 }
             }
 
@@ -60,9 +60,9 @@ namespace HungerGamesSimulator.MessageCenter
     public class BuilderContainer
     {
         public ContextType[] Contexts { get; }
-        public object[] Inputs { get; }
+        public BuilderObject[] Inputs { get; }
 
-        public BuilderContainer(ContextType[] contexts, object[] inputs)
+        public BuilderContainer(ContextType[] contexts, BuilderObject[] inputs)
         {
             Contexts = contexts;
             Inputs = inputs;

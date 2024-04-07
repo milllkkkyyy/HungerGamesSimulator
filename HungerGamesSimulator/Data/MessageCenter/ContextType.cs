@@ -21,6 +21,8 @@ namespace HungerGamesSimulator.MessageCenter
         PartyJoin,
         PartyLeave,
         PartyJoinFail,
-        Move
+        Move,
+        Attacker,
+        Defender
     }
 }

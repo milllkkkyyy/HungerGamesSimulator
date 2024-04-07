@@ -1,3 +1,5 @@
+using HungerGamesSimulator.MessageCenter;
+
 namespace HungerGamesSimulator.Data;
 
 public enum ActorAction
@@ -9,7 +11,7 @@ public enum ActorAction
     LeaveParty
 }
 
-public interface IActor
+public interface IActor : IBuildable
 {
     public string Name { get; }
     public Guid ActorId { get; }

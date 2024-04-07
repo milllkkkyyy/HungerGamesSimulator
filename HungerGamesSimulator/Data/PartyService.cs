@@ -88,7 +88,7 @@ namespace HungerGamesSimulator.Data
         /// <param name="request"></param>
         public void JoinParty( JoinPartyRequest request )
         {
-            request.Builder.QueueInformation(new ContextType[] { ContextType.PartyJoin }, request.Actor.IsInParty() ? request.ActorsParty : request.Actor, !request.OtherActor.IsInParty() ? request.OtherActor : request.OtherActorsParty);
+            request.Builder.QueueInformation(new ContextType[] { ContextType.PartyJoin }, new BuilderObject( request.Actor.IsInParty() ? request.ActorsParty : request.Actor ), new BuilderObject( !request.OtherActor.IsInParty() ? request.OtherActor : request.OtherActorsParty ));
 
             if (request.Actor.IsInParty() && request.OtherActor.IsInParty())
             {
@@ -140,7 +140,7 @@ namespace HungerGamesSimulator.Data
 
             request.ActorsParty.Remove(request.Actor);
 
-            request.Builder.QueueInformation(new ContextType[] { ContextType.PartyLeave }, new object[] { request.Actor, request.ActorsParty });
+            request.Builder.QueueInformation(new ContextType[] { ContextType.PartyLeave }, new BuilderObject(request.Actor), new BuilderObject(request.ActorsParty) );
 
             // dispand any parties that are have less than two people
             if (request.ActorsParty.Count < 2)

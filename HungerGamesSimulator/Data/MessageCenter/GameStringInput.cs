@@ -4,6 +4,7 @@
     {
         public required Type Type { get; set; }
         public Requirement[]? Requirements { get; set; }
+        public  ContextType[]? Contexts { get; set; }
     }
 
     public class GameStringInputMatches : Dictionary<int, int>
@@ -29,7 +30,7 @@
             _validity = args;
         }
 
-        public bool IsInputValid(object[] inputs)
+        public bool IsInputValid(BuilderObject[] inputs)
         {
             var matches = GetMatches(inputs);
             return matches.Count == _validity.Length;
@@ -40,7 +41,7 @@
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public bool TryGetMatches( object[] inputs, out GameStringInputMatches matches )
+        public bool TryGetMatches( BuilderObject[] inputs, out GameStringInputMatches matches )
         {
             matches = GetMatches(inputs);
             if (matches.Count != _validity.Length)
@@ -52,7 +53,7 @@
             return true;
         }
 
-        public GameStringInputMatches GetMatches(object[] inputs)
+        public GameStringInputMatches GetMatches(BuilderObject[] inputs)
         {
             GameStringInputMatches matches = new();
 
@@ -67,18 +68,44 @@
                     if (matches.ContainsKey(i) || matches.ContainsValue(j))
                         continue;
 
-                    if (_validity[i].Type != inputs[j].GetType())
+                    Console.WriteLine( inputs[j].Input.GetBuildableType() );
+
+                    if (_validity[i].Type != inputs[j].Input.GetBuildableType())
                         continue;
 
-                    if (!DoesPassRequirements(_validity[i].Requirements, inputs[j]))
+                    if (!DoesPassRequirements(_validity[i].Requirements, inputs[j].Input))
                         continue;
 
-                    matches.Add( desginerStringIndex: i, givenIndex: j);
+                    if (!HasValidContext(_validity[i].Contexts, inputs[j].ContextType))
+                        continue;
+
+                    matches.Add(desginerStringIndex: i, givenIndex: j);
                     break;
                 }
             }
 
             return matches;
+
+            bool HasValidContext(ContextType[]? contextTypes, ContextType[] contextInputs)
+            {
+                if (contextTypes == null && contextInputs.Length == 0 ) 
+                {
+                    return true;
+                } else if (
+                    contextTypes is not null &&
+                    contextInputs.Length != 0 &&
+                    contextTypes.Length == contextInputs.Length)
+                {
+                    HashSet<ContextType> contextTypesSet = new(contextTypes);
+                    HashSet<ContextType> contextInputsSet = new(contextInputs);
+
+                    return contextTypesSet.SetEquals(contextInputsSet);
+                }
+                else 
+                {
+                    return false;
+                }
+            }
 
             bool DoesPassRequirements(Requirement[]? requirements, object input)
             {

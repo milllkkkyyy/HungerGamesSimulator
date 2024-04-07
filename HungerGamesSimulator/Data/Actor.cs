@@ -113,4 +113,12 @@ public abstract class Actor : IActor
   { 
     return Name;
   }
+
+    #region Implements IBuildable
+    public Type GetBuildableType()
+    {
+        return typeof(Tribute);
+    }
+
+    #endregion
 }

@@ -42,7 +42,7 @@ namespace HungerGamesSimulator.Data
                 }
                 else
                 {
-                    _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.CornucopiaRunAway } , actor );
+                    _gameStringBuilder.QueueInformation( new ContextType[] { ContextType.CornucopiaRunAway } , new BuilderObject(actor) );
                 }
             }
 
@@ -81,7 +81,7 @@ namespace HungerGamesSimulator.Data
                 else
                 {
                     actor.Weapon = GetWeaponFromLoot(actor);
-                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaLuck }, actor);
+                    _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaLuck }, new BuilderObject(actor));
                 }
 
 
@@ -153,11 +153,11 @@ namespace HungerGamesSimulator.Data
         private void SimulateRunningToCornicopia(IActor inAdvantage, IActor inDisadvantage)
         {
             inAdvantage.Weapon = GetWeaponFromLoot(inAdvantage);
-            _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaOutpace }, new object[] { new CornucopiaTribute(inAdvantage, true), new CornucopiaTribute(inDisadvantage, false) });
+            _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaOutpace }, new BuilderObject[] { new BuilderObject( new CornucopiaTribute(inAdvantage, true) ), new BuilderObject( new CornucopiaTribute(inDisadvantage, false) ) });
 
             if (inAdvantage.Wisdom + SimulationUtils.RollD20() < ConfidenceDC)
             {
-                _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaLuck }, inDisadvantage);
+                _gameStringBuilder.QueueInformation(new ContextType[] { ContextType.CornucopiaLuck }, new BuilderObject(inDisadvantage));
                 inDisadvantage.Weapon = GetWeaponFromLoot(inDisadvantage);
                 return;
             }
@@ -176,7 +176,7 @@ namespace HungerGamesSimulator.Data
         }
     }
 
-    public class CornucopiaTribute : Tribute
+    public class CornucopiaTribute : Tribute, IBuildable
     {
         public bool HasAdvantage { get; set; }
 
@@ -193,5 +193,14 @@ namespace HungerGamesSimulator.Data
 
             HasAdvantage = advantage;
         }
+
+        #region Implements IBuildable
+
+        public new Type GetBuildableType()
+        {
+            return typeof(CornucopiaTribute);
+        }
+
+        #endregion
     }
 }
