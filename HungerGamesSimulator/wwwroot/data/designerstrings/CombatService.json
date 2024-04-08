@@ -261,6 +261,22 @@
     "Contexts": [ "Combat", "Flavor" ],
     "Inputs": [
       {
+        "Type": "Tribute",
+        "Contexts": [ "Attacker" ]
+      },
+      {
+        "Type": "Party",
+        "Contexts": [ "Defender" ]
+      }
+    ],
+    "Texts": [
+      "{input[0]} pounces on {input[1]} while they walk through the forest"
+    ]
+  },
+  {
+    "Contexts": [ "Combat", "Flavor" ],
+    "Inputs": [
+      {
         "Type": "Party",
         "Contexts": [ "Attacker" ]
       },
