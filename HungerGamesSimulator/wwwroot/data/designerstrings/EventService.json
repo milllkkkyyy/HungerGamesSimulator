@@ -105,8 +105,7 @@
         "Requirements": [ "!HasAdvantage" ]
       },
       {
-        "Type": "Tribute",
-        "Requirements": [ "HasDisadvantage" ]
+        "Type": "Tribute"
       }
     ],
     "Texts": [
