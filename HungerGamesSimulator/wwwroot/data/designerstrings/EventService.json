@@ -80,36 +80,5 @@
     "Texts": [
       "{input[0]} was sick of the Hunger Games, so they let the fires eat them.", "{input[0]} walked in the flames burning the map, unwilling to fight anymore."
     ]
-  },
-  {
-    "Contexts": [ "BurnMapSucceed" ],
-    "Inputs": [
-      {
-        "Type": "Tribute",
-        "Requirements": [ "HasAdvantage" ]
-      },
-      {
-        "Type": "Tribute",
-        "Requirements": [ "!HasAdvantage" ]
-      }
-    ],
-    "Texts": [
-      "{input[0]} ran to outrun the flame, {input[1]} hot on their heels. As the heat faded from their backs, they stopped to watch the flame in silent relief."
-    ]
-  },
-  {
-    "Contexts": [ "BurnMapFail" ],
-    "Inputs": [
-      {
-        "Type": "Tribute",
-        "Requirements": [ "!HasAdvantage" ]
-      },
-      {
-        "Type": "Tribute"
-      }
-    ],
-    "Texts": [
-      "{input[0]} ran as fast as they could, {input[1]} slowly falling behind them. As the heat faded from their backs, {input[0]} turned to see {input[1]} perish in the flames."
-    ]
   }
 ]
